@@ -60,6 +60,22 @@ function findOne(obj, cb) {
   });
 }
 
+function forgotPassword(obj, cb) {
+  findOne(obj, (err, user) => {
+    if (err) return err;
+    const token = user.generateToken();
+    cb(null, token);
+  })
+}
+
+function updatePassword(obj, cb) {
+  findOne(obj, (err, user) => {
+    if (err) return err;
+    if (user.token != obj.token) return new Error("Cannot change password, invalid token");
+    user.save(cb)
+  });
+}
+
 function search(opt, cb) {
   User.find({ username: { $gt: opt } }).exec((err, results) => {
     if (err) return cb(err, false);

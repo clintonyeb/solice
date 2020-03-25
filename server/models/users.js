@@ -36,7 +36,13 @@ var userSchema = mongoose.Schema({
   lastLogin: String, // 10 min ago
   notifications: Array, // [{msg:"New message from @user", link:"/chat/user"}]
   developer: Boolean, // true or false
-  token: String // authentication token
+  token: String, // authentication token
+  role: {
+    type: Number,
+    enum: Object.values(require("../utils/user-roles")),
+    required: true,
+    default: 0
+  } // user roles
 });
 
 // before save has password
@@ -76,7 +82,7 @@ userSchema.methods.generateToken = function(cb) {
   jwt.sign(
     {
       data: {
-        user_id: user._id,
+        _id: user._id,
         username: user.username,
         iat: Math.floor(Date.now() / 1000) - 30
       }
