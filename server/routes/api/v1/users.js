@@ -310,4 +310,10 @@ router.get("/:category", function(req, res, next) {
   });
 });
 
+router.use(function(err, req, res, next) {
+  if (err.name === "UnauthorizedError") {
+    res.status(401).json("Invalid token received with request...");
+  }
+});
+
 module.exports = router;

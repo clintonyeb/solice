@@ -2,11 +2,12 @@ var express = require("express");
 const jwt = require("express-jwt");
 var router = express.Router();
 var userService = require("../../../services").users;
+var HttpStatus = require("http-status-codes");
 
 router.post("/signup", function(req, res) {
   userService.createNew(req.body, (err, data) => {
     if (err) {
-      return res.status(422).json({
+      return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
         error: err.message
       });
     }
@@ -17,14 +18,14 @@ router.post("/signup", function(req, res) {
 router.post("/login", function(req, res) {
   userService.authenticate(req.body, (err, user) => {
     if (err) {
-      return res.status(401).json({
+      return res.status(HttpStatus.UNAUTHORIZED).json({
         error: err.message
       });
     }
 
     user.generateToken((err, token) => {
       if (err) {
-        return res.status(401).json({
+        return res.status(HttpStatus.UNAUTHORIZED).json({
           error: err.message
         });
       }
