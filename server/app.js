@@ -1,6 +1,5 @@
 var express = require("express");
 var path = require("path");
-var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
 var cors = require("cors");
@@ -18,14 +17,11 @@ app.use(cors());
 app.use(logger(process.env.NODE_ENV));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 // views setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");
-// app.set("view engine", "json");
-// app.engine("json", hbs.__express);
 hbs.registerPartials(path.join(__dirname, 'views/partials/'));
 hbs.registerHelper("getRole", (role) => roleName(role));
 
