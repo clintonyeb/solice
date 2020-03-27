@@ -17,7 +17,12 @@ function createNew(obj, cb) {
       if (user) {
         return cb(new Error("User with username already exists"));
       } else {
-        var bio = `Hey there! I'm ${obj.firstname} ;)! Wish me on ${obj.dob.day} ${obj.dob.month}`;
+        let bio = "";
+        if (obj.dob) {
+          bio = `Hey there! I'm ${obj.firstname} ;)! Wish me on ${obj.dob.day} ${obj.dob.month}`;
+        } else {
+          bio = `Hey there! I'm ${obj.firstname}`;
+        }
         var newUser = new User({
           username: obj.username,
           firstname: obj.firstname,

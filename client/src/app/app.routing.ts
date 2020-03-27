@@ -1,18 +1,26 @@
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { BrowserModule } from "@angular/platform-browser";
 import { Routes, RouterModule } from "@angular/router";
+import { HttpClientModule } from "@angular/common/http";
 
-import { ComponentsComponent } from "./components/components.component";
-import { LandingComponent } from "./layouts/landing/landing.component";
+import { LandingComponent } from "./user/landing/landing.component";
 import { LoginComponent } from "./session/login/login.component";
 import { RegisterComponent } from "./session/register/register.component";
-import { ProfileComponent } from "./layouts/profile/profile.component";
+import { ProfileComponent } from "./user/profile/profile.component";
 import { FooterComponent } from "./shared/footer/footer.component";
 import { SessionComponent } from "./session/session.component";
+import { ConfigService } from './services/config.service';
+import { AuthGuardService } from './services/auth-guard.service';
+import { SessionService } from './services/session.service';
+import { UserComponent } from './user/user.component';
+import { NavbarComponent } from './shared/navbar/navbar.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SharedModule } from './shared/shared.module';
 
 const routes: Routes = [
-  { path: "", redirectTo: "session", pathMatch: "full" },
+  { path: "", redirectTo: "users", pathMatch: "full" },
   {
     path: "session",
     component: SessionComponent,
@@ -29,7 +37,8 @@ const routes: Routes = [
   },
   {
     path: "users",
-    component: ComponentsComponent,
+    component: UserComponent,
+    canActivate: [AuthGuardService],
     children: [{ path: "profile", component: ProfileComponent }]
   },
   { path: "landing", component: LandingComponent },
@@ -37,8 +46,18 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [CommonModule, BrowserModule, RouterModule.forRoot(routes)],
-  declarations: [FooterComponent],
-  exports: []
+  imports: [
+    BrowserAnimationsModule,
+    NgbModule,
+    RouterModule,
+    CommonModule,
+    HttpClientModule,
+    BrowserModule,
+    SharedModule,
+    RouterModule.forRoot(routes)
+  ],
+  declarations: [],
+  exports: [],
+  providers: [ConfigService, SessionService, AuthGuardService]
 })
 export class AppRoutingModule {}

@@ -6,13 +6,13 @@ const authorize = require("../../../utils/roleware");
 const ROLES = require("../../../utils/user-roles");
 
 // JWT validation error handler
-router.use(
-  jwt({
-    secret: process.env["SECRET_KEY"]
-  })
-);
+// router.use(
+//   jwt({
+//     secret: process.env["SECRET_KEY"]
+//   })
+// );
 
-router.use(authorize(ROLES.MODERATOR));
+// router.use(authorize(ROLES.MODERATOR));
 
 /* GET users listing. */
 router.get("/moderator", function(req, res, next) {

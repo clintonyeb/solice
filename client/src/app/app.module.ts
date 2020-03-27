@@ -6,15 +6,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
-import { ExamplesModule } from './layouts/examples.module';
-
+import { UserModule } from './user/user.module';
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './shared/navbar/navbar.component';
 
 @NgModule({
     declarations: [
         AppComponent,
-        // NavbarComponent,
     ],
     imports: [
         BrowserAnimationsModule,
@@ -24,9 +21,8 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
         AppRoutingModule,
         ComponentsModule,
         SessionModule,
-        ExamplesModule
+        UserModule
     ],
-    providers: [],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
