@@ -4,6 +4,8 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
 var cors = require("cors");
+var hbs = require("hbs");
+const roleName = require("./utils/helpers").roleName;
 
 require("dotenv").config();
 
@@ -18,6 +20,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+// views setup
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "hbs");
+// app.set("view engine", "json");
+// app.engine("json", hbs.__express);
+hbs.registerPartials(path.join(__dirname, 'views/partials/'));
+hbs.registerHelper("getRole", (role) => roleName(role));
 
 mongoose.connect(require("./config/app").db.connectionUri, {
   useUnifiedTopology: true,

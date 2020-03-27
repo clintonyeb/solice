@@ -100,16 +100,6 @@ userSchema.methods.generateToken = function(cb) {
   );
 };
 
-userSchema.methods.toJSON = function() {
-  const obj = this.toObject();
-  return {
-    firstname: obj.firstname,
-    lastname: obj.lastname,
-    username: obj.username,
-    id: obj._id
-  };
-};
-
 module.exports = mongoose.model("users", userSchema);
 
 // create the model for users and expose it to our app

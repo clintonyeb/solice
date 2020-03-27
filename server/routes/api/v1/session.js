@@ -10,7 +10,7 @@ router.post("/signup", function(req, res) {
         error: err.message
       });
     }
-    res.json(data);
+    res.render("users", data);
   });
 });
 
