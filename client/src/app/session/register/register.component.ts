@@ -1,4 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { FormControl, Validators } from "@angular/forms";
+import { Component, OnInit } from "@angular/core";
+import { FormGroup } from "@angular/forms";
+import { SessionService } from "app/services/session.service";
+import { MessageAlert, ErrorAlert, IAlert, Notify } from "app/utils/alert";
+import {
+  matchesPattern,
+  checkPasswords,
+  getFormValidationErrors
+} from "../../utils/validators";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-register",
@@ -9,21 +19,75 @@ export class RegisterComponent implements OnInit {
   data: Date = new Date();
   focus;
   focus1;
+  focus2;
+  focus3;
+  focus4;
+  alert: IAlert;
+  formAlert: IAlert;
 
-  constructor() {}
+  form = new FormGroup(
+    {
+      username: new FormControl("", [
+        Validators.required,
+        matchesPattern(/^[a-zA-Z0-9]+$/)
+      ]),
+      firstname: new FormControl("", [Validators.required]),
+      lastname: new FormControl("", [Validators.required]),
+      password: new FormControl("", [
+        Validators.required,
+        Validators.minLength(6)
+      ]),
+      cpassword: new FormControl("", [Validators.required])
+    },
+    { validators: checkPasswords }
+  );
 
-  ngOnInit() {
-    var body = document.getElementsByTagName("body")[0];
-    body.classList.add("login-page");
+  constructor(private sessionService: SessionService, private router: Router) {}
 
-    var navbar = document.getElementsByTagName("nav")[0];
-    navbar.classList.add("navbar-transparent");
-  }
-  ngOnDestroy() {
-    var body = document.getElementsByTagName("body")[0];
-    body.classList.remove("login-page");
+  ngOnInit() {}
 
-    var navbar = document.getElementsByTagName("nav")[0];
-    navbar.classList.remove("navbar-transparent");
+  onSubmit() {
+    if (this.formAlert && this.formAlert.status) {
+      this.formAlert.status = false;
+    }
+
+    if (this.alert && this.alert.status) {
+      this.alert.status = false;
+    }
+
+    // validate form here
+    if (!this.form.valid) {
+      const mess =
+        getFormValidationErrors(this.form) || "Errors in your form...";
+      this.formAlert = new ErrorAlert("Errors", mess);
+      this.formAlert.status = true;
+      return;
+    }
+
+    this.sessionService.register(this.form.value).subscribe(
+      data => {
+        this.form.reset();
+        this.alert = new MessageAlert(
+          "Account registration successful!",
+          "You have created an account successfully!"
+        );
+        this.alert.status = true;
+        this.router.navigate([
+          "/session/login",
+          { message: "Account registration successful" }
+        ]);
+      },
+      err => {
+        this.form.patchValue({
+          password: "",
+          cpassword: ""
+        });
+        this.alert = new ErrorAlert(
+          "Account error!",
+          this.sessionService.handleError(err)
+        );
+        this.alert.status = true;
+      }
+    );
   }
 }

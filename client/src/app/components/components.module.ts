@@ -11,7 +11,6 @@ import { NavigationComponent } from './navigation/navigation.component';
 import { TypographyComponent } from './typography/typography.component';
 import { NucleoiconsComponent } from './nucleoicons/nucleoicons.component';
 import { ComponentsComponent } from './components.component';
-import { NotificationComponent } from './notification/notification.component';
 import { NgbdModalBasic } from './modal/modal.component';
 
 @NgModule({
@@ -29,7 +28,6 @@ import { NgbdModalBasic } from './modal/modal.component';
         NavigationComponent,
         TypographyComponent,
         NucleoiconsComponent,
-        NotificationComponent,
         NgbdModalBasic
     ],
     exports:[ ComponentsComponent ]
