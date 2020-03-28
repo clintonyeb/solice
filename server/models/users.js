@@ -84,7 +84,8 @@ userSchema.methods.generateToken = function(cb) {
       data: {
         _id: user._id,
         username: user.username,
-        iat: Math.floor(Date.now() / 1000) - 30
+        iat: Math.floor(Date.now() / 1000) - 30,
+        role: user.role
       }
     },
     secret,

@@ -10,6 +10,10 @@ import { RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { NavbarComponent } from "app/shared/navbar/navbar.component";
 import { SharedModule } from "../shared/shared.module";
+import { FeedComponent } from './feed/feed.component';
+import { ActivityComponent } from './activity/activity.component';
+import { BioComponent } from './bio/bio.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
   imports: [
@@ -20,6 +24,6 @@ import { SharedModule } from "../shared/shared.module";
     CommonModule,
     SharedModule
   ],
-  declarations: [LandingComponent, ProfileComponent, UserComponent]
+  declarations: [LandingComponent, ProfileComponent, UserComponent, FeedComponent, ActivityComponent, BioComponent, DashboardComponent]
 })
 export class UserModule {}

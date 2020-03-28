@@ -1,4 +1,4 @@
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { BrowserModule } from "@angular/platform-browser";
@@ -11,13 +11,13 @@ import { RegisterComponent } from "./session/register/register.component";
 import { ProfileComponent } from "./user/profile/profile.component";
 import { FooterComponent } from "./shared/footer/footer.component";
 import { SessionComponent } from "./session/session.component";
-import { ConfigService } from './services/config.service';
-import { AuthGuardService } from './services/auth-guard.service';
-import { SessionService } from './services/session.service';
-import { UserComponent } from './user/user.component';
-import { NavbarComponent } from './shared/navbar/navbar.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SharedModule } from './shared/shared.module';
+import { AuthGuardService } from "./services/auth-guard.service";
+import { SessionService } from "./services/session.service";
+import { UserComponent } from "./user/user.component";
+import { NavbarComponent } from "./shared/navbar/navbar.component";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { SharedModule } from "./shared/shared.module";
+import { DashboardComponent } from "./user/dashboard/dashboard.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "users", pathMatch: "full" },
@@ -39,7 +39,11 @@ const routes: Routes = [
     path: "users",
     component: UserComponent,
     canActivate: [AuthGuardService],
-    children: [{ path: "profile", component: ProfileComponent }]
+    children: [
+      { path: "", redirectTo: "feeds", pathMatch: "full" },
+      { path: "feeds", component: DashboardComponent },
+      { path: "profile", component: ProfileComponent }
+    ]
   },
   { path: "landing", component: LandingComponent },
   { path: "**", component: LandingComponent }
@@ -58,6 +62,6 @@ const routes: Routes = [
   ],
   declarations: [],
   exports: [],
-  providers: [ConfigService, SessionService, AuthGuardService]
+  providers: [SessionService, AuthGuardService]
 })
 export class AppRoutingModule {}

@@ -23,18 +23,23 @@ app.use(express.static(path.join(__dirname, "public")));
 // views setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");
-hbs.registerPartials(path.join(__dirname, 'views', 'partials/'));
-hbs.registerHelper("getRole", (role) => roleName(role));
+hbs.registerPartials(path.join(__dirname, "views", "partials/"));
+hbs.registerHelper("getRole", role => roleName(role));
 
 mongoose.connect(require("./config/app").db.connectionUri, {
   useUnifiedTopology: true,
   useNewUrlParser: true
 });
 
-
 // set api routes
 app.use("/", indexRouter);
 apiRoutes.forEach(route => app.use("/api/v1", route));
+
+app.use(function(err, req, res, next) {
+  if (err.name === "UnauthorizedError") {
+    res.status(401).json("Invalid token received with request...");
+  }
+});
 
 app.use(function(err, req, res, next) {
   res.status(HttpStatus.NOT_FOUND).json("Path does noe exit");

@@ -1,18 +1,19 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { ConfigService } from "./config.service";
+import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
+import { environment } from "../../environments/environment";
 
 @Injectable()
 export class SessionService {
-  constructor(private http: HttpClient, private configService: ConfigService) {}
+  serviceURL = environment.server_url + "/";
+  constructor(private http: HttpClient) {}
 
   login(data) {
-    const url: string = this.configService.getServerURL("login");
+    const url: string = this.getServerURL("login");
     return this.http.post(url, data);
   }
 
   register(data) {
-    const url: string = this.configService.getServerURL("signup");
+    const url: string = this.getServerURL("signup");
     return this.http.post(url, data);
   }
 
@@ -33,12 +34,24 @@ export class SessionService {
   validateToken(cb) {
     const err = new Error("Invalid token");
     const token = localStorage.getItem("token");
-    if (!token) { return cb(err); }
-    const url: string = this.configService.getServerURL("validate-token");
-    this.http.get(url).subscribe(() => cb(null), (e) => cb(e));
+    if (!token) {
+      return cb(err);
+    }
+    const headers = new HttpHeaders({"Authorization": `Bearer ${token}`});
+    const url: string = this.getServerURL("authenticate");
+    this.http.get(url, {
+      headers
+    }).subscribe(
+      () => cb(null),
+      e => cb(e)
+    );
   }
 
   saveSession(data) {
-    localStorage.setItem('token', data.token);
+    localStorage.setItem("token", data.token);
+  }
+
+  getServerURL(path: string): string {
+    return this.serviceURL + path;
   }
 }

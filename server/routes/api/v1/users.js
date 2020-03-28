@@ -2,7 +2,7 @@ const jwt = require("express-jwt");
 var express = require("express");
 var router = express.Router();
 var userService = require("../../../services").users;
-const authorize = require("../../../utils/roleware");
+const authorize = require("../../../utils/authorize");
 const ROLES = require("../../../utils/user-roles");
 
 // JWT validation error handler
@@ -13,6 +13,11 @@ router.use(
 );
 
 router.use(authorize(ROLES.USER));
+
+router.get("/authenticate", function(req, res) {
+  console.log("passed");
+  res.json({ status: true });
+});
 
 router.get("/:username", function(req, res) {
   db.findOne({ username: req.params.username }, (err, user) => {
@@ -310,10 +315,6 @@ router.get("/:category", function(req, res, next) {
   });
 });
 
-router.use(function(err, req, res, next) {
-  if (err.name === "UnauthorizedError") {
-    res.status(401).json("Invalid token received with request...");
-  }
-});
+
 
 module.exports = router;
