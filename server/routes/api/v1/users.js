@@ -15,14 +15,14 @@ router.use(
 router.use(authorize(ROLES.USER));
 
 router.get("/authenticate", function(req, res) {
-  console.log("passed");
   res.json({ status: true });
 });
 
-router.get("/:username", function(req, res) {
-  db.findOne({ username: req.params.username }, (err, user) => {
-    if (!user) return res.status(404).send("No user found");
-    res.json(user);
+router.get("/user", function(req, res) {
+  const user = req.user.data;
+  userService.getUser(user._id, (err, user) => {
+    if (err || !user) return res.status(404).send("No user found");
+    res.render("users", user);
   });
 });
 
@@ -314,7 +314,5 @@ router.get("/:category", function(req, res, next) {
     });
   });
 });
-
-
 
 module.exports = router;

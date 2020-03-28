@@ -81,12 +81,10 @@ userSchema.methods.generateToken = function(cb) {
   const secret = process.env["SECRET_KEY"];
   jwt.sign(
     {
-      data: {
         _id: user._id,
         username: user.username,
         iat: Math.floor(Date.now() / 1000) - 30,
         role: user.role
-      }
     },
     secret,
     {
