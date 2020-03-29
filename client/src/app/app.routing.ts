@@ -14,10 +14,11 @@ import { SessionComponent } from "./session/session.component";
 import { AuthGuardService } from "./services/auth-guard.service";
 import { SessionService } from "./services/session.service";
 import { UserComponent } from "./user/user.component";
-import { NavbarComponent } from "./shared/navbar/navbar.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { SharedModule } from "./shared/shared.module";
 import { DashboardComponent } from "./user/dashboard/dashboard.component";
+import { ToastService } from "./services/toast.service";
+import { ToastComponent } from "./components/toast/toast.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "users", pathMatch: "full" },
@@ -60,8 +61,6 @@ const routes: Routes = [
     SharedModule,
     RouterModule.forRoot(routes)
   ],
-  declarations: [],
-  exports: [],
   providers: [SessionService, AuthGuardService]
 })
 export class AppRoutingModule {}

@@ -28,7 +28,7 @@ import { NgbdModalBasic } from './modal/modal.component';
         NavigationComponent,
         TypographyComponent,
         NucleoiconsComponent,
-        NgbdModalBasic
+        NgbdModalBasic,
     ],
     exports:[ ComponentsComponent ]
 })
