@@ -29,7 +29,7 @@ var userSchema = mongoose.Schema({
     month: Number,
     year: Number
   }, // 23rd july 2018
-  followers: Array, // ["134wr3","1q2easd2"]
+  friends: Array, // ["134wr3","1q2easd2"]
   posts: Array,
   profile_pic: String, // /public/profile_pic/username/user.png
   chat_rooms: Array, // ["1234", "3456"]
@@ -42,7 +42,9 @@ var userSchema = mongoose.Schema({
     enum: Object.values(require("../utils/user-roles")),
     required: true,
     default: 0
-  } // user roles
+  }, // user roles
+  following: [{ type: mongoose.Schema.ObjectId, ref: "users" }],
+  followers: [{ type: mongoose.Schema.ObjectId, ref: "users" }]
 });
 
 // before save has password
