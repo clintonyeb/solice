@@ -1,0 +1,4 @@
+<ngb-toast [header]="'Toast #'+index+' here!'"
+  *ngFor="let toast of toasts; index as index" (hide)="toasts.splice(index, 1)">
+  <!-- Content here -->
+</ngb-toast>
