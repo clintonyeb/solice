@@ -6,5 +6,6 @@
 export const environment = {
   production: false,
   server_url: "http://localhost:3000/api/v1",
-  WEB_SOCKET_URL: "ws://localhost:3000/ws"
+  WEB_SOCKET_URL: "ws://localhost:3000/ws",
+  FILE_UPLOAD: "4ef91c4509b63866a03c9aee317920eb"
 };

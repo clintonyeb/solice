@@ -1,29 +1,31 @@
 <div class="profile-page">
   <div class="wrapper">
-    <div class="page-header page-header-small" filter-color="orange">
-      <div
-        class="page-header-image rellax-header"
-        data-rellax-speed="-8"
-        style="background-image: url('assets/img/bg5.jpg') ;"
-      ></div>
-      <div class="container" *ngIf="user">
-        <div class="content-center">
-          <div class="photo-container">
-            <img src="assets/img/ryan.jpg" alt="" />
-          </div>
-          <h3 class="title">{{ user.firstname + " " + user.lastname }}</h3>
+    <div class="container" *ngIf="user">
+      <div class="content-center">
+        <div class="photo-container" style="height: 15rem; width: 15rem;">
+          <img src="assets/img/ryan.jpg" alt="" />
         </div>
+        <h3 class="title">{{ user.firstname + " " + user.lastname }}</h3>
+        <p class="pb-0">
+          <svg height="36" width="36" class="blinking">
+            <circle
+              cx="18"
+              cy="18"
+              r="6"
+              [attr.fill]="status ? 'blue' : 'red'"
+            />
+            Sorry, your browser does not support inline SVG.
+          </svg>
+          {{ status ? "Online" : "Offline" }}
+        </p>
       </div>
     </div>
     <div class="section pt-0" *ngIf="user">
       <div class="container">
-        <h5 class="title">About me</h5>
-        <p class="description">
-          {{ user.bio }}
-        </p>
-        <div class="row">
+        <p class="text-primary" [innerHTML]="user.bio"></p>
+        <div class="row mt-5">
           <div class="col-md-12">
-            <h4 class="title text-center">Friends Online</h4>
+            <p class="text-left pull-left text-muted">Friends Active</p>
             <!--  Friends Here-->
           </div>
         </div>

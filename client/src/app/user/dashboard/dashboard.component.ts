@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { SessionService } from '../../services/session.service';
-import { Router } from '@angular/router';
+import { Component, OnInit } from "@angular/core";
+import { SessionService } from "../../services/session.service";
+import { Router } from "@angular/router";
+import { UsersService } from "../../services/users.service";
 
 @Component({
   selector: "app-dashboard",
@@ -9,7 +10,13 @@ import { Router } from '@angular/router';
 })
 export class DashboardComponent implements OnInit {
   authenticated = false;
-  constructor(private sessionService: SessionService, private router: Router) {}
+  active = false;
+
+  constructor(
+    private sessionService: SessionService,
+    private userService: UsersService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.authenticateUser();
@@ -17,12 +24,14 @@ export class DashboardComponent implements OnInit {
 
   authenticateUser() {
     this.sessionService.validateToken((err, res) => {
-      if (err) { return this.router.navigate([
-                 "/session/login",
-                 { message: "Please login to continue" }]
-      );
+      if (err) {
+        return this.router.navigate([
+          "/session/login",
+          { message: "Please login to continue" }
+        ]);
       }
       this.authenticated = true;
+      this.userService.goActive().subscribe(d => (this.active = d));
     });
   }
 }
