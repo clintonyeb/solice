@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
-import { environment } from "../../environments/environment";
 import { getServerURL } from '../utils/helpers';
 
 @Injectable()
@@ -9,7 +8,7 @@ export class SessionService {
 
   login(data) {
     const url: string = getServerURL("login");
-    return  this.http.post(url, data);
+    return this.http.post(url, data);
   }
 
   register(data) {
@@ -37,17 +36,23 @@ export class SessionService {
     if (!token) {
       return cb(err);
     }
-    const headers = new HttpHeaders({"Authorization": `Bearer ${token}`});
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
     const url: string = getServerURL("authenticate");
-    this.http.get(url, {
-      headers
-    }).subscribe(
-      () => cb(null),
-      e => cb(e)
-    );
+    this.http
+      .get(url, {
+        headers
+      })
+      .subscribe(
+        () => cb(null),
+        e => cb(e)
+      );
   }
 
   saveSession(data) {
     localStorage.setItem("token", data.token);
+  }
+
+  makePost(url, data) {
+    return this.http.post(url, data);
   }
 }
