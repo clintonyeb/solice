@@ -1,0 +1,36 @@
+<div class="profile-feed pt-4" *ngIf="feed">
+  <div
+    class="d-flex align-items-start profile-feed-item"
+    *ngFor="let post of feed; index as i;"
+  >
+    <img
+      src="https://bootdey.com/img/Content/avatar/avatar2.png"
+      alt="profile"
+      class="img-sm rounded-circle"
+    />
+    <div class="ml-4">
+      <h6>
+        Dylan Silva
+        <small class="ml-4 text-muted"
+          ><i class="mdi mdi-clock mr-1"></i>{{post.created | timeago:live}}</small
+        >
+      </h6>
+      <p>
+       {{post.text}}
+      </p>
+      <img
+      *ngIf="post.photo"
+        [src]="post.photo"
+        alt="Image"
+        class="rounded mw-100"
+      />
+      <p class="small text-muted mt-2 mb-0">
+        <span> <i class="mdi mdi-star mr-1"></i>4 </span>
+        <span class="ml-2"> <i class="mdi mdi-comment mr-1"></i>11 </span>
+        <span class="ml-2">
+          <i class="mdi mdi-reply"></i>
+        </span>
+      </p>
+    </div>
+  </div>
+</div>

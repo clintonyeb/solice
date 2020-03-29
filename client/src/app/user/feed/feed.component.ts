@@ -1,15 +1,112 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { UsersService } from "../../services/users.service";
+import { ToastService } from "../../services/toast.service";
+import { IPost } from '../../utils/interfaces';
+import { SessionService } from "../../services/session.service";
+import { UploadService } from "../../services/upload.service";
+import { HttpResponse, HttpEventType } from "@angular/common/http";
 
 @Component({
-  selector: 'app-feed',
-  templateUrl: './feed.component.html',
-  styleUrls: ['./feed.component.css']
+  selector: "app-feed",
+  templateUrl: "./feed.component.html",
+  styleUrls: ["./feed.component.css"]
 })
 export class FeedComponent implements OnInit {
+  @ViewChild("myPond") myPond: any;
+  focus;
+  feed: Array<IPost>;
 
-  constructor() { }
+  // post form
+  form = new FormGroup({
+    text: new FormControl("", [Validators.required])
+  });
+
+  pondOptions = {
+    class: "my-filepond",
+    multiple: false,
+    labelIdle: "Drop files here or click to browse",
+    acceptedFileTypes: "image/jpeg, image/png"
+  };
+
+  pondFiles = [];
+
+  constructor(
+    private modalService: NgbModal,
+    private userService: UsersService,
+    private toastService: ToastService,
+    private uploadService: UploadService
+  ) {}
 
   ngOnInit(): void {
+    this.getFeed();
   }
 
+  open(content) {
+    this.modalService.open(content, { ariaLabelledBy: "modal-basic-title" });
+  }
+
+  pondHandleInit() {
+    console.log("FilePond has initialized", this.myPond);
+  }
+
+  pondHandleAddFile(event: any) {
+    console.log("A file was added", event);
+    this.pondFiles.splice(0, 1, event.file.file);
+  }
+
+  onPostSubmit() {
+    if (this.pondFiles.length) {
+      this.processPhoto(this.pondFiles[0]).subscribe(
+        event => {
+          if (event.type == HttpEventType.UploadProgress) {
+            const percentDone = Math.round((100 * event.loaded) / event.total);
+            console.log(`File is ${percentDone}% loaded.`);
+          } else if (event instanceof HttpResponse) {
+            console.log("File is completely loaded!");
+            const res = event.body.data;
+            const data = this.form.value;
+            if (res.thumb) {
+              data["photo"] = res.thumb.url;
+            } else {
+              data["photo"] = res.image.url;
+            }
+            
+            this.submit(data);
+          }
+        },
+        err => {}
+      );
+    } else {
+      this.submit(this.form.value);
+    }
+  }
+
+  submit(data) {
+    this.userService.createPost(data).subscribe(
+      (data: IPost) => {
+        this.modalService.dismissAll();
+        this.toastService.show("Post", "Post created successfully...");
+        this.form.reset();
+        this.feed.unshift(data);
+      },
+      err => console.log(err)
+    );
+  }
+
+  getFeed() {
+    this.userService.getPosts().subscribe(
+      data => {
+        console.log(data, "feed");
+        this.feed = <IPost[]>data;
+      },
+      err => console.log(err)
+    );
+  }
+
+  processPhoto(file: File) {
+    const url = "https://api.imgbb.com/1/upload";
+    return this.uploadService.uploadFile(url, file);
+  }
 }
