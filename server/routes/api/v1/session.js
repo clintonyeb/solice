@@ -5,13 +5,16 @@ var userService = require("../../../services").users;
 var HttpStatus = require("http-status-codes");
 
 router.post("/signup", function(req, res) {
-  userService.createNew(req.body, (err, data) => {
+  console.log("here1");
+  userService.createUser(req.body, (err, data) => {
+    console.log("here");
+
     if (err) {
       return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
         error: err.message
       });
     }
-    res.render("users", data);
+    res.json(data);
   });
 });
 

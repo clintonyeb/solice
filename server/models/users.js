@@ -29,7 +29,6 @@ var userSchema = mongoose.Schema({
     month: Number,
     year: Number
   }, // 23rd july 2018
-  friends: Array, // ["134wr3","1q2easd2"]
   posts: Array,
   profile_pic: String, // /public/profile_pic/username/user.png
   chat_rooms: Array, // ["1234", "3456"]

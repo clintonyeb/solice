@@ -4,6 +4,7 @@ var router = express.Router();
 var userService = require("../../../services").users;
 const authorize = require("../../../utils/authorize");
 const ROLES = require("../../../utils/user-roles");
+var HttpStatus = require("http-status-codes");
 
 // JWT validation error handler
 router.use(
@@ -19,10 +20,48 @@ router.get("/authenticate", function(req, res) {
 });
 
 router.get("/user", function(req, res) {
-  const user = req.user.data;
+  const user = req.user;
   userService.getUser(user._id, (err, user) => {
     if (err || !user) return res.status(404).send("No user found");
-    res.render("users", user);
+    res.json(user);
+  });
+});
+
+// router.get("/user/:id", function(req, res) {
+//   userService.getUser(id, (err, user) => {
+//     if (err || !user) return res.status(404).send("No user found");
+//     res.render("users", user);
+//   });
+// });
+
+router.get("/active", function(req, res) {
+  const user = req.user;
+  userService.getUser(user._id, (err, user) => {
+    if (err || !user) return res.status(404).send("No user found");
+    res.json(user);
+  });
+});
+
+router.get("/posts", function(req, res) {
+  const user = req.user;
+  userService.getPosts(user._id, (err, posts) => {
+    if (err || !user)
+      return res.status(HttpStatus.NOT_FOUND).send("Error retrieving posts");
+    res.json(posts);
+  });
+});
+
+router.post("/posts", function(req, res) {
+  const user = req.user;
+  const _post = req.body;
+  _post["postedBy"] = user;
+  userService.createPost(_post, (err, post) => {
+    if (err || !post)
+      return res
+        .status(HttpStatus.UNPROCESSABLE_ENTITY)
+        .send("Error creating post");
+    res.contentType("application/json");
+    res.status(HttpStatus.CREATED).json(post);
   });
 });
 

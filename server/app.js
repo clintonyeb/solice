@@ -15,7 +15,7 @@ const apiRoutes = require("./routes/api/v1");
 var app = express();
 
 app.use(cors());
-app.use(logger(process.env.NODE_ENV));
+app.use(logger("tiny"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -36,13 +36,13 @@ app.use("/", indexRouter);
 apiRoutes.forEach(route => app.use("/api/v1", route));
 
 app.use(function(err, req, res, next) {
+  console.error(err);
   if (err.name === "UnauthorizedError") {
-    res.status(401).json("Invalid token received with request...");
+    return res.status(401).json({ error: "Cannot authenticate request..." });
   }
-});
-
-app.use(function(err, req, res, next) {
-  res.status(HttpStatus.NOT_FOUND).json("Path does noe exit");
+  res.status(HttpStatus.NOT_FOUND).json({
+    error: "An error occurred whiles processing request.."
+  });
 });
 
 module.exports = app;

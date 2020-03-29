@@ -1,4 +1,4 @@
 module.exports = [
-  require('./session'),
-  require('./users'),
+  require("./session"),
+  require("./users")
 ];

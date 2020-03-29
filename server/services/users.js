@@ -1,6 +1,7 @@
 var User = require("../models/users");
+var Post = require("../models/posts");
 // const a = require("array-tools");
-// const _ = require("lodash/_arrayIncludes");
+const _ = require("lodash/_arrayIncludes");
 
 const error = new Error("Record not found...");
 
@@ -26,64 +27,76 @@ function getUser(id, cb) {
   });
 }
 
-// function checkSpace(name) {
-//   var charSplit = name.split("");
-//   //console.log(charSplit)
-//   return _(charSplit, " ");
-// }
+function getPosts(userId, cb) {
+  Post.find({ postedBy: userId }, (err, posts) => {
+    return cb(err, posts);
+  });
+}
 
-// function createNew(obj, cb) {
-//   if (checkSpace(obj.username)) {
-//     return cb(new Error("Invalid username provided"));
-//   } else {
-//     User.findOne({ username: obj.username }).exec((err, user) => {
-//       if (user) {
-//         return cb(new Error("User with username already exists"));
-//       } else {
-//         let bio = "";
-//         if (obj.dob) {
-//           bio = `Hey there! I'm ${obj.firstname} ;)! Wish me on ${obj.dob.day} ${obj.dob.month}`;
-//         } else {
-//           bio = `Hey there! I'm ${obj.firstname}`;
-//         }
-//         var newUser = new User({
-//           username: obj.username,
-//           firstname: obj.firstname,
-//           lastname: obj.lastname,
-//           dob: obj.dob,
-//           bio: bio,
-//           profile_pic: "/images/logo/logo.png",
-//           posts: [],
-//           followers: [],
-//           lastLogin: new Date(),
-//           password: obj.password
-//         });
-//         newUser.save((err, res) => {
-//           return cb(err, res);
-//         });
-//       }
-//     });
-//   }
-// }
+function createPost(post, cb) {
+  var newPost = new Post(post);
+  newPost.save((err, res) => {
+    return cb(err, res);
+  });
+}
 
+function checkSpace(name) {
+  var charSplit = name.split("");
+  //console.log(charSplit)
+  return _(charSplit, " ");
+}
 
+function createUser(obj, cb) {
+  if (checkSpace(obj.username)) {
+    console.log("herecscacacascas");
+    return cb(new Error("Invalid username provided"));
+  }
+  console.log("mmsmsamdms");
 
-// function forgotPassword(obj, cb) {
-//   findOne(obj, (err, user) => {
-//     if (err) return err;
-//     const token = user.generateToken();
-//     cb(null, token);
-//   });
-// }
+  User.findOne({ username: obj.username }, (err, user) => {
+    if (user) {
+      return cb(new Error("User with username already exists"));
+    }
 
-// function updatePassword(obj, cb) {
-//   findOne(obj, (err, user) => {
-//     if (err) return err;
-//     if (user.token != obj.token)
-//       return new Error("Cannot change password, invalid token");
-//     user.save(cb);
-//   });
-// }
+    let bio = "";
+    if (obj.dob) {
+      bio = `Hey there! I'm ${obj.firstname} ;)! Wish me on ${obj.dob.day} ${obj.dob.month}`;
+    } else {
+      bio = `Hey there! I'm ${obj.firstname}`;
+    }
+    var newUser = new User({
+      username: obj.username,
+      firstname: obj.firstname,
+      lastname: obj.lastname,
+      dob: obj.dob,
+      bio: bio,
+      profile_pic: "/images/logo/logo.png",
+      password: obj.password
+    });
+    console.log("here");
+
+    newUser.save((err, res) => {
+      return cb(err, res);
+    });
+  });
+}
+
+function forgotPassword(obj, cb) {
+  findOne(obj, (err, user) => {
+    if (err) return err;
+    const token = user.generateToken();
+    cb(null, token);
+  });
+}
+
+function updatePassword(obj, cb) {
+  findOne(obj, (err, user) => {
+    if (err) return err;
+    if (user.token != obj.token)
+      return new Error("Cannot change password, invalid token");
+    user.save(cb);
+  });
+}
 
 // function search(opt, cb) {
 //   User.find({ username: { $gt: opt } }).exec((err, results) => {
@@ -159,9 +172,11 @@ function getUser(id, cb) {
 
 // Expose all the api...
 module.exports = {
-  // createNew: createNew,
-  authenticate: authenticate,
+  createUser,
+  authenticate,
   getUser,
+  createPost,
+  getPosts
   // getAll: getAll,
   // comment: comment,
   // like: like,

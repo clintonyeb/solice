@@ -1,8 +1,15 @@
-import { Component, OnInit, ViewChild, Renderer2, Inject, ElementRef } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { NavbarComponent } from 'app/shared/navbar/navbar.component';
-import { Router, NavigationEnd } from '@angular/router';
-import { DOCUMENT, Location } from '@angular/common';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  Renderer2,
+  Inject,
+  ElementRef
+} from "@angular/core";
+import { Subscription } from "rxjs";
+import { NavbarComponent } from "app/shared/navbar/navbar.component";
+import { Router, NavigationEnd } from "@angular/router";
+import { DOCUMENT, Location } from "@angular/common";
 
 @Component({
   selector: "app-user",
@@ -31,7 +38,7 @@ export class UserComponent implements OnInit {
         } else {
           window.document.activeElement.scrollTop = 0;
         }
-        this.navbar.sidebarClose();
+        this.navbar && this.navbar.sidebarClose();
 
         this.renderer.listen("window", "scroll", event => {
           const number = window.scrollY;

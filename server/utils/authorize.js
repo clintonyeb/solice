@@ -3,7 +3,7 @@ module.exports = function(role) {
     const error = new Error("Does not have authorization to this resource");
     error.name = "UnauthorizedError";
 
-    const user = req.user.data;
+    const user = req.user;
     if (!user) return next(error);
     if (user.role < role) return next(error);
     next();
