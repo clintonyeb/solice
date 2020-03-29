@@ -1,2 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~bootstrap/scss/bootstrap.scss";
+@import "~filepond/dist/filepond.min.css";
+
+.form-control {
+  height: 100%;
+  font-size: 1rem !important;
+}
