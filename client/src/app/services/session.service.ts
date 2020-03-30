@@ -50,6 +50,7 @@ export class SessionService {
 
   saveSession(data) {
     localStorage.setItem("token", data.token);
+    localStorage.setItem("userId", data._id);
   }
 
   makePost(url, data) {
