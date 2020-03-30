@@ -129,14 +129,12 @@ export class UsersService {
   }
 
   getComments(postId) {
-    const url = getServerURL(`posts/comments?postId=${postId}`);
+    const url = getServerURL(`posts/${postId}/comments`);
     return this.http.get(url);
   }
 
   deleteComment(postId, commentId) {
-    const url = getServerURL(
-      `posts/comments?postId=${postId}&commentId=${commentId}`
-    );
+    const url = getServerURL(`posts/${postId}/comments/${commentId}`);
     return this.http.delete(url);
   }
 

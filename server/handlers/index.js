@@ -148,8 +148,8 @@ function commentPost(req, res, next) {
 
 function deleteComment(req, res, next) {
   return userService.deleteComment(
-    req.query.postId,
-    req.query.commentId,
+    req.params.postId,
+    req.params.commentId,
     (err, post) => {
       if (err)
         return res
@@ -161,7 +161,7 @@ function deleteComment(req, res, next) {
 }
 
 function getComments(req, res, next) {
-  return userService.getComments(req.query.postId, (err, comments) => {
+  return userService.getComments(req.params.postId, (err, comments) => {
     if (err)
       return res
         .status(HttpStatus.UNPROCESSABLE_ENTITY)

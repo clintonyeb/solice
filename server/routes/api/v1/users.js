@@ -37,8 +37,8 @@ router.post("/posts", handlers.createPost);
 router.post("/posts/like", handlers.likePost);
 
 router.post("/posts/comment", handlers.commentPost);
-router.get("/posts/comments", handlers.getComments);
+router.get("/posts/:postId/comments", handlers.getComments);
 
-router.delete("/posts/comments", handlers.deleteComment);
+router.delete("/posts/:postId/comments/:commentId", handlers.deleteComment);
 
 module.exports = router;
