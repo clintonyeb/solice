@@ -2,6 +2,15 @@
 @import "~bootstrap/scss/bootstrap.scss";
 @import "~filepond/dist/filepond.min.css";
 
+// semantic ui components
+@import "~semantic-ui-feed/feed.min.css";
+@import "~semantic-ui-comment/comment.min.css";
+@import "~semantic-ui-item/item.min.css";
+@import "~semantic-ui-card/card.min.css";
+@import "~semantic-ui-image/image.min.css";
+@import "~semantic-ui-button/button.min.css";
+@import "~semantic-ui-grid/grid.min.css";
+
 .form-control {
   height: 100%;
   font-size: 1rem !important;
