@@ -45,10 +45,10 @@
             People
           </a>
           <ng-template ngbNavContent>
-            <app-feed-friend type="all"></app-feed-friend>
+            <app-feed-friend type="all" (profile)="profile.emit($event)"></app-feed-friend>
           </ng-template>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" href="#">
             <i class="mdi mdi-attachment"></i>
             Posts
@@ -56,7 +56,7 @@
           <ng-template ngbNavContent>
             <app-story type="posts"></app-story>
           </ng-template>
-        </li>
+        </li> -->
       </ul>
     </div>
 

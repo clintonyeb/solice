@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, Output, EventEmitter } from "@angular/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { UsersService } from "../../services/users.service";
@@ -16,6 +16,7 @@ export class FeedComponent implements OnInit {
   @ViewChild("myPond") myPond: any;
   @ViewChild("feed") feed: any;
   @ViewChild("feed") posts: any;
+  @Output() profile = new EventEmitter<string>();
   focus;
 
   // post form

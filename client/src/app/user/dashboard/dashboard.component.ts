@@ -12,8 +12,9 @@ import { BioComponent } from "../bio/bio.component";
 export class DashboardComponent implements OnInit {
   authenticated = false;
   active = false;
-  mainSection = "feed"; // feed, profile
+  mainSection = "feed"; // feed, profile, view-profile
   @ViewChild("bio") bio: BioComponent;
+  userId: string;
 
   constructor(
     private sessionService: SessionService,
@@ -41,5 +42,10 @@ export class DashboardComponent implements OnInit {
   editProfile(value: string) {
     this.bio.refresh();
     this.mainSection = value;
+  }
+
+  viewProfile(value: string) {
+    this.userId = value;
+    this.mainSection = "view-profile";
   }
 }

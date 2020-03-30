@@ -4,11 +4,19 @@
       <app-bio [status]="active" (main)="editProfile($event)" #bio></app-bio>
     </div>
     <div class="col-6 p-4">
-      <app-feed *ngIf="mainSection === 'feed'"></app-feed>
+      <app-feed
+        *ngIf="mainSection === 'feed'"
+        (profile)="viewProfile($event)"
+      ></app-feed>
       <app-update-profile
         *ngIf="mainSection === 'profile'"
         (main)="editProfile($event)"
       ></app-update-profile>
+      <app-profile
+        *ngIf="mainSection === 'view-profile'"
+        (main)="editProfile($event)"
+        [userId]="userId"
+      ></app-profile>
     </div>
     <div class="col p-4">
       <app-activity></app-activity>

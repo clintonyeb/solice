@@ -14,6 +14,8 @@ router.get("/authenticate", handlers.authenticate);
 
 router.get("/user", handlers.getUser);
 
+router.get("/user/:id", handlers.getUserForId);
+
 router.get("/users", handlers.getUsers);
 
 router.put("/users", handlers.updateUser);

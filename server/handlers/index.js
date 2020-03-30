@@ -13,6 +13,13 @@ function getUser(req, res, next) {
   });
 }
 
+function getUserForId(req, res, next) {
+  userService.getUser(req.params.id, (err, user) => {
+    if (err || !user) return res.status(404).send("No user found");
+    res.json(user);
+  });
+}
+
 function getUsers(req, res, next) {
   const type = req.query.type;
   const user = req.user;
@@ -58,11 +65,15 @@ function goOnline(req, res, next) {
 
 function getPosts(req, res, next) {
   const user = req.user;
-  userService.getPosts(user._id, (err, posts) => {
-    if (err)
-      return res.status(HttpStatus.NOT_FOUND).send("Error retrieving posts");
-    res.json(posts);
-  });
+  userService.getPosts(
+    user._id,
+    (err, posts) => {
+      if (err)
+        return res.status(HttpStatus.NOT_FOUND).send("Error retrieving posts");
+      res.json(posts);
+    },
+    req.query.page
+  );
 }
 
 function getFeed(req, res, next) {
@@ -116,11 +127,16 @@ function searchFeed(req, res, next) {
   }
 
   const user = req.user;
-  userService.searchFeed(user._id, query, (err, posts) => {
-    if (err)
-      return res.status(HttpStatus.NOT_FOUND).send("Error retrieving posts");
-    res.json(posts);
-  }, req.query.page);
+  userService.searchFeed(
+    user._id,
+    query,
+    (err, posts) => {
+      if (err)
+        return res.status(HttpStatus.NOT_FOUND).send("Error retrieving posts");
+      res.json(posts);
+    },
+    req.query.page
+  );
 }
 
 function likePost(req, res, next) {
@@ -200,5 +216,6 @@ module.exports = {
   commentPost,
   deleteComment,
   getComments,
-  updateUser
+  updateUser,
+  getUserForId
 };

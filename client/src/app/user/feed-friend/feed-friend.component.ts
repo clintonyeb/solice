@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { IUser } from "../../utils/interfaces";
 import { UsersService } from "../../services/users.service";
 import { FormControl } from "@angular/forms";
@@ -10,6 +10,7 @@ import { FormControl } from "@angular/forms";
 })
 export class FeedFriendComponent implements OnInit {
   @Input() type: string;
+  @Output() profile = new EventEmitter<string>();
   people: Array<IUser>;
   query = new FormControl("");
 
@@ -44,7 +45,9 @@ export class FeedFriendComponent implements OnInit {
       .subscribe((data: IUser) => this.people.splice(index, 1, data));
   }
 
-  visitProfile(personId) {}
+  visitProfile(personId) {
+    this.profile.emit(personId);
+  }
 
   isFollowing(user): boolean {
     if (!user || !user.followers) return false;
