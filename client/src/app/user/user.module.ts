@@ -1,6 +1,6 @@
 import { UserComponent } from "./user.component";
 import { NgModule } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { ReactiveFormsModule } from "@angular/forms";
 
 import { LandingComponent } from "../user/landing/landing.component";
 import { ProfileComponent } from "../user/profile/profile.component";
@@ -19,7 +19,7 @@ import { StoryComponent } from "./story/story.component";
 import { FilePondModule, registerPlugin } from 'ngx-filepond';
 // import and register filepond file type validation plugin
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
-import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+// import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 
 import { BrowserModule } from '@angular/platform-browser';
 registerPlugin(FilePondPluginFileValidateType);
@@ -27,6 +27,7 @@ registerPlugin(FilePondPluginFileValidateType);
 
 import { TimeagoModule } from "ngx-timeago";
 import { FeedFriendComponent } from './feed-friend/feed-friend.component';
+import { UpdateProfileComponent } from './update-profile/update-profile.component';
 
 @NgModule({
   imports: [
@@ -50,7 +51,7 @@ import { FeedFriendComponent } from './feed-friend/feed-friend.component';
     DashboardComponent,
     StoryComponent,
     FeedFriendComponent,
-    FeedFriendComponent
+    UpdateProfileComponent
   ]
 })
 export class UserModule {}

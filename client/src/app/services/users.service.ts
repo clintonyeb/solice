@@ -3,14 +3,14 @@ import { getServerURL } from "../utils/helpers";
 import { HttpClientService } from "./http-client.service";
 import { environment } from "../../environments/environment";
 import { Observable } from "rxjs/Rx";
-import { IPost } from "../utils/interfaces";
+import { Router } from "@angular/router";
 
 @Injectable({
   providedIn: "root"
 })
 export class UsersService {
   socket;
-  constructor(private http: HttpClientService) {}
+  constructor(private http: HttpClientService, private router: Router) {}
 
   getUser() {
     const url: string = getServerURL("user");
@@ -134,7 +134,27 @@ export class UsersService {
   }
 
   deleteComment(postId, commentId) {
-     const url = getServerURL(`posts/comments?postId=${postId}&commentId=${commentId}`);
-     return this.http.delete(url);
+    const url = getServerURL(
+      `posts/comments?postId=${postId}&commentId=${commentId}`
+    );
+    return this.http.delete(url);
+  }
+
+  logout() {
+    const url: string = getServerURL("logout");
+    return this.http.get(url).subscribe(res => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+
+      this.router.navigate([
+        "/session/login",
+        { message: "You have been logged out..." }
+      ]);
+    });
+  }
+
+  updateUser(user) {
+    const url: string = getServerURL("users");
+    return this.http.put(url, user);
   }
 }

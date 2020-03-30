@@ -43,11 +43,9 @@ router.post("/login", function(req, res) {
 router.get(
   "/logout",
   jwt({ secret: process.env["SECRET_KEY"], credentialsRequired: false }),
-  function(req, res) {
-    const user = req.user;
-    if (!user) res.end();
-    user.token = null;
-    user.save(() => res.end());
+  async function(req, res) {
+    const user = await userService.logout(req.user._id);
+    res.json(user);
   }
 );
 

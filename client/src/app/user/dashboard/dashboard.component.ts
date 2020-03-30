@@ -1,7 +1,8 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { SessionService } from "../../services/session.service";
 import { Router } from "@angular/router";
 import { UsersService } from "../../services/users.service";
+import { BioComponent } from "../bio/bio.component";
 
 @Component({
   selector: "app-dashboard",
@@ -11,6 +12,8 @@ import { UsersService } from "../../services/users.service";
 export class DashboardComponent implements OnInit {
   authenticated = false;
   active = false;
+  mainSection = "feed"; // feed, profile
+  @ViewChild("bio") bio: BioComponent;
 
   constructor(
     private sessionService: SessionService,
@@ -33,5 +36,10 @@ export class DashboardComponent implements OnInit {
       this.authenticated = true;
       this.userService.goActive().subscribe(d => (this.active = d));
     });
+  }
+
+  editProfile(value: string) {
+    this.bio.refresh();
+    this.mainSection = value;
   }
 }

@@ -170,6 +170,15 @@ function getComments(req, res, next) {
   });
 }
 
+async function updateUser(req, res, next) {
+  try {
+    const user = userService.updateUser(req.user._id, req.body);
+    res.json(user);
+  } catch (error) {
+    res.status(HttpStatus.UNPROCESSABLE_ENTITY).send("Error retrieving posts");
+  }
+}
+
 module.exports = {
   authenticate,
   getUser,
@@ -188,5 +197,6 @@ module.exports = {
   likePost,
   commentPost,
   deleteComment,
-  getComments
+  getComments,
+  updateUser
 };

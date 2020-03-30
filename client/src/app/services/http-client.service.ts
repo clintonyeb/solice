@@ -23,6 +23,12 @@ export class HttpClientService {
     });
   }
 
+  put(url, data) {
+    return this.http.put(url, data, {
+      headers: this.headers
+    });
+  }
+
   delete(url) {
     return this.http.delete(url, {
       headers: this.headers

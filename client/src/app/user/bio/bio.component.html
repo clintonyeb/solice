@@ -1,31 +1,79 @@
-<div class="profile-page">
+<div class="profile-page" *ngIf="user">
   <div class="wrapper">
-    <div class="container" *ngIf="user">
+    <div class="container">
       <div class="content-center">
         <div class="photo-container" style="height: 15rem; width: 15rem;">
-          <img src="assets/img/ryan.jpg" alt="" />
+          <img
+            [src]="user.profile_pic"
+            alt="Profile Picture"
+            style="width: 100%; height: 100%"
+          />
         </div>
         <h3 class="title">{{ user.firstname + " " + user.lastname }}</h3>
-        <p class="pb-0">
+        <p class="pb-0 text-center">
           <svg height="36" width="36" class="blinking">
             <circle
               cx="18"
               cy="18"
               r="6"
-              [attr.fill]="status ? 'blue' : 'red'"
+              [attr.fill]="status ? 'red' : 'yellow'"
             />
-            Sorry, your browser does not support inline SVG.
           </svg>
           {{ status ? "Online" : "Offline" }}
         </p>
       </div>
     </div>
-    <div class="section pt-0" *ngIf="user">
+    <div class="section pt-0">
       <div class="container">
-        <p class="text-primary" [innerHTML]="user.bio"></p>
-        <div class="row mt-5">
+        <p class="text-secondary lead text-center" [innerHTML]="user.bio"></p>
+
+        <div class="row">
+          <button class="btn btn-outline-primary col" (click)="logout()">
+            <svg
+              class="bi bi-lock-fill mr-2"
+              width="1em"
+              height="1em"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect width="11" height="9" x="2.5" y="7" rx="2" />
+              <path
+                fill-rule="evenodd"
+                d="M4.5 4a3.5 3.5 0 117 0v3h-1V4a2.5 2.5 0 00-5 0v3h-1V4z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            Logout
+          </button>
+          <button class="btn btn-primary col" (click)="editProfile()">
+            <svg
+              class="bi bi-person-bounding-box mr-2"
+              width="1em"
+              height="1em"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M1.5 1a.5.5 0 00-.5.5v3a.5.5 0 01-1 0v-3A1.5 1.5 0 011.5 0h3a.5.5 0 010 1h-3zM11 .5a.5.5 0 01.5-.5h3A1.5 1.5 0 0116 1.5v3a.5.5 0 01-1 0v-3a.5.5 0 00-.5-.5h-3a.5.5 0 01-.5-.5zM.5 11a.5.5 0 01.5.5v3a.5.5 0 00.5.5h3a.5.5 0 010 1h-3A1.5 1.5 0 010 14.5v-3a.5.5 0 01.5-.5zm15 0a.5.5 0 01.5.5v3a1.5 1.5 0 01-1.5 1.5h-3a.5.5 0 010-1h3a.5.5 0 00.5-.5v-3a.5.5 0 01.5-.5z"
+                clip-rule="evenodd"
+              />
+              <path
+                fill-rule="evenodd"
+                d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 100-6 3 3 0 000 6z"
+                clip-rule="evenodd"
+              />
+            </svg>
+
+            Manage Profile
+          </button>
+        </div>
+        <hr />
+        <div class="row mt-3">
           <div class="col-md-12">
-            <p class="text-left pull-left text-muted">Friends Active</p>
+            <p class="text-center text-info font-italic">Active Friends</p>
             <!--  Friends Here-->
           </div>
         </div>

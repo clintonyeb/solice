@@ -2,7 +2,7 @@ import { SessionService } from "./../../services/session.service";
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { IAlert, MessageAlert, ErrorAlert } from "app/utils/alert";
-import { ActivatedRoute, ParamMap, Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
   selector: "app-login",

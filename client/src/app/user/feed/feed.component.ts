@@ -3,8 +3,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { UsersService } from "../../services/users.service";
 import { ToastService } from "../../services/toast.service";
-import { IPost, IUser } from "../../utils/interfaces";
-import { SessionService } from "../../services/session.service";
+import { IPost } from "../../utils/interfaces";
 import { UploadService } from "../../services/upload.service";
 import { HttpResponse, HttpEventType } from "@angular/common/http";
 
@@ -75,7 +74,7 @@ export class FeedComponent implements OnInit {
             this.submit(data);
           }
         },
-        err => {}
+        () => {}
       );
     } else {
       this.submit(this.form.value);

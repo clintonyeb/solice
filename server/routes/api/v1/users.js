@@ -16,6 +16,8 @@ router.get("/user", handlers.getUser);
 
 router.get("/users", handlers.getUsers);
 
+router.put("/users", handlers.updateUser);
+
 router.post("/users/follow", handlers.followUser);
 
 router.post("/users/unfollow", handlers.unFollowUser);

@@ -77,6 +77,7 @@ function getPost(id, cb) {
 function createPost(post, cb) {
   var newPost = new Post(post);
   newPost.save((err, res) => {
+    if (err) return err;
     return getPost(res._id, cb);
   });
 }
@@ -289,6 +290,20 @@ function getComments(postId, cb) {
     });
 }
 
+async function logout(userId) {
+  const user = await User.findById(userId);
+  const res = await user.update({ token: null });
+  return res;
+}
+
+async function updateUser(userId, data) {
+  delete data["_id"];
+  const user = await User.findById(userId);
+  const res = await user.update(data);
+  console.log(res, "user");
+  return res;
+}
+
 // Expose all the api...
 module.exports = {
   createUser,
@@ -307,5 +322,6 @@ module.exports = {
   likePost,
   getComments,
   commentPost,
-  deleteComment
+  deleteComment,
+  updateUser
 };
