@@ -34,7 +34,7 @@ router.post("/login", function(req, res) {
       }
       user.lastLogin = new Date();
       user.save(() => {
-        res.json({ token: token });
+        res.json({ token: token, _id: user._id });
       });
     });
   });

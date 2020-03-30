@@ -18,33 +18,49 @@
             Feed
           </a>
           <ng-template ngbNavContent>
-            <app-story [feed]="feed"></app-story>
+            <app-story type="feed" #feed></app-story>
           </ng-template>
         </li>
         <li class="nav-item" ngbNavItem>
           <a class="nav-link" ngbNavLink>
             <i class="mdi mdi-newspaper"></i>
-            Friends
+            Following
           </a>
-          <ng-template ngbNavContent>Friends</ng-template>
+          <ng-template ngbNavContent>
+            <app-feed-friend type="following"></app-feed-friend>
+          </ng-template>
         </li>
         <li class="nav-item" ngbNavItem>
           <a class="nav-link" ngbNavLink>
             <i class="mdi mdi-newspaper"></i>
-            Profile
+            Followers
           </a>
-          <ng-template ngbNavContent>Profile</ng-template>
+          <ng-template ngbNavContent>
+            <app-feed-friend type="followers"></app-feed-friend>
+          </ng-template>
+        </li>
+        <li class="nav-item" ngbNavItem>
+          <a class="nav-link" ngbNavLink>
+            <i class="mdi mdi-newspaper"></i>
+            People
+          </a>
+          <ng-template ngbNavContent>
+            <app-feed-friend type="all"></app-feed-friend>
+          </ng-template>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">
             <i class="mdi mdi-attachment"></i>
-            History
+            Posts
           </a>
+          <ng-template ngbNavContent>
+            <app-story type="posts"></app-story>
+          </ng-template>
         </li>
       </ul>
     </div>
 
-    <div [ngbNavOutlet]="nav"></div>
+    <div [ngbNavOutlet]="nav" class="mt-4"></div>
   </div>
 
   <ng-template #content let-modal>

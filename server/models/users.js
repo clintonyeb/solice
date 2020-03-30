@@ -9,7 +9,7 @@ var userSchema = mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   }, // _username_
   password: {
     type: String,
@@ -17,11 +17,11 @@ var userSchema = mongoose.Schema({
   }, // 123rikwdjbfp2ioeurroasodfj[OJ[Ojsjdfag*wef
   firstname: {
     type: String,
-    required: true
+    required: true,
   }, // firstName
   lastname: {
     type: String,
-    required: true
+    required: true,
   }, // lastName
   bio: String, // A new bio
   dob: {
@@ -82,10 +82,10 @@ userSchema.methods.generateToken = function(cb) {
   const secret = process.env["SECRET_KEY"];
   jwt.sign(
     {
-        _id: user._id,
-        username: user.username,
-        iat: Math.floor(Date.now() / 1000) - 30,
-        role: user.role
+      _id: user._id,
+      username: user.username,
+      iat: Math.floor(Date.now() / 1000) - 30,
+      role: user.role
     },
     secret,
     {
@@ -100,6 +100,7 @@ userSchema.methods.generateToken = function(cb) {
   );
 };
 
+userSchema.index({ username: "text", firstname: "text", lastname: "text" });
 module.exports = mongoose.model("users", userSchema);
 
 // create the model for users and expose it to our app

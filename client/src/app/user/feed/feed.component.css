@@ -1,0 +1,12 @@
+.profile-navbar .nav-item .nav-link {
+  color: #6c7293;
+}
+
+.profile-navbar .nav-item .nav-link[aria-selected="true"] {
+  color: #f96332;
+  border-bottom: #f96332 2px solid;
+}
+
+.profile-navbar .nav-item .nav-link i {
+  font-size: 1.25rem;
+}

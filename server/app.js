@@ -31,6 +31,8 @@ mongoose.connect(require("./config/app").db.connectionUri, {
   useNewUrlParser: true
 });
 
+mongoose.set("debug", true);
+
 // set api routes
 app.use("/", indexRouter);
 apiRoutes.forEach(route => app.use("/api/v1", route));

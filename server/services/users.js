@@ -1,6 +1,5 @@
 var User = require("../models/users");
 var Post = require("../models/posts");
-// const a = require("array-tools");
 const _ = require("lodash/_arrayIncludes");
 
 const error = new Error("Record not found...");
@@ -19,24 +18,65 @@ function authenticate(obj, cb) {
 function getUser(id, cb) {
   User.findById(id, (err, user) => {
     if (err) return cb(err, false);
-    if (user) {
+    return cb(err, user);
+  });
+}
+
+function getUserFull(id, type, cb) {
+  User.findById(id)
+    .populate(type)
+    .exec((err, user) => {
+      if (err) return cb(err, false);
       return cb(err, user);
-    } else {
-      return cb(error, false);
-    }
+    });
+}
+
+function getAllUsers(user, cb) {
+  User.find({ role: 0, _id: { $ne: user } }, (err, users) => {
+    if (err) return cb(err, false);
+    return cb(err, users);
   });
 }
 
 function getPosts(userId, cb) {
-  Post.find({ postedBy: userId }, (err, posts) => {
-    return cb(err, posts);
+  Post.find({ postedBy: userId })
+    .populate("postedBy")
+    .sort({ created: "desc" })
+    .limit(20)
+    .exec((err, posts) => {
+      return cb(err, posts);
+    });
+}
+
+function getFeed(userId, cb) {
+  User.findById(userId, (err, user) => {
+    if (err) return cb(err, false);
+    const following = user.following;
+    following.push(userId); // include self
+    Post.find({ postedBy: { $in: following } })
+      .populate("postedBy")
+      .sort({ created: "desc" })
+      .limit(20)
+      .exec((err, posts) => {
+        return cb(err, posts);
+      });
   });
+}
+
+function getPost(id, cb) {
+  Post.findById(id)
+    .populate("postedBy")
+    .exec((err, post) => {
+      console.log(err, post);
+      if (err) return cb(err);
+      return cb(err, post);
+    });
 }
 
 function createPost(post, cb) {
   var newPost = new Post(post);
   newPost.save((err, res) => {
-    return cb(err, res);
+    return getPost(res._id, cb);
   });
 }
 
@@ -48,10 +88,8 @@ function checkSpace(name) {
 
 function createUser(obj, cb) {
   if (checkSpace(obj.username)) {
-    console.log("herecscacacascas");
     return cb(new Error("Invalid username provided"));
   }
-  console.log("mmsmsamdms");
 
   User.findOne({ username: obj.username }, (err, user) => {
     if (user) {
@@ -70,10 +108,9 @@ function createUser(obj, cb) {
       lastname: obj.lastname,
       dob: obj.dob,
       bio: bio,
-      profile_pic: "/images/logo/logo.png",
+      profile_pic: "https://bootdey.com/img/Content/avatar/avatar2.png",
       password: obj.password
     });
-    console.log("here");
 
     newUser.save((err, res) => {
       return cb(err, res);
@@ -98,77 +135,82 @@ function updatePassword(obj, cb) {
   });
 }
 
-// function search(opt, cb) {
-//   User.find({ username: { $gt: opt } }).exec((err, results) => {
-//     if (err) return cb(err, false);
-//     if (results) {
-//       return cb(err, results);
-//     } else {
-//       return cb(null, false);
-//     }
-//   });
-// }
+/**
+ *
+ * @param {String} userId current user id
+ * @param {String} otherId other user id
+ * @param {Function} cb callback function
+ */
+function follow(userId, otherId, cb) {
+  User.findById(userId, (err, user) => {
+    if (err) return cb(err, false);
+    User.findById(otherId, (err, other) => {
+      if (err) return cb(err, false);
+      user.following.push(other._id);
+      other.followers.push(user._id);
+      user.save(err => other.save(err => cb(err, other)));
+    });
+  });
+}
 
-// function getAll(cb) {
-//   User.find({}).exec((err, users) => {
-//     if (err) return cb(err, false);
-//     if (users) {
-//       return cb(null, users);
-//     } else {
-//       return cb(null, false);
-//     }
-//   });
-// }
+function unfollow(userId, otherId, cb) {
+  User.findById(userId, (err, user) => {
+    if (err) return cb(err, false);
+    User.findById(otherId, (err, other) => {
+      if (err) return cb(err, false);
+      const uI = user.following.findIndex(d => d === otherId);
+      const oI = user.followers.findIndex(d => d === userId);
+      user.following.splice(uI, 1);
+      other.followers.splice(oI, 1);
+      user.save(err => other.save(err => cb(err, other)));
+    });
+  });
+}
 
-// function deleteOne(opt, cb) {
-//   //if(typeof opt !== Object) cb("Must be a javascript object.");
-//   User.deleteOne(opt).exec((err, res) => {
-//     if (err) return cb(err, null);
-//     else if (res.n == 0) {
-//       return cb(null, true);
-//     }
-//   });
-// }
-// function comment(user, comment, _id, cb) {
-//   User.findOne(user).exec((err, obj) => {
-//     if (!obj) return cb("Does not exist.", null);
-//     for (var i = 0; i < obj.posts.length; i++) {
-//       if (obj.posts[i]._id == _id) {
-//         obj.posts[i].comments.push(comment);
-//         obj.notifications.push({
-//           msg: `@${comment.by} reacted to your post.`,
-//           link: `/u/${comment.by}`,
-//           time: new Date()
-//         });
-//         obj = new User(obj);
-//         obj.save((err, res) => {
-//           return cb(err, res);
-//         });
-//       }
-//     }
-//   });
-// }
-// function like(user, like, _id, cb) {
-//   console.log(user);
-//   User.findOne(user).exec((err, obj) => {
-//     if (!obj) return cb("Does not exist.", null);
-//     //console.log(obj);
-//     for (var i = 0; i < obj.posts.length; i++) {
-//       if (obj.posts[i]._id == _id) {
-//         obj.posts[i].likes.push(like.by);
-//         obj.notifications.push({
-//           msg: `@${like.by} liked your post.`,
-//           link: `/u/${like.by}`,
-//           time: new Date()
-//         });
-//         obj = new User(obj);
-//         obj.save(err => {
-//           cb(err, true);
-//         });
-//       }
-//     }
-//   });
-// }
+// sort by textscore
+function searchUsers(userId, query, cb) {
+  User.find(
+    {
+      role: 0,
+      _id: { $ne: userId },
+      $text: { $search: query }
+    },
+    (err, users) => {
+      if (err) return cb(err, false);
+      return cb(err, users);
+    }
+  );
+}
+
+function searchPosts(userId, query, cb) {
+  User.findById(userId, (err, user) => {
+    if (err) return cb(err, false);
+    const following = user.following;
+    following.push(userId); // include self
+    Post.find({ postedBy: { $in: following } })
+      .populate("postedBy")
+      .sort({ created: "desc" })
+      .limit(20)
+      .exec((err, posts) => {
+        return cb(err, posts);
+      });
+  });
+}
+
+function searchFeed(userId, query, cb) {
+  User.findById(userId, (err, user) => {
+    if (err) return cb(err, false);
+    const following = user.following;
+    following.push(userId); // include self
+    Post.find({ postedBy: { $in: following }, $text: { $search: query } })
+      .populate("postedBy")
+      .sort({ created: "desc" })
+      .limit(20)
+      .exec((err, posts) => {
+        return cb(err, posts);
+      });
+  });
+}
 
 // Expose all the api...
 module.exports = {
@@ -176,9 +218,13 @@ module.exports = {
   authenticate,
   getUser,
   createPost,
-  getPosts
-  // getAll: getAll,
-  // comment: comment,
-  // like: like,
-  // search: search
+  getPosts,
+  getAllUsers,
+  follow,
+  unfollow,
+  getUserFull,
+  getFeed,
+  searchPosts,
+  searchUsers,
+  searchFeed
 };

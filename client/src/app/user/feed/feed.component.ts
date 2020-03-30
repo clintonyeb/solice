@@ -3,7 +3,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { UsersService } from "../../services/users.service";
 import { ToastService } from "../../services/toast.service";
-import { IPost } from '../../utils/interfaces';
+import { IPost, IUser } from "../../utils/interfaces";
 import { SessionService } from "../../services/session.service";
 import { UploadService } from "../../services/upload.service";
 import { HttpResponse, HttpEventType } from "@angular/common/http";
@@ -15,8 +15,9 @@ import { HttpResponse, HttpEventType } from "@angular/common/http";
 })
 export class FeedComponent implements OnInit {
   @ViewChild("myPond") myPond: any;
+  @ViewChild("feed") feed: any;
+  @ViewChild("feed") posts: any;
   focus;
-  feed: Array<IPost>;
 
   // post form
   form = new FormGroup({
@@ -39,9 +40,7 @@ export class FeedComponent implements OnInit {
     private uploadService: UploadService
   ) {}
 
-  ngOnInit(): void {
-    this.getFeed();
-  }
+  ngOnInit(): void {}
 
   open(content) {
     this.modalService.open(content, { ariaLabelledBy: "modal-basic-title" });
@@ -72,7 +71,7 @@ export class FeedComponent implements OnInit {
             } else {
               data["photo"] = res.image.url;
             }
-            
+
             this.submit(data);
           }
         },
@@ -89,17 +88,12 @@ export class FeedComponent implements OnInit {
         this.modalService.dismissAll();
         this.toastService.show("Post", "Post created successfully...");
         this.form.reset();
-        this.feed.unshift(data);
-      },
-      err => console.log(err)
-    );
-  }
 
-  getFeed() {
-    this.userService.getPosts().subscribe(
-      data => {
-        console.log(data, "feed");
-        this.feed = <IPost[]>data;
+        if (this.feed) {
+          this.feed.add(data);
+        } else if (this.posts) {
+          this.posts.add(data);
+        }
       },
       err => console.log(err)
     );

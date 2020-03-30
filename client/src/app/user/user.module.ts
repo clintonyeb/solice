@@ -26,6 +26,7 @@ registerPlugin(FilePondPluginFileValidateType);
 // registerPlugin(FilePondPluginImagePreview);
 
 import { TimeagoModule } from "ngx-timeago";
+import { FeedFriendComponent } from './feed-friend/feed-friend.component';
 
 @NgModule({
   imports: [
@@ -47,7 +48,9 @@ import { TimeagoModule } from "ngx-timeago";
     ActivityComponent,
     BioComponent,
     DashboardComponent,
-    StoryComponent
+    StoryComponent,
+    FeedFriendComponent,
+    FeedFriendComponent
   ]
 })
 export class UserModule {}

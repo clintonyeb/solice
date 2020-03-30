@@ -1,0 +1,52 @@
+<div class="input-group mb-4">
+  <input
+    type="text"
+    class="form-control"
+    placeholder="Enter name of person to search"
+    [formControl]="query"
+    (keyup.enter)="searchPeople()"
+  />
+  <div class="input-group-append">
+    <button
+      class="btn btn-secondary search"
+      type="button"
+      (click)="searchPeople()"
+    >
+      <i class="fa fa-search"></i>
+    </button>
+  </div>
+</div>
+
+<div class="ui cards" *ngIf="people">
+  <div class="card" *ngFor="let person of people; index as i">
+    <div class="content">
+      <img class="right floated mini ui image" [src]="person.profile_pic" />
+      <div class="header">
+        {{ person.firstname + " " + person.lastname }}
+      </div>
+      <div class="meta">
+        Friends of Veronika
+      </div>
+      <div class="description">
+        {{ person.bio }}
+      </div>
+    </div>
+    <div class="extra content">
+      <div class="ui two buttons">
+        <div
+          class="ui basic green button"
+          (click)="
+            isFollowing(person)
+              ? unFollowUser(person._id, i)
+              : followUser(person._id, i)
+          "
+        >
+          {{ isFollowing(person) ? "Unfollow" : "Follow" }}
+        </div>
+        <div class="ui basic blue button" (click)="visitProfile(person._id)">
+          Profile
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

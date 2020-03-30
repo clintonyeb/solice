@@ -17,6 +17,16 @@ export class UsersService {
     return this.http.get(url);
   }
 
+  getUsers() {
+    const url: string = getServerURL("users");
+    return this.http.get(url);
+  }
+
+  getUsersFilter(type) {
+    const url: string = getServerURL(`users?type=${type}`);
+    return this.http.get(url);
+  }
+
   getUserById(id) {
     let url: string = `user/${id}`;
     url = getServerURL(url);
@@ -70,6 +80,41 @@ export class UsersService {
 
   getPosts() {
     const url: string = getServerURL("posts");
+    return this.http.get(url);
+  }
+
+  getFeed() {
+    console.log(this);
+    const url: string = getServerURL("feed");
+    return this.http.get(url);
+  }
+
+  followUser(userId) {
+    const url: string = getServerURL("users/follow");
+    return this.http.post(url, { _id: userId });
+  }
+
+  unFollowUser(userId) {
+    const url: string = getServerURL("users/unfollow");
+    return this.http.post(url, { _id: userId });
+  }
+
+  visitUser(userId) {}
+
+  searchPeople(query, type) {
+    const url: string = getServerURL(
+      `users/search?query=${query}&type=${type}`
+    );
+    return this.http.get(url);
+  }
+
+  searchFeed(query, type) {
+    const url: string = getServerURL(`feed/search?query=${query}&type=${type}`);
+    return this.http.get(url);
+  }
+
+  searchPosts(query) {
+    const url: string = getServerURL(`posts/search?query=${query}`);
     return this.http.get(url);
   }
 }
