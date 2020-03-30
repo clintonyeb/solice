@@ -32,4 +32,11 @@ router.get("/feed/search", handlers.searchFeed);
 
 router.post("/posts", handlers.createPost);
 
+router.post("/posts/like", handlers.likePost);
+
+router.post("/posts/comment", handlers.commentPost);
+router.get("/posts/comments", handlers.getComments);
+
+router.delete("/posts/comments", handlers.deleteComment);
+
 module.exports = router;

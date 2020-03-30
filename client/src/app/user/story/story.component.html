@@ -7,7 +7,7 @@
     (keyup.enter)="search()"
   />
   <div class="input-group-append">
-    <button class="btn btn-secondary search" type="button" (click)="search()">
+    <button class="btn btn-primary search" type="button" (click)="search()">
       <i class="fa fa-search"></i>
     </button>
   </div>
@@ -32,7 +32,87 @@
         <a><img [src]="post.photo"/></a>
       </div>
       <div class="meta">
-        <a class="like"> <i class="like icon"></i> 5 Likes </a>
+        <a
+          class="like mr-4"
+          (click)="likePost(post, i)"
+          [class.text-primary]="hasLiked(post)"
+        >
+          <i class="fa fa-thumbs-up"></i>
+          {{ post.likes.length }} Likes
+        </a>
+        <a
+          class="like"
+          (click)="getComments(post)"
+          [class.text-primary]="hasCommented(post)"
+        >
+          <i class="fa fa-comment"></i>
+          {{ post.comments.length }} Comments
+        </a>
+      </div>
+      <div class="extra images mb-3" *ngIf="commentActive === post">
+        <div class="ui comments">
+          <div class="comment" *ngFor="let comment of comments; index as j">
+            <a class="avatar">
+              <img [src]="comment.postedBy.profile_pic" />
+            </a>
+            <div class="content">
+              <a class="author">{{
+                comment.postedBy.firstname + " " + comment.postedBy.lastname
+              }}</a>
+              <div class="metadata">
+                <div class="date mr-3">{{ comment.created | timeago }}</div>
+                <a (click)="deleteComment(post, comment, i)"
+                  ><svg
+                    class="bi bi-trash-fill"
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg"
+                    *ngIf="isMyComment(comment.postedBy)"
+                  >
+                    <title id="svg1title">Delete Comment</title>
+                    <path
+                      fill-rule="evenodd"
+                      d="M2.5 1a1 1 0 00-1 1v1a1 1 0 001 1H3v9a2 2 0 002 2h6a2 2 0 002-2V4h.5a1 1 0 001-1V2a1 1 0 00-1-1H10a1 1 0 00-1-1H7a1 1 0 00-1 1H2.5zm3 4a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7a.5.5 0 01.5-.5zM8 5a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7A.5.5 0 018 5zm3 .5a.5.5 0 00-1 0v7a.5.5 0 001 0v-7z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </a>
+              </div>
+              <div class="text">
+                {{ comment.text }}
+              </div>
+            </div>
+          </div>
+          <form
+            class="ui reply form"
+            [formGroup]="commentForm"
+            (ngSubmit)="commentPost(post, i)"
+          >
+            <div
+              class="input-group form-group-no-border input-lg"
+              [ngClass]="{ 'input-group-focus': focus1 === true }"
+            >
+              <textarea
+                placeholder="Enter comments here"
+                class="form-control"
+                style="height: 5rem !important;"
+                (focus)="focus1 = true"
+                (blur)="focus1 = false"
+                formControlName="text"
+                rows="3"
+              ></textarea>
+            </div>
+            <button
+              type="submit"
+              [disabled]="!commentForm.valid"
+              class="btn btn-primary btn-round"
+            >
+              <i class="fa fa-edit"></i> Add Comment
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   </div>

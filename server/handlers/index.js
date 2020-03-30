@@ -121,6 +121,55 @@ function searchFeed(req, res, next) {
   });
 }
 
+function likePost(req, res, next) {
+  return userService.likePost(req.user._id, req.body.postId, (err, post) => {
+    if (err)
+      return res
+        .status(HttpStatus.UNPROCESSABLE_ENTITY)
+        .send("Error retrieving posts");
+    return res.json(post);
+  });
+}
+
+function commentPost(req, res, next) {
+  return userService.commentPost(
+    req.user._id,
+    req.body.postId,
+    req.body.text,
+    (err, post) => {
+      if (err)
+        return res
+          .status(HttpStatus.UNPROCESSABLE_ENTITY)
+          .send("Error retrieving posts");
+      return res.json(post);
+    }
+  );
+}
+
+function deleteComment(req, res, next) {
+  return userService.deleteComment(
+    req.query.postId,
+    req.query.commentId,
+    (err, post) => {
+      if (err)
+        return res
+          .status(HttpStatus.UNPROCESSABLE_ENTITY)
+          .send("Error retrieving posts");
+      return res.json(post);
+    }
+  );
+}
+
+function getComments(req, res, next) {
+  return userService.getComments(req.query.postId, (err, comments) => {
+    if (err)
+      return res
+        .status(HttpStatus.UNPROCESSABLE_ENTITY)
+        .send("Error retrieving posts");
+    return res.json(comments);
+  });
+}
+
 module.exports = {
   authenticate,
   getUser,
@@ -135,5 +184,9 @@ module.exports = {
   followUser,
   unFollowUser,
   searchFeed,
-  searchUsers
+  searchUsers,
+  likePost,
+  commentPost,
+  deleteComment,
+  getComments
 };

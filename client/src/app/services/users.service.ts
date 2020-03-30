@@ -117,4 +117,24 @@ export class UsersService {
     const url: string = getServerURL(`posts/search?query=${query}`);
     return this.http.get(url);
   }
+
+  likePost(postId) {
+    const url = getServerURL("posts/like");
+    return this.http.post(url, { postId });
+  }
+
+  commentPost(postId, text) {
+    const url = getServerURL("posts/comment");
+    return this.http.post(url, { postId, text });
+  }
+
+  getComments(postId) {
+    const url = getServerURL(`posts/comments?postId=${postId}`);
+    return this.http.get(url);
+  }
+
+  deleteComment(postId, commentId) {
+     const url = getServerURL(`posts/comments?postId=${postId}&commentId=${commentId}`);
+     return this.http.delete(url);
+  }
 }

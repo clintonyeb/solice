@@ -27,12 +27,14 @@ export interface Message {
 }
 
 export interface IComment {
+  _id: string;
   text: string;
   created: Date;
   postedBy: IUser;
 }
 
 export interface IPost {
+  _id: string;
   text: string;
   photo: string;
   likes: Array<IUser>;

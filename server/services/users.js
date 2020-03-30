@@ -1,5 +1,6 @@
 var User = require("../models/users");
 var Post = require("../models/posts");
+var Comment = require("../models/comments");
 const _ = require("lodash/_arrayIncludes");
 
 const error = new Error("Record not found...");
@@ -212,6 +213,82 @@ function searchFeed(userId, query, cb) {
   });
 }
 
+function likePost(userId, postId, cb) {
+  getPost(postId, (err, post) => {
+    if (err) return cb(err);
+    const f = post.likes.indexOf(userId);
+    if (f > -1) {
+      post.likes.splice(f, 1);
+    } else {
+      post.likes.push(userId);
+    }
+
+    post.save(err => cb(err, post));
+  });
+}
+
+async function commentPost(userId, postId, text, cb) {
+  getPost(postId, async (err, post) => {
+    if (err) return cb(err);
+
+    const comment = await new Comment({
+      text: text,
+      postedBy: userId
+    }).save();
+
+    post.comments.push(comment._id);
+
+    post.save(err => {
+      Post.findById(post._id)
+        .populate("postedBy")
+        .populate({
+          path: "comments",
+          populate: {
+            path: "postedBy",
+            model: "users"
+          }
+        })
+        .exec((err, post) => {
+          if (err) return cb(err);
+          return cb(err, post);
+        });
+    });
+  });
+}
+
+function deleteComment(postId, commentId, cb) {
+  Post.update({ _id: postId }, { $pull: { comments: commentId } }, err => {
+    Post.findById(postId)
+      .populate("postedBy")
+      .populate({
+        path: "comments",
+        populate: {
+          path: "postedBy",
+          model: "users"
+        }
+      })
+      .exec((err, post) => {
+        if (err) return cb(err);
+        return cb(err, post);
+      });
+  });
+}
+
+function getComments(postId, cb) {
+  Post.findById(postId)
+    .populate({
+      path: "comments",
+      populate: {
+        path: "postedBy",
+        model: "users"
+      }
+    })
+    .exec((err, post) => {
+      if (err) return cb(err);
+      return cb(err, post.comments);
+    });
+}
+
 // Expose all the api...
 module.exports = {
   createUser,
@@ -226,5 +303,9 @@ module.exports = {
   getFeed,
   searchPosts,
   searchUsers,
-  searchFeed
+  searchFeed,
+  likePost,
+  getComments,
+  commentPost,
+  deleteComment
 };
