@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { IPost, IComment, IUser } from "../../utils/interfaces";
 import { UsersService } from "../../services/users.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
@@ -11,10 +11,12 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 export class StoryComponent implements OnInit {
   feed: Array<IPost>;
   @Input() type: string;
+
   query = new FormControl("");
   commentActive: IPost;
   comments: Array<IComment>;
   focus1: any;
+  page = 1;
 
   commentForm = new FormGroup({
     text: new FormControl("", [Validators.required])
@@ -42,6 +44,36 @@ export class StoryComponent implements OnInit {
       this.userService.getFeed().subscribe(
         data => {
           this.feed = <IPost[]>data;
+        },
+        err => console.log(err)
+      );
+    }
+  }
+
+  getMoreFeed() {
+    const _page = this.page + 1;
+    if (this.query.value) {
+      return this.userService.searchFeed(this.query.value, this.type, _page).subscribe(
+        (data: Array<IPost>) => {
+          this.feed = this.feed.concat(<IPost[]>data);
+          this.page = _page;
+        },
+        err => console.error(err)
+      );
+    }
+    if (this.type === "posts") {
+      this.userService.getPosts(_page).subscribe(
+        data => {
+          this.feed = this.feed.concat(<IPost[]>data);
+          this.page = _page;
+        },
+        err => console.log(err)
+      );
+    } else {
+      this.userService.getFeed(_page).subscribe(
+        data => {
+          this.feed = this.feed.concat(<IPost[]>data);
+          this.page = _page;
         },
         err => console.log(err)
       );
@@ -111,9 +143,16 @@ export class StoryComponent implements OnInit {
   }
 
   deleteComment(post, comment, index) {
-    return this.userService.deleteComment(post._id, comment._id).subscribe((data: IPost) => { 
-      this.feed.splice(index, 1, data);
-      this.getComments(data);
-    }, err => { });
+    return this.userService.deleteComment(post._id, comment._id).subscribe(
+      (data: IPost) => {
+        this.feed.splice(index, 1, data);
+        this.getComments(data);
+      },
+      err => {}
+    );
+  }
+
+  onScroll() {
+    this.getMoreFeed();
   }
 }

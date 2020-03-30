@@ -5,6 +5,8 @@ const _ = require("lodash/_arrayIncludes");
 
 const error = new Error("Record not found...");
 
+const LIMIT = 10;
+
 function authenticate(obj, cb) {
   User.findOne({ username: obj.username }).exec((err, user) => {
     if (err) return cb(new Error("Invalid username and password"));
@@ -43,13 +45,14 @@ function getPosts(userId, cb) {
   Post.find({ postedBy: userId })
     .populate("postedBy")
     .sort({ created: "desc" })
-    .limit(20)
+    .limit(LIMIT)
     .exec((err, posts) => {
       return cb(err, posts);
     });
 }
 
-function getFeed(userId, cb) {
+function getFeed(userId, cb, page) {
+  page = page || 1;
   User.findById(userId, (err, user) => {
     if (err) return cb(err, false);
     const following = user.following;
@@ -57,7 +60,8 @@ function getFeed(userId, cb) {
     Post.find({ postedBy: { $in: following } })
       .populate("postedBy")
       .sort({ created: "desc" })
-      .limit(20)
+      .skip(LIMIT * page - LIMIT)
+      .limit(LIMIT)
       .exec((err, posts) => {
         return cb(err, posts);
       });
@@ -120,23 +124,6 @@ function createUser(obj, cb) {
   });
 }
 
-function forgotPassword(obj, cb) {
-  findOne(obj, (err, user) => {
-    if (err) return err;
-    const token = user.generateToken();
-    cb(null, token);
-  });
-}
-
-function updatePassword(obj, cb) {
-  findOne(obj, (err, user) => {
-    if (err) return err;
-    if (user.token != obj.token)
-      return new Error("Cannot change password, invalid token");
-    user.save(cb);
-  });
-}
-
 /**
  *
  * @param {String} userId current user id
@@ -170,7 +157,7 @@ function unfollow(userId, otherId, cb) {
 }
 
 // sort by textscore
-function searchUsers(userId, query, cb) {
+function searchUsers(userId, query, cb, page) {
   User.find(
     {
       role: 0,
@@ -192,14 +179,15 @@ function searchPosts(userId, query, cb) {
     Post.find({ postedBy: { $in: following } })
       .populate("postedBy")
       .sort({ created: "desc" })
-      .limit(20)
+      .limit(LIMIT)
       .exec((err, posts) => {
         return cb(err, posts);
       });
   });
 }
 
-function searchFeed(userId, query, cb) {
+function searchFeed(userId, query, cb, page) {
+  page = page || 1;
   User.findById(userId, (err, user) => {
     if (err) return cb(err, false);
     const following = user.following;
@@ -207,7 +195,8 @@ function searchFeed(userId, query, cb) {
     Post.find({ postedBy: { $in: following }, $text: { $search: query } })
       .populate("postedBy")
       .sort({ created: "desc" })
-      .limit(20)
+      .skip(LIMIT * page - LIMIT)
+      .limit(LIMIT)
       .exec((err, posts) => {
         return cb(err, posts);
       });

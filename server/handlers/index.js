@@ -67,11 +67,15 @@ function getPosts(req, res, next) {
 
 function getFeed(req, res, next) {
   const user = req.user;
-  userService.getFeed(user._id, (err, posts) => {
-    if (err)
-      return res.status(HttpStatus.NOT_FOUND).send("Error retrieving posts");
-    res.json(posts);
-  });
+  userService.getFeed(
+    user._id,
+    (err, posts) => {
+      if (err)
+        return res.status(HttpStatus.NOT_FOUND).send("Error retrieving posts");
+      res.json(posts);
+    },
+    req.query.page
+  );
 }
 
 function createPost(req, res, next) {
@@ -106,8 +110,6 @@ function searchUsers(req, res, next) {
 }
 
 function searchFeed(req, res, next) {
-  console.log("search");
-
   const query = req.query.query;
   if (!query) {
     return getFeed(req, res, next);
@@ -118,7 +120,7 @@ function searchFeed(req, res, next) {
     if (err)
       return res.status(HttpStatus.NOT_FOUND).send("Error retrieving posts");
     res.json(posts);
-  });
+  }, req.query.page);
 }
 
 function likePost(req, res, next) {

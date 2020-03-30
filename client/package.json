@@ -37,6 +37,7 @@
     "jw-bootstrap-switch-ng2": "2.0.5",
     "ng2-nouislider": "1.7.13",
     "ngx-filepond": "^5.0.1",
+    "ngx-infinite-scroll": "^8.0.1",
     "ngx-timeago": "^1.0.4",
     "nouislider": "9.2.0",
     "rellax": "1.4.0",

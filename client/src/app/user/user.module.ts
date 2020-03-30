@@ -28,6 +28,7 @@ registerPlugin(FilePondPluginFileValidateType);
 import { TimeagoModule } from "ngx-timeago";
 import { FeedFriendComponent } from './feed-friend/feed-friend.component';
 import { UpdateProfileComponent } from './update-profile/update-profile.component';
+import { InfiniteScrollModule } from "ngx-infinite-scroll";
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import { UpdateProfileComponent } from './update-profile/update-profile.componen
     SharedModule,
     BrowserModule,
     FilePondModule,
+    InfiniteScrollModule,
     TimeagoModule.forRoot()
   ],
   declarations: [

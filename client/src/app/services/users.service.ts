@@ -78,14 +78,19 @@ export class UsersService {
     return this.http.post(url, post);
   }
 
-  getPosts() {
-    const url: string = getServerURL("posts");
+  getPosts(page?: number) {
+    let url;
+    if (page) url = `posts?page=${page}`;
+    else url = "posts";
+    url = getServerURL(url);
     return this.http.get(url);
   }
 
-  getFeed() {
-    console.log(this);
-    const url: string = getServerURL("feed");
+  getFeed(page?: number) {
+   let url;
+   if (page) url = `feed?page=${page}`;
+   else url = "feed";
+   url = getServerURL(url);
     return this.http.get(url);
   }
 
@@ -108,8 +113,8 @@ export class UsersService {
     return this.http.get(url);
   }
 
-  searchFeed(query, type) {
-    const url: string = getServerURL(`feed/search?query=${query}&type=${type}`);
+  searchFeed(query, type, page?: number) {
+    const url: string = getServerURL(`feed/search?query=${query}&type=${type}&page=${page}`);
     return this.http.get(url);
   }
 

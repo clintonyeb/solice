@@ -12,7 +12,7 @@
     </button>
   </div>
 </div>
-<div class="ui feed">
+<div class="ui feed" infiniteScroll (scrolled)="onScroll()">
   <div class="event" *ngFor="let post of feed; index as i">
     <div class="label">
       <img [src]="post.postedBy.profile_pic" />
