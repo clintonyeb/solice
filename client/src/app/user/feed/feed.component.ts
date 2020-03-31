@@ -21,7 +21,8 @@ export class FeedComponent implements OnInit {
 
   // post form
   form = new FormGroup({
-    text: new FormControl("", [Validators.required])
+    text: new FormControl("", [Validators.required]),
+    notify: new FormControl(true)
   });
 
   pondOptions = {

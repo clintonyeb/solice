@@ -45,7 +45,10 @@
             People
           </a>
           <ng-template ngbNavContent>
-            <app-feed-friend type="all" (profile)="profile.emit($event)"></app-feed-friend>
+            <app-feed-friend
+              type="all"
+              (profile)="profile.emit($event)"
+            ></app-feed-friend>
           </ng-template>
         </li>
         <!-- <li class="nav-item">
@@ -102,6 +105,18 @@
           >
           </file-pond>
         </div>
+        <div class="custom-control custom-checkbox">
+          <input
+            type="checkbox"
+            class="custom-control-input"
+            id="notify"
+            formControlName="notify"
+          />
+          <label class="custom-control-label" for="notify"
+            >Notify my followers</label
+          >
+        </div>
+
         <div class="modal-footer mt-2">
           <button
             type="submit"

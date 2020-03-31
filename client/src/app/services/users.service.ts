@@ -87,10 +87,10 @@ export class UsersService {
   }
 
   getFeed(page?: number) {
-   let url;
-   if (page) url = `feed?page=${page}`;
-   else url = "feed";
-   url = getServerURL(url);
+    let url;
+    if (page) url = `feed?page=${page}`;
+    else url = "feed";
+    url = getServerURL(url);
     return this.http.get(url);
   }
 
@@ -114,7 +114,9 @@ export class UsersService {
   }
 
   searchFeed(query, type, page?: number) {
-    const url: string = getServerURL(`feed/search?query=${query}&type=${type}&page=${page}`);
+    const url: string = getServerURL(
+      `feed/search?query=${query}&type=${type}&page=${page}`
+    );
     return this.http.get(url);
   }
 
@@ -159,5 +161,10 @@ export class UsersService {
   updateUser(user) {
     const url: string = getServerURL("users");
     return this.http.put(url, user);
+  }
+
+  getNotifications() {
+    const url: string = getServerURL("users/notifications");
+    return this.http.get(url);
   }
 }

@@ -1,4 +1,5 @@
 var userService = require("../services").users;
+const notiService = require("../services").noti;
 var HttpStatus = require("http-status-codes");
 
 function authenticate(req, res, next) {
@@ -43,6 +44,7 @@ function followUser(req, res, next) {
   userService.follow(user._id, body._id, (err, user) => {
     if (err || !user) return res.status(404).send("No user found");
     res.json(user);
+    notiService.followedUser(req.user._id, body._id);
   });
 }
 
@@ -60,6 +62,7 @@ function goOnline(req, res, next) {
   userService.getUser(user._id, (err, user) => {
     if (err) return res.status(404).send("No user found");
     res.json(user);
+    notiService.online(req.user._id);
   });
 }
 
@@ -100,18 +103,18 @@ function createPost(req, res, next) {
         .send("Error creating post");
     res.contentType("application/json");
     res.status(HttpStatus.CREATED).json(post);
+    if (req.body.notify) {
+      notiService.newPost(req.user._id, post._id);
+    }
   });
 }
 
 function searchUsers(req, res, next) {
   const query = req.query.query;
-
   if (!query) {
     return getUsers(req, res, next);
   }
-
   const type = req.query.type;
-
   const user = req.user;
   userService.searchUsers(user._id, query, (err, users) => {
     if (err)
@@ -125,7 +128,6 @@ function searchFeed(req, res, next) {
   if (!query) {
     return getFeed(req, res, next);
   }
-
   const user = req.user;
   userService.searchFeed(
     user._id,
@@ -145,7 +147,8 @@ function likePost(req, res, next) {
       return res
         .status(HttpStatus.UNPROCESSABLE_ENTITY)
         .send("Error retrieving posts");
-    return res.json(post);
+    res.json(post);
+    notiService.likedPost(req.user._id, post._id);
   });
 }
 
@@ -159,7 +162,8 @@ function commentPost(req, res, next) {
         return res
           .status(HttpStatus.UNPROCESSABLE_ENTITY)
           .send("Error retrieving posts");
-      return res.json(post);
+      res.json(post);
+      notiService.commentedPost(req.user._id, post._id);
     }
   );
 }
@@ -190,10 +194,22 @@ function getComments(req, res, next) {
 
 async function updateUser(req, res, next) {
   try {
-    const user = userService.updateUser(req.user._id, req.body);
+    const user = await userService.updateUser(req.user._id, req.body);
     res.json(user);
+    notiService.updatedProfile(req.user._id);
   } catch (error) {
     res.status(HttpStatus.UNPROCESSABLE_ENTITY).send("Error retrieving posts");
+  }
+}
+
+async function getNotifications(req, res, next) {
+  try {
+    const notifications = await userService.getNotifications(req.user._id);
+    res.json(notifications);
+  } catch (error) {
+    res
+      .status(HttpStatus.UNPROCESSABLE_ENTITY)
+      .send("Error retrieving notifications");
   }
 }
 
@@ -217,5 +233,6 @@ module.exports = {
   deleteComment,
   getComments,
   updateUser,
-  getUserForId
+  getUserForId,
+  getNotifications
 };

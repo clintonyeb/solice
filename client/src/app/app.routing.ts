@@ -8,8 +8,6 @@ import { HttpClientModule } from "@angular/common/http";
 import { LandingComponent } from "./user/landing/landing.component";
 import { LoginComponent } from "./session/login/login.component";
 import { RegisterComponent } from "./session/register/register.component";
-import { ProfileComponent } from "./user/profile/profile.component";
-import { FooterComponent } from "./shared/footer/footer.component";
 import { SessionComponent } from "./session/session.component";
 import { AuthGuardService } from "./services/auth-guard.service";
 import { SessionService } from "./services/session.service";
@@ -17,8 +15,6 @@ import { UserComponent } from "./user/user.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { SharedModule } from "./shared/shared.module";
 import { DashboardComponent } from "./user/dashboard/dashboard.component";
-import { ToastService } from "./services/toast.service";
-import { ToastComponent } from "./components/toast/toast.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "users", pathMatch: "full" },
@@ -42,8 +38,7 @@ const routes: Routes = [
     canActivate: [AuthGuardService],
     children: [
       { path: "", redirectTo: "feeds", pathMatch: "full" },
-      { path: "feeds", component: DashboardComponent },
-      { path: "profile", component: ProfileComponent }
+      { path: "feeds", component: DashboardComponent }
     ]
   },
   { path: "landing", component: LandingComponent },

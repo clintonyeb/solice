@@ -3,6 +3,7 @@ import { SessionService } from "../../services/session.service";
 import { Router } from "@angular/router";
 import { UsersService } from "../../services/users.service";
 import { BioComponent } from "../bio/bio.component";
+import { INotify, INotification } from '../../utils/interfaces';
 
 @Component({
   selector: "app-dashboard",

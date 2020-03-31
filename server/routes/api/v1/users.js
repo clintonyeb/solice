@@ -39,8 +39,11 @@ router.post("/posts", handlers.createPost);
 router.post("/posts/like", handlers.likePost);
 
 router.post("/posts/comment", handlers.commentPost);
+
 router.get("/posts/:postId/comments", handlers.getComments);
 
 router.delete("/posts/:postId/comments/:commentId", handlers.deleteComment);
+
+router.get("/users/notifications", handlers.getNotifications);
 
 module.exports = router;

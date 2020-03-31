@@ -42,3 +42,12 @@ export interface IPost {
   postedBy: IUser;
   created: Date;
 }
+
+export interface INotification {
+  type: number;
+  targetUser: IUser;
+  postedBy: IUser;
+  created: Date;
+  targetPost: IPost;
+  status: boolean;
+}

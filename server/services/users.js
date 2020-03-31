@@ -1,7 +1,7 @@
 var User = require("../models/users");
 var Post = require("../models/posts");
 var Comment = require("../models/comments");
-const _ = require("lodash/_arrayIncludes");
+// const _ = require("lodash/_arrayIncludes");
 
 const error = new Error("Record not found...");
 
@@ -86,16 +86,16 @@ function createPost(post, cb) {
   });
 }
 
-function checkSpace(name) {
-  var charSplit = name.split("");
-  //console.log(charSplit)
-  return _(charSplit, " ");
-}
+// function checkSpace(name) {
+//   var charSplit = name.split("");
+//   //console.log(charSplit)
+//   return _(charSplit, " ");
+// }
 
 function createUser(obj, cb) {
-  if (checkSpace(obj.username)) {
-    return cb(new Error("Invalid username provided"));
-  }
+  // if (checkSpace(obj.username)) {
+  //   return cb(new Error("Invalid username provided"));
+  // }
 
   User.findOne({ username: obj.username }, (err, user) => {
     if (user) {
@@ -280,17 +280,47 @@ function getComments(postId, cb) {
 }
 
 async function logout(userId) {
-  const user = await User.findById(userId);
-  const res = await user.update({ token: null });
-  return res;
+  // const user = await User.findById(userId);
+  // const res = await user.update({ token: null });
+  return true;
 }
 
 async function updateUser(userId, data) {
   delete data["_id"];
   const user = await User.findById(userId);
   const res = await user.update(data);
-  console.log(res, "user");
   return res;
+}
+
+async function getNotifications(userId) {
+  const user = await User.findById(userId)
+    .populate({
+      path: "notifications",
+      populate: {
+        path: "postedBy",
+        model: "users"
+      }
+    })
+    .populate({
+      path: "notifications",
+      populate: {
+        path: "targetUser",
+        model: "users"
+      }
+    })
+    .populate({
+      path: "notifications",
+      populate: {
+        path: "targetPost",
+        model: "posts"
+      }
+    })
+    .sort({ created: "desc" })
+    .limit(LIMIT)
+    .exec();
+  console.log(user);
+
+  return user.notifications;
 }
 
 // Expose all the api...
@@ -312,5 +342,7 @@ module.exports = {
   getComments,
   commentPost,
   deleteComment,
-  updateUser
+  updateUser,
+  getNotifications,
+  logout
 };

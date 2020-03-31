@@ -1,47 +1,41 @@
-// app/models/user.js
-// load the things we need
 var mongoose = require("mongoose");
 var bcrypt = require("bcrypt-nodejs");
 const jwt = require("jsonwebtoken");
 
-// define the schema for our user model
 var userSchema = mongoose.Schema({
   username: {
     type: String,
     required: true,
     unique: true,
-  }, // _username_
+  },
   password: {
     type: String,
     required: true
-  }, // 123rikwdjbfp2ioeurroasodfj[OJ[Ojsjdfag*wef
+  },
   firstname: {
     type: String,
     required: true,
-  }, // firstName
+  },
   lastname: {
     type: String,
     required: true,
-  }, // lastName
-  bio: String, // A new bio
+  },
+  bio: String,
   dob: {
     day: Number,
     month: Number,
     year: Number
-  }, // 23rd july 2018
+  }, 
   posts: Array,
-  profile_pic: String, // /public/profile_pic/username/user.png
-  chat_rooms: Array, // ["1234", "3456"]
-  lastLogin: String, // 10 min ago
-  notifications: Array, // [{msg:"New message from @user", link:"/chat/user"}]
-  developer: Boolean, // true or false
-  token: String, // authentication token
+  profile_pic: String,
+  lastLogin: String, 
+  notifications: [{ type: mongoose.Schema.ObjectId, ref: "notifications" }],
   role: {
     type: Number,
     enum: Object.values(require("../utils/user-roles")),
     required: true,
     default: 0
-  }, // user roles
+  },
   following: [{ type: mongoose.Schema.ObjectId, ref: "users" }],
   followers: [{ type: mongoose.Schema.ObjectId, ref: "users" }]
 });
@@ -94,7 +88,6 @@ userSchema.methods.generateToken = function(cb) {
     },
     function(err, token) {
       if (err) return cb(err);
-      user.token = token;
       cb(null, token);
     }
   );
