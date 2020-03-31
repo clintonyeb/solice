@@ -25,6 +25,7 @@ async function seed() {
   const admin = await createAdmin();
   await createUser();
   await generate(admin._id);
+  mongoose.connection.close();
   process.exit(0);
 }
 
