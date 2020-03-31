@@ -16,19 +16,20 @@ import { DashboardComponent } from "./dashboard/dashboard.component";
 import { StoryComponent } from "./story/story.component";
 
 // import filepond module
-import { FilePondModule, registerPlugin } from 'ngx-filepond';
+import { FilePondModule, registerPlugin } from "ngx-filepond";
 // import and register filepond file type validation plugin
-import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 // import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule } from "@angular/platform-browser";
 registerPlugin(FilePondPluginFileValidateType);
 // registerPlugin(FilePondPluginImagePreview);
 
 import { TimeagoModule } from "ngx-timeago";
-import { FeedFriendComponent } from './feed-friend/feed-friend.component';
-import { UpdateProfileComponent } from './update-profile/update-profile.component';
+import { FeedFriendComponent } from "./feed-friend/feed-friend.component";
+import { UpdateProfileComponent } from "./update-profile/update-profile.component";
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
+import { UsersService } from "../services/users.service";
 
 @NgModule({
   imports: [
@@ -54,6 +55,7 @@ import { InfiniteScrollModule } from "ngx-infinite-scroll";
     StoryComponent,
     FeedFriendComponent,
     UpdateProfileComponent
-  ]
+  ],
+  providers: [UsersService]
 })
 export class UserModule {}

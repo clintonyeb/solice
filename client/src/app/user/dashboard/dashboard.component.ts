@@ -3,7 +3,7 @@ import { SessionService } from "../../services/session.service";
 import { Router } from "@angular/router";
 import { UsersService } from "../../services/users.service";
 import { BioComponent } from "../bio/bio.component";
-import { INotify, INotification } from '../../utils/interfaces';
+import { INotify, INotification } from "../../utils/interfaces";
 
 @Component({
   selector: "app-dashboard",
@@ -27,6 +27,10 @@ export class DashboardComponent implements OnInit {
     this.authenticateUser();
   }
 
+  ngOnDestroy() {
+    this.userService.closeConnections()
+  }
+
   authenticateUser() {
     this.sessionService.validateToken((err, res) => {
       if (err) {
@@ -36,8 +40,23 @@ export class DashboardComponent implements OnInit {
         ]);
       }
       this.authenticated = true;
-      this.userService.goActive().subscribe(d => (this.active = d));
+      this.userService.subject.subscribe(
+        (d: any) => {
+          console.log(d, "online");
+
+          if (d === true || d === false) {
+            this.active = d;
+          }
+        },
+        err => {
+          console.log(err);
+        }
+      );
     });
+
+    setTimeout(() => {
+      this.userService.goActive();
+    }, 500);
   }
 
   editProfile(value: string) {

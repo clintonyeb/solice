@@ -6,7 +6,7 @@ var userSchema = mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: true,
+    unique: true
   },
   password: {
     type: String,
@@ -14,22 +14,38 @@ var userSchema = mongoose.Schema({
   },
   firstname: {
     type: String,
-    required: true,
+    required: true
   },
   lastname: {
     type: String,
-    required: true,
+    required: true
   },
   bio: String,
   dob: {
     day: Number,
     month: Number,
     year: Number
-  }, 
+  },
   posts: Array,
   profile_pic: String,
-  lastLogin: String, 
-  notifications: [{ type: mongoose.Schema.ObjectId, ref: "notifications" }],
+  lastLogin: String,
+  notifications: [
+    {
+      type: {
+        type: Number,
+        enum: Object.values(require("../utils/noti-types")),
+        required: true
+      },
+      targetUser: { type: mongoose.Schema.ObjectId, ref: "users" },
+      targetPost: { type: mongoose.Schema.ObjectId, ref: "posts" },
+      created: { type: Date, default: Date.now },
+      postedBy: { type: mongoose.Schema.ObjectId, ref: "users" },
+      status: {
+        type: Boolean,
+        default: false
+      }
+    }
+  ],
   role: {
     type: Number,
     enum: Object.values(require("../utils/user-roles")),

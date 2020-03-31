@@ -2,14 +2,14 @@ import { Injectable } from "@angular/core";
 import { getServerURL } from "../utils/helpers";
 import { HttpClientService } from "./http-client.service";
 import { environment } from "../../environments/environment";
-import { Observable } from "rxjs/Rx";
+import { Observable, Subject } from "rxjs/Rx";
 import { Router } from "@angular/router";
+import { INotification } from "app/utils/interfaces";
 
-@Injectable({
-  providedIn: "root"
-})
+@Injectable()
 export class UsersService {
   socket;
+  public subject = new Subject();
   constructor(private http: HttpClientService, private router: Router) {}
 
   getUser() {
@@ -33,44 +33,55 @@ export class UsersService {
     return this.http.get(url);
   }
 
-  goActive(): Observable<boolean> {
-    return new Observable<boolean>(observer => {
-      const url = environment.WEB_SOCKET_URL;
-      const message = {
-        token: localStorage.getItem("token")
-      };
-      this.socket = new WebSocket(url);
+  closeConnections() {
+    this.socket.close();
+    // this.subject.complete();
+  }
 
-      this.socket.onopen = e => {
-        console.log("Successfully connected: " + url);
-        this.socket.send(JSON.stringify(message));
-        console.log("calling true");
-        observer.next(true);
-      };
+  goActive() {
+    console.log("active 2");
 
-      this.socket.onmessage = e => {
-        console.log(`[message] Data received from server: ${e.data}`);
-        observer.next(true);
-      };
+    const url = environment.WEB_SOCKET_URL;
 
-      this.socket.onclose = function(event) {
-        if (event.wasClean) {
-          console.log(
-            `[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`
-          );
-        } else {
-          // e.g. server process killed or network down
-          // event.code is usually 1006 in this case
-          console.log("[close] Connection died");
-        }
-        observer.next(false);
-      };
+    const message = {
+      token: localStorage.getItem("token")
+    };
 
-      this.socket.onerror = function(error) {
-        console.log(`[error] ${error.message}`);
-        observer.next(false);
-      };
-    });
+    this.socket = new WebSocket(url);
+
+    this.socket.onopen = e => {
+      console.log("Successfully connected: " + url);
+      this.socket.send(JSON.stringify(message));
+      this.subject.next(true);
+    };
+
+    this.socket.onmessage = e => {
+      console.log(`[message] Data received from server: ${e.data}`);
+      const data = JSON.parse(e.data);
+      if (data.type == "notifications") {
+        this.subject.next(data.data);
+      } else {
+        this.subject.next(true);
+      }
+    };
+
+    this.socket.onclose = function(event) {
+      if (event.wasClean) {
+        console.log(
+          `[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`
+        );
+      } else {
+        // e.g. server process killed or network down
+        // event.code is usually 1006 in this case
+        console.log("[close] Connection died");
+      }
+      this.subject && this.subject.next(false);
+    };
+
+    this.socket.onerror = function(error) {
+      console.log(`[error] ${error.message}`);
+      this.subject && this.subject.next(false);
+    };
   }
 
   createPost(post) {
@@ -148,6 +159,7 @@ export class UsersService {
   logout() {
     const url: string = getServerURL("logout");
     return this.http.get(url).subscribe(res => {
+      this.socket.close();
       localStorage.removeItem("token");
       localStorage.removeItem("userId");
 
@@ -165,6 +177,11 @@ export class UsersService {
 
   getNotifications() {
     const url: string = getServerURL("users/notifications");
+    return this.http.get(url);
+  }
+
+  getActive() {
+    const url: string = getServerURL("users/active");
     return this.http.get(url);
   }
 }

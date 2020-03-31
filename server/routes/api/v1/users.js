@@ -26,6 +26,8 @@ router.post("/users/unfollow", handlers.unFollowUser);
 
 router.get("/active", handlers.goOnline);
 
+router.get("/users/active", handlers.getActiveUsers);
+
 router.get("/posts", handlers.getPosts);
 
 router.get("/feed", handlers.getFeed);

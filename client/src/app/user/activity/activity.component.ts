@@ -12,9 +12,8 @@ export class ActivityComponent implements OnInit {
   notifications: Array<INotification>;
 
   ngOnInit(): void {
-    console.log("here");
-
     this.getNotifications();
+    this.watchForNotif();
   }
 
   getNotifications() {
@@ -23,5 +22,20 @@ export class ActivityComponent implements OnInit {
       .subscribe((data: Array<INotification>) => {
         this.notifications = data;
       });
+  }
+
+  watchForNotif() {
+    this.userService.subject.subscribe(
+      (d: any) => {
+        console.log(d, "noti");
+        if (!(d === true || d === false)) {
+          if (this.getNotifications.length > 10) {
+            this.notifications.shift();
+          }
+          this.notifications.unshift(d);
+        }
+      },
+      err => {}
+    );
   }
 }

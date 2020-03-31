@@ -75,6 +75,16 @@
           <div class="col-md-12">
             <p class="text-center text-info font-italic">Active Friends</p>
             <!--  Friends Here-->
+            <div class="ui feed mt-4 ml-4">
+              <div class="event" *ngFor="let user of active; index as i">
+                <div class="label">
+                  <img [src]="user.profile_pic" />
+                </div>
+                <div class="content">
+                  <a>{{ user.firstname }}</a> is online.
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

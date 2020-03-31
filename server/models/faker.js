@@ -13,7 +13,6 @@ mongoose.connect(require("../config/app").db.connectionUri, {
 var User = require("../models/users");
 var Post = require("../models/posts");
 var Comment = require("../models/comments");
-var Notifications = require("../models/notifications");
 
 // populate user
 seed();
@@ -22,7 +21,6 @@ async function seed() {
   await Post.deleteMany({});
   await User.deleteMany({});
   await Comment.deleteMany({});
-  await Notifications.deleteMany({});
 
   const admin = await createAdmin();
   await createUser();

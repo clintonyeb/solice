@@ -3,56 +3,56 @@
 
 <!-- Notifications -->
 
-<div class="row mt-3">
+<div class="row mt-4" *ngIf="notifications.length > 0">
   <div class="col-md-12">
     <p class="text-center text-info">Notifications</p>
     <!--  Friends Here-->
   </div>
 </div>
 
-<div class="ui cards">
+<div class="ui cards mt-3">
   <a
     class="border-bottom primary border-primary
      ui raised centered card"
     *ngFor="let noti of notifications; index as i"
   >
     <div class="content" *ngIf="noti.type === 0">
-      <div class="center aligned header">New Post</div>
+      <div class="center aligned header text-primary">New Post</div>
       <div class="description">
         <p>{{ noti.postedBy.firstname }} created a new post. Check it out.</p>
       </div>
     </div>
 
     <div class="content" *ngIf="noti.type === 1">
-      <div class="center aligned header">Liked Post</div>
+      <div class="center aligned header text-primary">Liked Post</div>
       <div class="description">
         <p>{{ noti.postedBy.firstname }} liked a post. Check it out.</p>
       </div>
     </div>
 
     <div class="content" *ngIf="noti.type === 2">
-      <div class="center aligned header">Commented Post</div>
+      <div class="center aligned header text-primary">Commented Post</div>
       <div class="description">
         <p>{{ noti.postedBy.firstname }} commented on a post. Check it out.</p>
       </div>
     </div>
 
     <div class="content" *ngIf="noti.type === 3">
-      <div class="center aligned header">Followed User</div>
+      <div class="center aligned header text-primary">Followed User</div>
       <div class="description">
         <p>{{ noti.postedBy.firstname }} followed a user. Check him out.</p>
       </div>
     </div>
 
     <div class="content" *ngIf="noti.type === 4">
-      <div class="center aligned header">Updated Profile</div>
+      <div class="center aligned header text-primary">Updated Profile</div>
       <div class="description">
         <p>{{ noti.postedBy.firstname }} updated his profile. Check it out.</p>
       </div>
     </div>
 
     <div class="content" *ngIf="noti.type === 5">
-      <div class="center aligned header">Is Online</div>
+      <div class="center aligned header text-primary">Is Online</div>
       <div class="description">
         <p>{{ noti.postedBy.firstname }} is online.</p>
       </div>

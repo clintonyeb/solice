@@ -22,10 +22,15 @@ export class BioComponent implements OnInit {
   getUserInfo() {
     this.userService.getUser().subscribe((data: IUser) => {
       this.user = data;
+      this.getActiveFriends();
     });
   }
 
-  getActiveFriends() {}
+  getActiveFriends() {
+    this.userService.getActive().subscribe((data: Array<IUser>) => {
+      this.active = data;
+    });
+  }
 
   logout() {
     this.userService.logout();

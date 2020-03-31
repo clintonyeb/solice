@@ -34,6 +34,8 @@ app.locals.activeUsers = activeUsers;
 app.ws("/ws", function(ws, req) {
   ws.on("open", function() {
     console.log("new websocket connection...");
+
+    // TODO: timeout to check if ws got authenticated
   });
 
   ws.on("message", function(msg) {
@@ -43,18 +45,20 @@ app.ws("/ws", function(ws, req) {
     if (!token) return closeSocket(ws);
     var decoded = jwt.verify(token, process.env.SECRET_KEY);
     if (!decoded) return closeSocket(ws);
-    activeUsers[decoded._id] = new Date();
+
+    ws._id = decoded._id;
+    activeUsers[decoded._id] = ws;
     console.log("User authenticated and added");
   });
 
   ws.on("error", function(_err) {
     console.error("Error with client connection");
-    delete activeUsers[ws.userId];
+    delete activeUsers[ws._id];
   });
 
   ws.on("close", function() {
     console.log("Client closed connection...");
-    delete activeUsers[ws.userId];
+    delete activeUsers[ws._id];
   });
 });
 

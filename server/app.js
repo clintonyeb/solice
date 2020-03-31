@@ -6,7 +6,6 @@ var cors = require("cors");
 var hbs = require("hbs");
 const roleName = require("./utils/helpers").roleName;
 var HttpStatus = require("http-status-codes");
-var redis = require("redis");
 
 require("dotenv").config();
 
@@ -14,8 +13,6 @@ var indexRouter = require("./routes/index");
 const apiRoutes = require("./routes/api/v1");
 
 var app = express();
-
-app.locals.redis = redis.createClient();
 
 // disable caching to prevent express from sending 304 for similar get requests but different user sessions
 app.disable("etag");

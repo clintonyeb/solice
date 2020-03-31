@@ -295,32 +295,35 @@ async function updateUser(userId, data) {
 async function getNotifications(userId) {
   const user = await User.findById(userId)
     .populate({
-      path: "notifications",
-      populate: {
-        path: "postedBy",
-        model: "users"
-      }
+      path: "notifications.postedBy",
+      model: "users"
     })
     .populate({
-      path: "notifications",
-      populate: {
-        path: "targetUser",
-        model: "users"
-      }
+      path: "notifications.targetUser",
+      model: "users"
     })
     .populate({
-      path: "notifications",
-      populate: {
-        path: "targetPost",
-        model: "posts"
-      }
+      path: "notifications.targetPost",
+      model: "posts"
     })
     .sort({ created: "desc" })
     .limit(LIMIT)
     .exec();
-  console.log(user);
 
   return user.notifications;
+}
+
+async function deleteNotifications(userId) {
+  await User.updateOne({ _id: userId }, { $set: { notifications: [] } });
+}
+
+async function getActiveFollowing(app, userId) {
+  const user = await User.findById(userId);
+  const active = user.following.filter(ff =>
+    app.locals.activeUsers.hasOwnProperty(ff)
+  );
+  const users = await User.find({ _id: { $in: active } });
+  return users;
 }
 
 // Expose all the api...
@@ -344,5 +347,7 @@ module.exports = {
   deleteComment,
   updateUser,
   getNotifications,
-  logout
+  logout,
+  deleteNotifications,
+  getActiveFollowing
 };

@@ -44,7 +44,7 @@ function followUser(req, res, next) {
   userService.follow(user._id, body._id, (err, user) => {
     if (err || !user) return res.status(404).send("No user found");
     res.json(user);
-    notiService.followedUser(req.user._id, body._id);
+    notiService.followedUser(req.app, req.user._id, body._id);
   });
 }
 
@@ -62,7 +62,7 @@ function goOnline(req, res, next) {
   userService.getUser(user._id, (err, user) => {
     if (err) return res.status(404).send("No user found");
     res.json(user);
-    notiService.online(req.user._id);
+    notiService.online(req.app, req.user._id);
   });
 }
 
@@ -104,7 +104,7 @@ function createPost(req, res, next) {
     res.contentType("application/json");
     res.status(HttpStatus.CREATED).json(post);
     if (req.body.notify) {
-      notiService.newPost(req.user._id, post._id);
+      notiService.newPost(req.app, req.user._id, post._id);
     }
   });
 }
@@ -148,7 +148,7 @@ function likePost(req, res, next) {
         .status(HttpStatus.UNPROCESSABLE_ENTITY)
         .send("Error retrieving posts");
     res.json(post);
-    notiService.likedPost(req.user._id, post._id);
+    notiService.likedPost(req.app, req.user._id, post._id);
   });
 }
 
@@ -163,7 +163,7 @@ function commentPost(req, res, next) {
           .status(HttpStatus.UNPROCESSABLE_ENTITY)
           .send("Error retrieving posts");
       res.json(post);
-      notiService.commentedPost(req.user._id, post._id);
+      notiService.commentedPost(req.app, req.user._id, post._id);
     }
   );
 }
@@ -196,7 +196,7 @@ async function updateUser(req, res, next) {
   try {
     const user = await userService.updateUser(req.user._id, req.body);
     res.json(user);
-    notiService.updatedProfile(req.user._id);
+    notiService.updatedProfile(req.app, req.user._id);
   } catch (error) {
     res.status(HttpStatus.UNPROCESSABLE_ENTITY).send("Error retrieving posts");
   }
@@ -206,10 +206,25 @@ async function getNotifications(req, res, next) {
   try {
     const notifications = await userService.getNotifications(req.user._id);
     res.json(notifications);
+    await userService.deleteNotifications(req.user._id);
   } catch (error) {
     res
       .status(HttpStatus.UNPROCESSABLE_ENTITY)
       .send("Error retrieving notifications");
+  }
+}
+
+async function getActiveUsers(req, res, next) {
+  try {
+    const activeUsers = await userService.getActiveFollowing(
+      req.app,
+      req.user._id
+    );
+    res.json(activeUsers);
+  } catch (error) {
+    res
+      .status(HttpStatus.UNPROCESSABLE_ENTITY)
+      .send("Error retrieving active users...");
   }
 }
 
@@ -234,5 +249,6 @@ module.exports = {
   getComments,
   updateUser,
   getUserForId,
-  getNotifications
+  getNotifications,
+  getActiveUsers
 };
