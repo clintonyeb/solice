@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit {
   focus;
   focus1;
   alert: IAlert;
+  suspended = false;
 
   // controls
   form = new FormGroup({
@@ -63,11 +64,13 @@ export class LoginComponent implements OnInit {
         this.form.patchValue({
           password: ""
         });
-        this.alert = new ErrorAlert(
-          "Login error!",
-          this.sessionService.handleError(err)
-        );
+        const mess = this.sessionService.handleError(err);
+        this.alert = new ErrorAlert("Login error!", mess);
         this.alert.status = true;
+
+        if (mess === "Your Account has been suspended") {
+          this.suspended = true;
+        }
       }
     );
   }

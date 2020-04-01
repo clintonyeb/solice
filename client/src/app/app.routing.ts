@@ -17,10 +17,10 @@ import { SharedModule } from "./shared/shared.module";
 import { DashboardComponent } from "./user/dashboard/dashboard.component";
 import { NotFoundComponent } from "./shared/not-found/not-found.component";
 import { DashboardComponent as AdminDashboardComponent } from "./admin/dashboard/dashboard.component";
-import { PostsComponent } from './admin/posts/posts.component';
-import { UsersComponent } from './admin/users/users.component';
-import { AdsComponent } from './admin/ads/ads.component';
-import { RequestsComponent } from './admin/requests/requests.component';
+import { PostsComponent } from "./admin/posts/posts.component";
+import { UsersComponent } from "./admin/users/users.component";
+import { AdsComponent } from "./admin/ads/ads.component";
+import { RequestsComponent } from "./admin/requests/requests.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "users", pathMatch: "full" },
@@ -34,6 +34,7 @@ const routes: Routes = [
         component: LoginComponent
       },
       { path: "register", component: RegisterComponent },
+      { path: "request", component: RequestsComponent },
       { path: "forgot-password", component: LoginComponent },
       { path: "recover-password", component: LoginComponent }
     ]
