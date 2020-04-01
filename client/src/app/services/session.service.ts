@@ -1,6 +1,10 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
-import { getServerURL } from '../utils/helpers';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders
+} from "@angular/common/http";
+import { getServerURL } from "../utils/helpers";
 
 @Injectable()
 export class SessionService {
@@ -43,7 +47,7 @@ export class SessionService {
         headers
       })
       .subscribe(
-        () => cb(null),
+        data => cb(null, data),
         e => cb(e)
       );
   }

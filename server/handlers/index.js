@@ -3,7 +3,7 @@ const notiService = require("../services").noti;
 var HttpStatus = require("http-status-codes");
 
 function authenticate(req, res, next) {
-  res.json({ status: true });
+  res.json(req.user);
 }
 
 function getUser(req, res, next) {

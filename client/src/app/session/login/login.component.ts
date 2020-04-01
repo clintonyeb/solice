@@ -48,7 +48,12 @@ export class LoginComponent implements OnInit {
         );
         this.alert.status = true;
         this.sessionService.saveSession(data);
-        this.router.navigate(["/"]);
+        console.log(data);
+        if (data.role >= 2) {
+          this.router.navigate(["/admins"]);
+        } else {
+          this.router.navigate(["/"]);
+        }
       },
       err => {
         this.form.patchValue({

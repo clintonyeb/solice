@@ -5,7 +5,6 @@ var userService = require("../../../services").users;
 var HttpStatus = require("http-status-codes");
 
 router.post("/signup", function(req, res) {
-  console.log("here1");
   userService.createUser(req.body, (err, data) => {
     console.log("here");
 
@@ -34,7 +33,7 @@ router.post("/login", function(req, res) {
       }
       user.lastLogin = new Date();
       user.save(() => {
-        res.json({ token: token, _id: user._id });
+        res.json({ token: token, _id: user._id, role: user.role });
       });
     });
   });
