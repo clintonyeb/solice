@@ -5,11 +5,11 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ToastrService } from "ngx-toastr";
 
 @Component({
-  selector: "app-story",
-  templateUrl: "./story.component.html",
-  styleUrls: ["./story.component.css"]
+  selector: "app-post",
+  templateUrl: "./post.component.html",
+  styleUrls: ["./post.component.css"]
 })
-export class StoryComponent implements OnInit {
+export class PostComponent implements OnInit {
   feed: Array<IPost>;
 
   query = new FormControl("");
@@ -36,7 +36,7 @@ export class StoryComponent implements OnInit {
   }
 
   getFeed() {
-    this.userService.getFeed().subscribe(
+    this.userService.getPosts().subscribe(
       data => {
         this.feed = <IPost[]>data;
       },
@@ -48,7 +48,7 @@ export class StoryComponent implements OnInit {
     const _page = this.page + 1;
     if (this.query.value) {
       return this.userService
-        .searchFeed(this.query.value, "feed", _page)
+        .searchFeed(this.query.value, "posts", _page)
         .subscribe(
           (data: Array<IPost>) => {
             this.feed = this.feed.concat(<IPost[]>data);
@@ -61,7 +61,7 @@ export class StoryComponent implements OnInit {
           err => console.error(err)
         );
     }
-    this.userService.getFeed(_page).subscribe(
+    this.userService.getPosts(_page).subscribe(
       data => {
         this.feed = this.feed.concat(<IPost[]>data);
         this.page = _page;
@@ -75,7 +75,7 @@ export class StoryComponent implements OnInit {
   }
 
   search() {
-    this.userService.searchFeed(this.query.value, "feed").subscribe(
+    this.userService.searchFeed(this.query.value, "posts").subscribe(
       (data: Array<IPost>) => (this.feed = data),
       err => console.error(err)
     );

@@ -29,6 +29,7 @@ import { FeedFriendComponent } from "./feed-friend/feed-friend.component";
 import { UpdateProfileComponent } from "./update-profile/update-profile.component";
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { UsersService } from "../services/users.service";
+import { PostComponent } from './post/post.component';
 
 @NgModule({
   imports: [
@@ -52,7 +53,8 @@ import { UsersService } from "../services/users.service";
     DashboardComponent,
     StoryComponent,
     FeedFriendComponent,
-    UpdateProfileComponent
+    UpdateProfileComponent,
+    PostComponent
   ],
   providers: [UsersService]
 })

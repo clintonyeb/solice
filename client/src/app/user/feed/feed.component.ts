@@ -8,11 +8,11 @@ import {
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { UsersService } from "../../services/users.service";
-import { ToastService } from "../../services/toast.service";
 import { IPost } from "../../utils/interfaces";
 import { UploadService } from "../../services/upload.service";
 import { HttpResponse, HttpEventType } from "@angular/common/http";
 import { Router } from "@angular/router";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: "app-feed",
@@ -44,7 +44,7 @@ export class FeedComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private userService: UsersService,
-    private toastService: ToastService,
+    private toastService: ToastrService,
     private uploadService: UploadService,
     private router: Router
   ) {}
@@ -95,7 +95,7 @@ export class FeedComponent implements OnInit {
     this.userService.createPost(data).subscribe(
       (data: IPost) => {
         this.modalService.dismissAll();
-        this.toastService.show("Post", "Post created successfully...");
+        this.toastService.success("Post", "Post created successfully...");
         this.form.reset();
 
         if (this.feed) {

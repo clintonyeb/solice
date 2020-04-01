@@ -13,6 +13,7 @@ mongoose.connect(require("../config/app").db.connectionUri, {
 var User = require("../models/users");
 var Post = require("../models/posts");
 var Comment = require("../models/comments");
+var Word = require("../models/words");
 
 // populate user
 seed();
@@ -25,6 +26,7 @@ async function seed() {
   const admin = await createAdmin();
   await createUser();
   await generate(admin._id);
+  await addFilters();
   mongoose.connection.close();
   process.exit(0);
 }
@@ -71,7 +73,12 @@ async function generate(adminId) {
   for (let i = 0; i < 20; i++) {
     await new Post({
       text: faker.lorem.text(),
-      postedBy: adminId
+      postedBy: adminId,
+      status: 0
     }).save();
   }
+}
+
+async function addFilters() {
+  await new Word({ text: "fuck" }).save();
 }

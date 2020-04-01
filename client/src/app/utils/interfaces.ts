@@ -14,6 +14,7 @@ export interface IUser {
   role: string;
   dob: IDOB;
   token: string;
+  status: number;
 }
 export interface IDOB {
   day: number;
@@ -41,6 +42,7 @@ export interface IPost {
   comments: Array<Comment>;
   postedBy: IUser;
   created: Date;
+  status: number;
 }
 
 export interface INotification {

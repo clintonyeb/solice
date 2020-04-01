@@ -8,11 +8,11 @@ import { AppRoutingModule } from "./app.routing";
 import { ComponentsModule } from "./components/components.module";
 import { UserModule } from "./user/user.module";
 import { AppComponent } from "./app.component";
-import { ToastComponent } from './components/toast/toast.component';
-import { AdminModule } from './admin/admin.module';
+import { AdminModule } from "./admin/admin.module";
+import { ToastrModule } from "ngx-toastr";
 
 @NgModule({
-  declarations: [AppComponent, ToastComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserAnimationsModule,
     NgbModule,
@@ -22,7 +22,10 @@ import { AdminModule } from './admin/admin.module';
     ComponentsModule,
     SessionModule,
     UserModule,
-    AdminModule
+    AdminModule,
+    ToastrModule.forRoot({
+      toastClass: "bg-primary ngx-toastr text-white"
+    })
   ],
   bootstrap: [AppComponent]
 })

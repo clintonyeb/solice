@@ -7,11 +7,11 @@ import {
 } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { UsersService } from "app/services/users.service";
-import { ToastService } from "app/services/toast.service";
 import { UploadService } from "app/services/upload.service";
 import { HttpEventType, HttpResponse } from "@angular/common/http";
 import { IPost } from "app/utils/interfaces";
 import { IUser } from "../../utils/interfaces";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-update-profile",
@@ -43,7 +43,7 @@ export class UpdateProfileComponent implements OnInit {
 
   constructor(
     private userService: UsersService,
-    private toastService: ToastService,
+    private toastService: ToastrService,
     private uploadService: UploadService
   ) {}
 
@@ -99,7 +99,7 @@ export class UpdateProfileComponent implements OnInit {
   submit(data) {
     this.userService.updateUser(data).subscribe(
       (data: IUser) => {
-        this.toastService.show("User Profile", "Profile update successful...");
+        this.toastService.success("User Profile", "Profile update successful...");
         this.form.reset();
         this.goToFeed();
       },

@@ -1,7 +1,9 @@
 var User = require("../models/users");
 var Post = require("../models/posts");
 var Comment = require("../models/comments");
-// const _ = require("lodash/_arrayIncludes");
+var Comment = require("../models/comments");
+var Word = require("../models/words");
+const POST_STATUS = require("../utils/post-status");
 
 const error = new Error("Record not found...");
 
@@ -57,7 +59,7 @@ function getFeed(userId, cb, page) {
     if (err) return cb(err, false);
     const following = user.following;
     following.push(userId); // include self
-    Post.find({ postedBy: { $in: following } })
+    Post.find({ postedBy: { $in: following }, status: 0 })
       .populate("postedBy")
       .sort({ created: "desc" })
       .skip(LIMIT * page - LIMIT)
@@ -79,11 +81,25 @@ function getPost(id, cb) {
 }
 
 function createPost(post, cb) {
+  if (getPostStatus(post.text)) {
+    post.status = POST_STATUS.DISABLED;
+  } else {
+    post.status = POST_STATUS.ENABLED;
+  }
+
   var newPost = new Post(post);
   newPost.save((err, res) => {
+    console.log(err, res);
+
     if (err) return err;
     return getPost(res._id, cb);
   });
+}
+
+async function getPostStatus(text) {
+  const substrings = text.split(" ");
+  const filters = await Word.find();
+  return substrings.some(v => filters.includes(v));
 }
 
 // function checkSpace(name) {

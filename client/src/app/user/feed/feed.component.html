@@ -26,7 +26,16 @@
             Feed
           </a>
           <ng-template ngbNavContent>
-            <app-story type="feed" #feed></app-story>
+            <app-story #feed></app-story>
+          </ng-template>
+        </li>
+        <li class="nav-item" ngbNavItem>
+          <a class="nav-link" ngbNavLink>
+            <i class="mdi mdi-account-outline"></i>
+            Posts
+          </a>
+          <ng-template ngbNavContent>
+            <app-post #posts></app-post>
           </ng-template>
         </li>
         <li class="nav-item" ngbNavItem>

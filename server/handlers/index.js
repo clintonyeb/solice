@@ -97,11 +97,12 @@ function createPost(req, res, next) {
   const _post = req.body;
   _post["postedBy"] = user;
   userService.createPost(_post, (err, post) => {
+    console.log("created");
+
     if (err)
       return res
         .status(HttpStatus.UNPROCESSABLE_ENTITY)
         .send("Error creating post");
-    res.contentType("application/json");
     res.status(HttpStatus.CREATED).json(post);
     if (req.body.notify) {
       notiService.newPost(req.app, req.user._id, post._id);
