@@ -100,25 +100,13 @@ function createPost(post, cb) {
   });
 }
 
-// TODO: Improve performance of this to use db searching and $text searching
-// index text and do a match to see if any of the words match 
 async function getPostStatus(text) {
-  const substrings = text.split(" ");
-  const filters = await Word.find();
-  return substrings.some(v => filters.includes(v));
+  const filter = await Word.findOne({ text: { $in: text.split(" ") } });
+  return !!filter;
 }
 
-// function checkSpace(name) {
-//   var charSplit = name.split("");
-//   //console.log(charSplit)
-//   return _(charSplit, " ");
-// }
 
 function createUser(obj, cb) {
-  // if (checkSpace(obj.username)) {
-  //   return cb(new Error("Invalid username provided"));
-  // }
-
   User.findOne({ username: obj.username }, (err, user) => {
     if (user) {
       return cb(new Error("User with username already exists"));
