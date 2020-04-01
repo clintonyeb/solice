@@ -9,6 +9,7 @@ import { ComponentsModule } from "./components/components.module";
 import { UserModule } from "./user/user.module";
 import { AppComponent } from "./app.component";
 import { ToastComponent } from './components/toast/toast.component';
+import { AdminModule } from './admin/admin.module';
 
 @NgModule({
   declarations: [AppComponent, ToastComponent],
@@ -20,7 +21,8 @@ import { ToastComponent } from './components/toast/toast.component';
     AppRoutingModule,
     ComponentsModule,
     SessionModule,
-    UserModule
+    UserModule,
+    AdminModule
   ],
   bootstrap: [AppComponent]
 })
