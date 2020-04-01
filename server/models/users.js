@@ -53,7 +53,14 @@ var userSchema = mongoose.Schema({
     default: 0
   },
   following: [{ type: mongoose.Schema.ObjectId, ref: "users" }],
-  followers: [{ type: mongoose.Schema.ObjectId, ref: "users" }]
+  followers: [{ type: mongoose.Schema.ObjectId, ref: "users" }],
+  ad: { type: mongoose.Schema.ObjectId, ref: "ads" },
+  status: {
+    type: Number,
+    enum: Object.values(require("../utils/user-status")),
+    required: true,
+    default: 0
+  }
 });
 
 // before save has password

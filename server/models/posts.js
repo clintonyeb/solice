@@ -10,12 +10,16 @@ const PostSchema = new mongoose.Schema({
     required: false
   },
   likes: [{ type: mongoose.Schema.ObjectId, ref: "users" }],
-  comments: [{ type: mongoose.Schema.ObjectId, ref: "comments" }
-  ],
+  comments: [{ type: mongoose.Schema.ObjectId, ref: "comments" }],
   postedBy: { type: mongoose.Schema.ObjectId, ref: "users" },
   created: {
     type: Date,
     default: Date.now
+  },
+  status: {
+    type: Number,
+    enum: Object.values(require("../utils/post-status")),
+    required: true
   }
 });
 
