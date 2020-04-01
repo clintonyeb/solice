@@ -27,9 +27,9 @@ export class ActivityComponent implements OnInit {
   watchForNotif() {
     this.userService.subject.subscribe(
       (d: any) => {
-        console.log(d, "noti");
+        if (!this.notifications) return;
         if (!(d === true || d === false)) {
-          if (this.getNotifications.length > 10) {
+          if (this.notifications.length > 10) {
             this.notifications.shift();
           }
           this.notifications.unshift(d);

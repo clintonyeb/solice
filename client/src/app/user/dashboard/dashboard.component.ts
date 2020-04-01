@@ -28,7 +28,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.userService.closeConnections()
+    this.userService.closeConnections();
   }
 
   authenticateUser() {
@@ -42,8 +42,6 @@ export class DashboardComponent implements OnInit {
       this.authenticated = true;
       this.userService.subject.subscribe(
         (d: any) => {
-          console.log(d, "online");
-
           if (d === true || d === false) {
             this.active = d;
           }

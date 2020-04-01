@@ -39,16 +39,11 @@ export class UsersService {
   }
 
   goActive() {
-    console.log("active 2");
-
     const url = environment.WEB_SOCKET_URL;
-
     const message = {
       token: localStorage.getItem("token")
     };
-
     this.socket = new WebSocket(url);
-
     this.socket.onopen = e => {
       console.log("Successfully connected: " + url);
       this.socket.send(JSON.stringify(message));

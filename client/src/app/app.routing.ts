@@ -15,7 +15,7 @@ import { UserComponent } from "./user/user.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { SharedModule } from "./shared/shared.module";
 import { DashboardComponent } from "./user/dashboard/dashboard.component";
-import { NotFoundComponent } from './shared/not-found/not-found.component';
+import { NotFoundComponent } from "./shared/not-found/not-found.component";
 import { DashboardComponent as AdminDashboardComponent } from "./admin/dashboard/dashboard.component";
 
 const routes: Routes = [
@@ -45,11 +45,11 @@ const routes: Routes = [
   },
   {
     path: "admins",
-    component: UserComponent,
+    component: AdminDashboardComponent,
     canActivate: [AuthGuardService],
     children: [
       { path: "", redirectTo: "feeds", pathMatch: "full" },
-      { path: "feeds", component: AdminDashboardComponent }
+      { path: "feeds", component: NotFoundComponent }
     ]
   },
   { path: "**", component: NotFoundComponent }

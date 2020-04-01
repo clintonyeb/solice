@@ -3,14 +3,14 @@
 
 <!-- Notifications -->
 
-<div class="row mt-4" *ngIf="notifications.length > 0">
+<div class="row mt-4" *ngIf="notifications && notifications.length > 0">
   <div class="col-md-12">
     <p class="text-center text-info">Notifications</p>
     <!--  Friends Here-->
   </div>
 </div>
 
-<div class="ui cards mt-3">
+<div class="ui cards mt-3" *ngIf="notifications">
   <a
     class="border-bottom primary border-primary
      ui raised centered card"
