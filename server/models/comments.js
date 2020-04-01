@@ -6,5 +6,5 @@ const CommentSchema = new mongoose.Schema({
   postedBy: { type: mongoose.Schema.ObjectId, ref: "users" }
 });
 
-CommentSchema.index({ text: "text" });
+// CommentSchema.index({ text: "text" });
 module.exports = mongoose.model("comments", CommentSchema);

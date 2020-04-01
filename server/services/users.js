@@ -162,7 +162,10 @@ function searchUsers(userId, query, cb, page) {
     {
       role: 0,
       _id: { $ne: userId },
-      $text: { $search: query }
+      $or: [
+        { firstname: { $regex: query, $options: "i" } },
+        { lastname: { $regex: query, $options: "i" } }
+      ]
     },
     (err, users) => {
       if (err) return cb(err, false);
@@ -192,7 +195,10 @@ function searchFeed(userId, query, cb, page) {
     if (err) return cb(err, false);
     const following = user.following;
     following.push(userId); // include self
-    Post.find({ postedBy: { $in: following }, $text: { $search: query } })
+    Post.find({
+      postedBy: { $in: following },
+      text: { $regex: query, $options: "i" }
+    })
       .populate("postedBy")
       .sort({ created: "desc" })
       .skip(LIMIT * page - LIMIT)

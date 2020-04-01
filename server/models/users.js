@@ -109,7 +109,7 @@ userSchema.methods.generateToken = function(cb) {
   );
 };
 
-userSchema.index({ username: "text", firstname: "text", lastname: "text" });
+// userSchema.index({ username: "text", firstname: "text", lastname: "text" });
 module.exports = mongoose.model("users", userSchema);
 
 // create the model for users and expose it to our app
