@@ -292,7 +292,6 @@ async function logout(userId) {
 }
 
 async function updateUser(userId, data) {
-  delete data["_id"];
   const user = await User.findById(userId);
   const res = await user.update(data);
   return res;
