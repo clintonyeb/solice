@@ -9,6 +9,7 @@ import {
   getFormValidationErrors
 } from "../../utils/validators";
 import { Router } from "@angular/router";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-register",
@@ -42,7 +43,11 @@ export class RegisterComponent implements OnInit {
     { validators: checkPasswords }
   );
 
-  constructor(private sessionService: SessionService, private router: Router) {}
+  constructor(
+    private sessionService: SessionService,
+    private router: Router,
+    private toastService: ToastrService
+  ) {}
 
   ngOnInit() {}
 
@@ -70,6 +75,10 @@ export class RegisterComponent implements OnInit {
         this.alert = new MessageAlert(
           "Account registration successful!",
           "You have created an account successfully!"
+        );
+        this.toastService.success(
+          "Account",
+          "Account registration successful!"
         );
         this.alert.status = true;
         this.router.navigate([
