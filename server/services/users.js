@@ -1,7 +1,6 @@
 var User = require("../models/users");
 var Post = require("../models/posts");
 var Comment = require("../models/comments");
-var Comment = require("../models/comments");
 var Word = require("../models/words");
 const POST_STATUS = require("../utils/post-status");
 
@@ -13,7 +12,11 @@ function authenticate(obj, cb) {
   User.findOne({ username: obj.username }).exec((err, user) => {
     if (err) return cb(new Error("Invalid username and password"));
     if (user && user.validPassword(obj.password)) {
-      cb(null, user);
+      if (user.status === 0) {
+        cb(null, user);
+      } else {
+        cb(new Error("Your Account has been suspended"));
+      }
     } else {
       cb(new Error("Invalid username and password"));
     }
@@ -83,6 +86,7 @@ function getPost(id, cb) {
 function createPost(post, cb) {
   if (getPostStatus(post.text)) {
     post.status = POST_STATUS.DISABLED;
+    // TODO: check and notify admin
   } else {
     post.status = POST_STATUS.ENABLED;
   }
@@ -96,6 +100,8 @@ function createPost(post, cb) {
   });
 }
 
+// TODO: Improve performance of this to use db searching and $text searching
+// index text and do a match to see if any of the words match 
 async function getPostStatus(text) {
   const substrings = text.split(" ");
   const filters = await Word.find();

@@ -60,7 +60,8 @@ var userSchema = mongoose.Schema({
     enum: Object.values(require("../utils/user-status")),
     required: true,
     default: 0
-  }
+  },
+  deletedPosts: Number
 });
 
 // before save has password

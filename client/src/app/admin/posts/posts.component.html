@@ -3,174 +3,91 @@
     <div class="col-md-8">
       <div class="card">
         <div class="card-header">
-          <h5 class="title">Edit Profile</h5>
+          <h5 class="title">Flagged Posts</h5>
         </div>
         <div class="card-body">
-          <!-- <form>
-            <div class="row">
-              <div class="col-md-5 pr-1">
-                <div class="form-group">
-                  <label>Company (disabled)</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    disabled=""
-                    placeholder="Company"
-                    value="Creative Code Inc."
-                  />
-                </div>
-              </div>
-              <div class="col-md-3 px-1">
-                <div class="form-group">
-                  <label>Username</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Username"
-                    value="michael23"
-                  />
-                </div>
-              </div>
-              <div class="col-md-4 pl-1">
-                <div class="form-group">
-                  <label for="email">Email address</label>
-                  <input
-                    name="email"
-                    id="email"
-                    type="email"
-                    class="form-control"
-                    placeholder="Email"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6 pr-1">
-                <div class="form-group">
-                  <label>First Name</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Company"
-                    value="Mike"
-                  />
-                </div>
-              </div>
-              <div class="col-md-6 pl-1">
-                <div class="form-group">
-                  <label>Last Name</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Last Name"
-                    value="Andrew"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group">
-                  <label>Address</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Home Address"
-                    value="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-4 pr-1">
-                <div class="form-group">
-                  <label>City</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="City"
-                    value="Mike"
-                  />
-                </div>
-              </div>
-              <div class="col-md-4 px-1">
-                <div class="form-group">
-                  <label>Country</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Country"
-                    value="Andrew"
-                  />
-                </div>
-              </div>
-              <div class="col-md-4 pl-1">
-                <div class="form-group">
-                  <label>Postal Code</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    placeholder="ZIP Code"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group">
-                  <label>About Me</label>
-                  <textarea
-                    rows="4"
-                    cols="80"
-                    class="form-control"
-                    placeholder="Here can be your description"
-                    value="Mike"
-                  >
-Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo.</textarea
-                  >
-                </div>
-              </div>
-            </div>
-          </form> -->
+          <div class="table-responsive overflow-auto">
+            <table class="table table-hover">
+              <thead class=" text-primary">
+                <th>
+                  Posted By
+                </th>
+                <th>
+                  Created on
+                </th>
+                <th>
+                  Status
+                </th>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let post of posts; index as i"
+                  (click)="showPost(post)"
+                >
+                  <td>
+                    {{ post.postedBy.firstname + " " + post.postedBy.lastname }}
+                  </td>
+                  <td>
+                    {{ post.created }}
+                  </td>
+                  <td>
+                    {{ post.status === 0 ? "Enabled" : "Disabled" }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4" *ngIf="post">
       <div class="card card-user">
-        <div class="image">
-          <img src="../assets/img/bg5.jpg" alt="..." />
-        </div>
-        <div class="card-body">
-          <div class="author">
-            <a href="#">
-              <img
-                class="avatar border-gray"
-                src="../assets/img/mike.jpg"
-                alt="..."
-              />
-              <h5 class="title">Mike Andrew</h5>
-            </a>
-            <p class="description">
-              michael24
-            </p>
+        <div class="card-body" style="min-height: auto;">
+          <div class="ui feed">
+            <div class="event">
+              <div class="label">
+                <img [src]="post.postedBy.profile_pic" />
+              </div>
+              <div class="content">
+                <div class="summary">
+                  <a>{{
+                    post.postedBy.firstname + " " + post.postedBy.lastname
+                  }}</a>
+                  posted on his page
+                  <div class="date">
+                    {{ post.created | timeago }}
+                  </div>
+                </div>
+                <div class="extra text">
+                  {{ post.text }}
+                </div>
+                <div class="extra images" *ngIf="post.photo">
+                  <a><img [src]="post.photo"/></a>
+                </div>
+                <div class="meta">
+                  <span class="like mr-4">
+                    <i class="fa fa-thumbs-up"></i>
+                    {{ post.likes.length }} Likes
+                  </span>
+                  <span class="like">
+                    <i class="fa fa-comment"></i>
+                    {{ post.comments.length }} Comments
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
-          <p class="description text-center">
-            "Lamborghini Mercy
-            <br />
-            Your chick she so thirsty <br />
-            I'm in that two seat Lambo"
-          </p>
         </div>
         <hr />
-        <div class="button-container">
-          <button href="#" class="btn btn-neutral btn-icon btn-round btn-lg">
-            <i class="fab fa-facebook-f"></i>
+        <div class="button-container px-4">
+          <button class="btn btn-primary float-left" (click)="enablePost(post)" *ngIf="post.status === 1">
+            Enable Post
           </button>
-          <button href="#" class="btn btn-neutral btn-icon btn-round btn-lg">
-            <i class="fab fa-twitter"></i>
+          <button class="btn btn-primary float-left" (click)="disablePost(post)" *ngIf="post.status === 0">
+            Disable Post
           </button>
-          <button href="#" class="btn btn-neutral btn-icon btn-round btn-lg">
-            <i class="fab fa-google-plus-g"></i>
+          <button class="btn btn-secondary float-right" (click)="deletePost(post)" *ngIf="post.status === 1">
+            Delete Post
           </button>
         </div>
       </div>

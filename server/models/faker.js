@@ -25,6 +25,7 @@ async function seed() {
 
   const admin = await createAdmin();
   await createUser();
+  await createSuspendedUser();
   await generate(admin._id);
   await addFilters();
   mongoose.connection.close();
@@ -54,6 +55,19 @@ async function createUser() {
     profile_pic: "https://bootdey.com/img/Content/avatar/avatar2.png",
     password: "testuser",
     role: 0
+  }).save();
+}
+
+async function createSuspendedUser() {
+  await new User({
+    username: "suspended",
+    firstname: "Suspended",
+    lastname: "User",
+    bio: "Suspended User",
+    profile_pic: "https://bootdey.com/img/Content/avatar/avatar2.png",
+    password: "testuser",
+    role: 0,
+    status: 1
   }).save();
 }
 

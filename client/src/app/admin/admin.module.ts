@@ -4,16 +4,17 @@ import { DashboardComponent } from "./dashboard/dashboard.component";
 import { FooterComponent } from "./footer/footer.component";
 import { NavbarComponent } from "./navbar/navbar.component";
 import { SidebarComponent } from "./sidebar/sidebar.component";
-import { ReactiveFormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { RouterModule } from '@angular/router';
-import { SharedModule } from 'app/shared/shared.module';
-import { BrowserModule } from '@angular/platform-browser';
-import { PostsComponent } from './posts/posts.component';
-import { RequestsComponent } from './requests/requests.component';
-import { AdsComponent } from './ads/ads.component';
-import { UsersComponent } from './users/users.component';
+import { ReactiveFormsModule } from "@angular/forms";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { RouterModule } from "@angular/router";
+import { SharedModule } from "app/shared/shared.module";
+import { BrowserModule } from "@angular/platform-browser";
+import { PostsComponent } from "./posts/posts.component";
+import { RequestsComponent } from "./requests/requests.component";
+import { AdsComponent } from "./ads/ads.component";
+import { UsersComponent } from "./users/users.component";
+import { TimeagoModule } from "ngx-timeago";
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { UsersComponent } from './users/users.component';
     NgbModule,
     RouterModule,
     SharedModule,
-    BrowserModule
+    BrowserModule,
+    TimeagoModule.forRoot()
   ]
 })
 export class AdminModule {}

@@ -2,9 +2,8 @@ import { Injectable } from "@angular/core";
 import { getServerURL } from "../utils/helpers";
 import { HttpClientService } from "./http-client.service";
 import { environment } from "../../environments/environment";
-import { Observable, Subject } from "rxjs/Rx";
+import { Subject } from "rxjs/Rx";
 import { Router } from "@angular/router";
-import { INotification } from "app/utils/interfaces";
 
 @Injectable()
 export class UsersService {

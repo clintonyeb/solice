@@ -1,7 +1,7 @@
 const jwt = require("express-jwt");
 var express = require("express");
 const authorize = require("../../../utils/authorize");
-const handlers = require("../../../handlers");
+const handlers = require("../../../handlers").users;
 const ROLES = require("../../../utils/user-roles");
 
 var router = express.Router();
