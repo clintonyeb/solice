@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, Output, EventEmitter } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  Output,
+  EventEmitter
+} from "@angular/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { UsersService } from "../../services/users.service";
@@ -6,6 +12,7 @@ import { ToastService } from "../../services/toast.service";
 import { IPost } from "../../utils/interfaces";
 import { UploadService } from "../../services/upload.service";
 import { HttpResponse, HttpEventType } from "@angular/common/http";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-feed",
@@ -38,7 +45,8 @@ export class FeedComponent implements OnInit {
     private modalService: NgbModal,
     private userService: UsersService,
     private toastService: ToastService,
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {}
@@ -103,5 +111,9 @@ export class FeedComponent implements OnInit {
   processPhoto(file: File) {
     const url = "https://api.imgbb.com/1/upload";
     return this.uploadService.uploadFile(url, file);
+  }
+
+  goToAdmin() {
+    this.router.navigate(["/admins"]);
   }
 }

@@ -2,7 +2,6 @@ import { UserComponent } from "./user.component";
 import { NgModule } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 
-import { LandingComponent } from "../user/landing/landing.component";
 import { ProfileComponent } from "../user/profile/profile.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
@@ -45,7 +44,6 @@ import { UsersService } from "../services/users.service";
     TimeagoModule.forRoot()
   ],
   declarations: [
-    LandingComponent,
     ProfileComponent,
     UserComponent,
     FeedComponent,
