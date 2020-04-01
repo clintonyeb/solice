@@ -22,6 +22,7 @@ async function seed() {
   await Post.deleteMany({});
   await User.deleteMany({});
   await Comment.deleteMany({});
+  await Word.deleteMany({});
 
   const admin = await createAdmin();
   await createUser();

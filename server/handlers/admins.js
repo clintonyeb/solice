@@ -17,7 +17,12 @@ async function getWords(req, res, next) {
 }
 
 async function postWords(req, res, next) {
-  const words = await adminService.postWords(req.body);
+  const words = await adminService.postWords(req.body.text);
+  res.json(words);
+}
+
+async function deleteWords(req, res, next) {
+  const words = await adminService.deleteWords(req.params.id);
   res.json(words);
 }
 
@@ -32,7 +37,7 @@ async function deletePosts(req, res, next) {
 }
 
 async function updateUsers(req, res, next) {
-  const user = await adminService.updatePosts(req.params.id, req.body);
+  const user = await adminService.updateUsers(req.params.id, req.body);
   res.json(user);
 }
 
@@ -46,5 +51,6 @@ module.exports = {
   updatePosts,
   deletePosts,
   updateUsers,
-  postAds
+  postAds,
+  deleteWords
 };

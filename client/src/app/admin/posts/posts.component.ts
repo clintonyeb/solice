@@ -17,7 +17,6 @@ export class PostsComponent implements OnInit {
   }
 
   getPosts() {
-    console.log(this.adminService);
     this.adminService
       .getPosts()
       .subscribe((d: Array<IPost>) => (this.posts = d));

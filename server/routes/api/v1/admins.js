@@ -22,9 +22,9 @@ router.put("/admins/posts/:id", handlers.updatePosts);
 
 router.delete("/admins/posts/:id", handlers.deletePosts);
 
-router.put("/admins/users", handlers.updateUsers);
+router.put("/admins/users/:id", handlers.updateUsers);
 
-// router.put("/admins/users", handlers.updateUsers);
+router.delete("/admins/words/:id", handlers.deleteWords);
 
 router.post("/admins/ads", handlers.postAds);
 

@@ -15,6 +15,7 @@ import { RequestsComponent } from "./requests/requests.component";
 import { AdsComponent } from "./ads/ads.component";
 import { UsersComponent } from "./users/users.component";
 import { TimeagoModule } from "ngx-timeago";
+import { FiltersComponent } from './filters/filters.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { TimeagoModule } from "ngx-timeago";
     PostsComponent,
     RequestsComponent,
     AdsComponent,
-    UsersComponent
+    UsersComponent,
+    FiltersComponent
   ],
   imports: [
     CommonModule,

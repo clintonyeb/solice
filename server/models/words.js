@@ -1,7 +1,8 @@
 var mongoose = require("mongoose");
 
 const WordSchema = new mongoose.Schema({
-  text: [String]
+  text: { type: String, required: true, unique: true }
 });
 
+WordSchema.index({ text: "text" });
 module.exports = mongoose.model("words", WordSchema);

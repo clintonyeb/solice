@@ -1,1 +1,73 @@
-<p>users works!</p>
+<div class="main-content">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="title">Flagged Users</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive overflow-auto">
+            <table class="table table-hover">
+              <thead class=" text-primary">
+                <th>
+                  User
+                </th>
+                <th>
+                  Status
+                </th>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let user of users; index as i"
+                  (click)="showUser(user)"
+                >
+                  <td>
+                    {{ user.firstname + " " + user.lastname }}
+                  </td>
+                  <td>
+                    {{ user.status === 0 ? "Enabled" : "Disabled" }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4" *ngIf="user">
+      <div class="card card-user">
+        <div class="card-body" style="min-height: auto;">
+          <div class="content">
+            <img class="right floated mini ui image" [src]="user.profile_pic" />
+            <div class="header">
+              {{ user.firstname + " " + user.lastname }}
+            </div>
+            <div class="meta">
+              Friends of Veronika
+            </div>
+            <div class="description">
+              {{ user.bio }}
+            </div>
+          </div>
+        </div>
+        <hr />
+        <div class="button-container px-4">
+          <button
+            class="btn btn-primary float-left"
+            (click)="enableUser(user)"
+            *ngIf="user.status === 1"
+          >
+            Enable User
+          </button>
+          <button
+            class="btn btn-primary float-left"
+            (click)="disableUser(user)"
+            *ngIf="user.status === 0"
+          >
+            Disable User
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

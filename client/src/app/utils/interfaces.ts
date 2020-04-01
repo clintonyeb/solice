@@ -53,3 +53,8 @@ export interface INotification {
   targetPost: IPost;
   status: boolean;
 }
+
+export interface IFilter {
+  _id: string;
+  text: string;
+}

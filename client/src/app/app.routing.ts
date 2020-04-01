@@ -21,6 +21,7 @@ import { PostsComponent } from "./admin/posts/posts.component";
 import { UsersComponent } from "./admin/users/users.component";
 import { AdsComponent } from "./admin/ads/ads.component";
 import { RequestsComponent } from "./admin/requests/requests.component";
+import { FiltersComponent } from './admin/filters/filters.component';
 
 const routes: Routes = [
   { path: "", redirectTo: "users", pathMatch: "full" },
@@ -56,6 +57,7 @@ const routes: Routes = [
       { path: "", redirectTo: "posts", pathMatch: "full" },
       { path: "posts", component: PostsComponent },
       { path: "requests", component: RequestsComponent },
+      { path: "filters", component: FiltersComponent },
       { path: "ads", component: AdsComponent },
       { path: "users", component: UsersComponent }
     ]

@@ -31,4 +31,37 @@ export class AdminsService {
     const url = getAdminServerURL(`posts/${id}`);
     return this.http.delete(url);
   }
+
+  getUsers(page?: number) {
+    let url;
+    if (page) url = `users?page=${page}`;
+    else url = "users";
+    url = getAdminServerURL(url);
+    return this.http.get(url);
+  }
+
+  enableUser(id: string) {
+    const url = getAdminServerURL(`users/${id}`);
+    return this.http.put(url, { status: 0 });
+  }
+
+  disableUser(id: string) {
+    const url = getAdminServerURL(`users/${id}`);
+    return this.http.put(url, { status: 1 });
+  }
+
+  getFilters(page?: number) {
+    const url = getAdminServerURL('words');
+    return this.http.get(url);
+  }
+
+  deleteFilters(id: string) {
+    const url = getAdminServerURL(`words/${id}`);
+    return this.http.delete(url);
+  }
+
+  addFilters(filters) {
+     const url = getAdminServerURL(`words`);
+     return this.http.post(url, filters);
+  }
 }

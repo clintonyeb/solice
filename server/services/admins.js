@@ -25,11 +25,22 @@ async function getWords() {
   return words;
 }
 
-async function postWords(words) {
-  words.split(" ").forEach(async word => {
-    await new Word({ text: word }).save();
-    return getWords();
-  });
+async function postWords(_words) {
+  const filters = _words.split(" ");
+  for (let i = 0; i < filters.length; i++) {
+    const word = filters[i];
+    try {
+      await new Word({ text: word }).save();
+    } catch (e) {}
+  }
+  const words = await Word.find();
+  return words;
+}
+
+async function deleteWords(id) {
+  await Word.deleteOne({ _id: id });
+  const words = await Word.find();
+  return words;
 }
 
 async function updatePosts(id, _post) {
@@ -49,13 +60,14 @@ async function deletePosts(id) {
     { $inc: { deletedPosts: 1 } }
   );
   if (user.deletedPosts > 20) {
-    user = await User.findOneAndUpdate({ _id: postedBy }, { status: 1 });
+    await User.findOneAndUpdate({ _id: postedBy }, { status: 1 });
   }
   return post;
 }
 
-async function updateUsers(userId, _user) {
-  const user = await User.findOneAndUpdate({ _id: userId }, user);
+async function updateUsers(id, _user) {
+  await User.updateOne({ _id: id }, _user);
+  const user = await User.findOne({ _id: id });
   return user;
 }
 
@@ -72,5 +84,6 @@ module.exports = {
   deletePosts,
   updateUsers,
   updateUsers,
-  postAds
+  postAds,
+  deleteWords
 };
