@@ -5,7 +5,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { Routes, RouterModule } from "@angular/router";
 import { HttpClientModule } from "@angular/common/http";
 
-import { LandingComponent } from "./user/landing/landing.component";
+// import { LandingComponent } from "./user/landing/landing.component";
 import { LoginComponent } from "./session/login/login.component";
 import { RegisterComponent } from "./session/register/register.component";
 import { SessionComponent } from "./session/session.component";
@@ -15,6 +15,8 @@ import { UserComponent } from "./user/user.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { SharedModule } from "./shared/shared.module";
 import { DashboardComponent } from "./user/dashboard/dashboard.component";
+import { NotFoundComponent } from './shared/not-found/not-found.component';
+import { DashboardComponent as AdminDashboardComponent } from "./admin/dashboard/dashboard.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "users", pathMatch: "full" },
@@ -41,8 +43,16 @@ const routes: Routes = [
       { path: "feeds", component: DashboardComponent }
     ]
   },
-  { path: "landing", component: LandingComponent },
-  { path: "**", component: LandingComponent }
+  {
+    path: "admins",
+    component: UserComponent,
+    canActivate: [AuthGuardService],
+    children: [
+      { path: "", redirectTo: "feeds", pathMatch: "full" },
+      { path: "feeds", component: AdminDashboardComponent }
+    ]
+  },
+  { path: "**", component: NotFoundComponent }
 ];
 
 @NgModule({
