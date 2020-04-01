@@ -10,13 +10,21 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'app/shared/shared.module';
 import { BrowserModule } from '@angular/platform-browser';
+import { PostsComponent } from './posts/posts.component';
+import { RequestsComponent } from './requests/requests.component';
+import { AdsComponent } from './ads/ads.component';
+import { UsersComponent } from './users/users.component';
 
 @NgModule({
   declarations: [
     DashboardComponent,
     FooterComponent,
     NavbarComponent,
-    SidebarComponent
+    SidebarComponent,
+    PostsComponent,
+    RequestsComponent,
+    AdsComponent,
+    UsersComponent
   ],
   imports: [
     CommonModule,

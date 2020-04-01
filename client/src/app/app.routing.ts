@@ -17,6 +17,10 @@ import { SharedModule } from "./shared/shared.module";
 import { DashboardComponent } from "./user/dashboard/dashboard.component";
 import { NotFoundComponent } from "./shared/not-found/not-found.component";
 import { DashboardComponent as AdminDashboardComponent } from "./admin/dashboard/dashboard.component";
+import { PostsComponent } from './admin/posts/posts.component';
+import { UsersComponent } from './admin/users/users.component';
+import { AdsComponent } from './admin/ads/ads.component';
+import { RequestsComponent } from './admin/requests/requests.component';
 
 const routes: Routes = [
   { path: "", redirectTo: "users", pathMatch: "full" },
@@ -48,8 +52,11 @@ const routes: Routes = [
     component: AdminDashboardComponent,
     canActivate: [AuthGuardService],
     children: [
-      { path: "", redirectTo: "feeds", pathMatch: "full" },
-      { path: "feeds", component: NotFoundComponent }
+      { path: "", redirectTo: "posts", pathMatch: "full" },
+      { path: "posts", component: PostsComponent },
+      { path: "requests", component: RequestsComponent },
+      { path: "ads", component: AdsComponent },
+      { path: "users", component: UsersComponent }
     ]
   },
   { path: "**", component: NotFoundComponent }
