@@ -3,6 +3,13 @@ export interface INotify {
   message: string;
 }
 
+interface IRequest {
+  _id: string;
+  status: number;
+  text: string;
+  created: Date;
+}
+
 export interface IUser {
   firstname: string;
   lastname: string;
@@ -15,6 +22,7 @@ export interface IUser {
   dob: IDOB;
   token: string;
   status: number;
+  requests: Array<IRequest>;
 }
 export interface IDOB {
   day: number;

@@ -67,12 +67,18 @@ async function deletePosts(id) {
 
 async function updateUsers(id, _user) {
   await User.updateOne({ _id: id }, _user);
+  await User.update({ _id: id, 'requests.status': 0 }, { $set: { "requests.$.status": 1 } });
   const user = await User.findOne({ _id: id });
   return user;
 }
 
 async function postAds(ad) {
   // const ad = await new Ad({ text: word }).save();
+}
+
+async function getRequests() {
+  const users = await User.find({ status: 1, "requests.status": 0 });
+  return users;
 }
 
 module.exports = {
@@ -85,5 +91,6 @@ module.exports = {
   updateUsers,
   updateUsers,
   postAds,
-  deleteWords
+  deleteWords,
+  getRequests
 };

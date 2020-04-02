@@ -63,4 +63,9 @@ export class SessionService {
   makePost(url, data) {
     return this.http.post(url, data);
   }
+
+  submitRequest(request) {
+    const url: string = getServerURL("requests");
+    return this.http.post(url, request);
+  }
 }

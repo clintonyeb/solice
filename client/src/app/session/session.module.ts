@@ -8,9 +8,10 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { ReactiveFormsModule } from "@angular/forms";
 import { SharedModule } from "../shared/shared.module";
+import { RequestsComponent } from './requests/requests.component';
 
 @NgModule({
-  declarations: [SessionComponent, LoginComponent, RegisterComponent],
+  declarations: [SessionComponent, LoginComponent, RegisterComponent, RequestsComponent],
   imports: [
     ReactiveFormsModule,
     BrowserAnimationsModule,

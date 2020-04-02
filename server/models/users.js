@@ -61,7 +61,14 @@ var userSchema = mongoose.Schema({
     required: true,
     default: 0
   },
-  deletedPosts: Number
+  deletedPosts: Number,
+  requests: [
+    {
+      text: String,
+      created: { type: Date, default: Date.now },
+      status: Number // 0: pending, 1: resolved, 2: rejected
+    }
+  ]
 });
 
 // before save has password

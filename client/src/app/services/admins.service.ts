@@ -51,7 +51,7 @@ export class AdminsService {
   }
 
   getFilters(page?: number) {
-    const url = getAdminServerURL('words');
+    const url = getAdminServerURL("words");
     return this.http.get(url);
   }
 
@@ -61,7 +61,12 @@ export class AdminsService {
   }
 
   addFilters(filters) {
-     const url = getAdminServerURL(`words`);
-     return this.http.post(url, filters);
+    const url = getAdminServerURL(`words`);
+    return this.http.post(url, filters);
+  }
+
+  getRequests() {
+    const url = getAdminServerURL("users/requests");
+    return this.http.get(url);
   }
 }

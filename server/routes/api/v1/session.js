@@ -62,4 +62,16 @@ router.post("/update_password", function(req, res) {
   });
 });
 
+router.post("/requests", async function(req, res) {
+  try {
+    const status = await userService.createRequest(
+      req.body.email,
+      req.body.text
+    );
+    res.json(status);
+  } catch (error) {
+    res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({ error: error.message });
+  }
+});
+
 module.exports = router;

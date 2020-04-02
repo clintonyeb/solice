@@ -341,6 +341,45 @@ async function getActiveFollowing(app, userId) {
   return users;
 }
 
+async function createRequest(username, text) {
+  // find user by username
+  // if not error
+  const user = await User.findOne({
+    email: username
+  });
+
+  if (!user) {
+    throw new Error("No user with email address found in our records");
+  }
+  // check if user is disabled
+  // else error
+  if (user.status === 0) {
+    throw new Error("You account has not been disabled");
+  }
+
+  // check if user does not have pending requests
+  // else error
+  const found = user.requests.find(r => r.status === 0);
+  if (found) {
+    throw new Error("You already have pending requests");
+  }
+
+  const request = {
+    text: text,
+    status: 0
+  };
+
+  // created and add request
+  await User.updateOne(
+    { _id: user._id },
+    {
+      $push: { requests: request }
+    }
+  );
+
+  return true;
+}
+
 // Expose all the api...
 module.exports = {
   createUser,
@@ -364,5 +403,6 @@ module.exports = {
   getNotifications,
   logout,
   deleteNotifications,
-  getActiveFollowing
+  getActiveFollowing,
+  createRequest
 };

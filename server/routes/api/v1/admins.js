@@ -28,4 +28,6 @@ router.delete("/admins/words/:id", handlers.deleteWords);
 
 router.post("/admins/ads", handlers.postAds);
 
+router.get("/admins/users/requests", handlers.getRequests);
+
 module.exports = router;

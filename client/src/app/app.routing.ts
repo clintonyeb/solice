@@ -21,7 +21,8 @@ import { PostsComponent } from "./admin/posts/posts.component";
 import { UsersComponent } from "./admin/users/users.component";
 import { AdsComponent } from "./admin/ads/ads.component";
 import { RequestsComponent } from "./admin/requests/requests.component";
-import { FiltersComponent } from './admin/filters/filters.component';
+import { RequestsComponent as UserRequestsComponent } from "./session/requests/requests.component";
+import { FiltersComponent } from "./admin/filters/filters.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "users", pathMatch: "full" },
@@ -35,7 +36,7 @@ const routes: Routes = [
         component: LoginComponent
       },
       { path: "register", component: RegisterComponent },
-      { path: "request", component: RequestsComponent },
+      { path: "request", component: UserRequestsComponent },
       { path: "forgot-password", component: LoginComponent },
       { path: "recover-password", component: LoginComponent }
     ]

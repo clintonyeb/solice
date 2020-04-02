@@ -43,6 +43,11 @@ async function updateUsers(req, res, next) {
 
 async function postAds(req, res, next) {}
 
+async function getRequests(req, res, next) {
+  const users = await adminService.getRequests();
+  res.json(users);
+}
+
 module.exports = {
   getPosts,
   getUsers,
@@ -52,5 +57,6 @@ module.exports = {
   deletePosts,
   updateUsers,
   postAds,
-  deleteWords
+  deleteWords,
+  getRequests
 };

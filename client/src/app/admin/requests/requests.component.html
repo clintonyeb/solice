@@ -1,1 +1,77 @@
-<p>requests works!</p>
+<div class="main-content">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="title">User Requests</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive overflow-auto">
+            <table class="table table-hover">
+              <thead class=" text-primary">
+                <th>
+                  User
+                </th>
+                <th>
+                  Status
+                </th>
+                <th>
+                  Message
+                </th>
+                <th>
+                  Submitted On
+                </th>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let user of requests; index as i"
+                  (click)="showUser(user)"
+                >
+                  <td>
+                    {{ user.firstname + " " + user.lastname }}
+                  </td>
+                  <td>
+                    {{ user.status === 0 ? "Enabled" : "Disabled" }}
+                  </td>
+                  <td>{{ getRequest(user).text }}</td>
+                  <td>{{ getRequest(user).created }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4" *ngIf="request">
+      <div class="card card-user">
+        <div class="card-body" style="min-height: auto;">
+          <div class="content">
+            <img
+              class="right floated mini ui image"
+              [src]="request.profile_pic"
+            />
+            <div class="header">
+              {{ request.firstname + " " + request.lastname }}
+            </div>
+            <div class="meta">
+              Friends of Veronika
+            </div>
+            <div class="description">
+              {{ request.bio }}
+            </div>
+          </div>
+        </div>
+        <hr />
+        <div class="button-container px-4">
+          <button
+            class="btn btn-primary float-left"
+            (click)="enableUser(request)"
+            *ngIf="request.status === 1"
+          >
+            Accept Request
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
