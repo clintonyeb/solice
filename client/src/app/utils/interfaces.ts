@@ -6,7 +6,7 @@ export interface INotify {
 export interface IUser {
   firstname: string;
   lastname: string;
-  username: string;
+  email: string;
   _id: string;
   bio: string;
   profile_pic: string;

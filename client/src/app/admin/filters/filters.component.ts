@@ -10,7 +10,7 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 })
 export class FiltersComponent implements OnInit {
   filters: Array<IFilter>;
-  focus;
+  focus: any;
   form = new FormGroup({
     text: new FormControl("", [Validators.required])
   });

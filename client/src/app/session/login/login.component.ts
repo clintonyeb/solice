@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
 
   // controls
   form = new FormGroup({
-    username: new FormControl("", [Validators.required]),
+    email: new FormControl("", [Validators.required, Validators.email]),
     password: new FormControl("", [Validators.required])
   });
 
@@ -51,7 +51,6 @@ export class LoginComponent implements OnInit {
         );
         this.alert.status = true;
         this.sessionService.saveSession(data);
-        console.log(data);
         if (data["role"] >= 2) {
           this.toastService.success("Login", "Logged in as Admin");
           this.router.navigate(["/admins"]);

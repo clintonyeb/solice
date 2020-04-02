@@ -40,7 +40,7 @@ export class UsersService {
   goActive() {
     const url = environment.WEB_SOCKET_URL;
     const message = {
-      token: localStorage.getItem("token")
+      token: sessionStorage.getItem("token")
     };
     this.socket = new WebSocket(url);
     this.socket.onopen = e => {
@@ -154,8 +154,8 @@ export class UsersService {
     const url: string = getServerURL("logout");
     return this.http.get(url).subscribe(res => {
       this.socket.close();
-      localStorage.removeItem("token");
-      localStorage.removeItem("userId");
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("userId");
 
       this.router.navigate([
         "/session/login",

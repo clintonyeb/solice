@@ -5,33 +5,34 @@ import { HttpHeaders, HttpClient } from "@angular/common/http";
   providedIn: "root"
 })
 export class HttpClientService {
-  headers;
-  constructor(private http: HttpClient) {
-    const token = localStorage.getItem("token");
-    this.headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-  }
+  constructor(private http: HttpClient) {}
 
   get(url) {
     return this.http.get(url, {
-      headers: this.headers
+      headers: this.getHeaders()
     });
   }
 
   post(url, data) {
     return this.http.post(url, data, {
-      headers: this.headers
+      headers: this.getHeaders()
     });
   }
 
   put(url, data) {
     return this.http.put(url, data, {
-      headers: this.headers
+      headers: this.getHeaders()
     });
   }
 
   delete(url) {
     return this.http.delete(url, {
-      headers: this.headers
+      headers: this.getHeaders()
     });
+  }
+
+  getHeaders() {
+    const token = sessionStorage.getItem("token");
+    return new HttpHeaders({ Authorization: `Bearer ${token}` });
   }
 }

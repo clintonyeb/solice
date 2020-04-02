@@ -8,7 +8,10 @@ import { getServerURL } from "../utils/helpers";
 
 @Injectable()
 export class SessionService {
-  constructor(private http: HttpClient) {}
+  userId: string;
+  constructor(private http: HttpClient) {
+    this.userId = sessionStorage.getItem("userId");
+  }
 
   login(data) {
     const url: string = getServerURL("login");
@@ -30,13 +33,13 @@ export class SessionService {
   }
 
   hasToken(): boolean {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     return token != null;
   }
 
   validateToken(cb) {
     const err = new Error("Invalid token");
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (!token) {
       return cb(err);
     }
@@ -53,8 +56,8 @@ export class SessionService {
   }
 
   saveSession(data) {
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("userId", data._id);
+    sessionStorage.setItem("token", data.token);
+    sessionStorage.setItem("userId", data._id);
   }
 
   makePost(url, data) {

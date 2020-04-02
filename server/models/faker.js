@@ -36,7 +36,7 @@ async function seed() {
 // manually create admin
 async function createAdmin() {
   const user = await new User({
-    username: "admin",
+    email: "admin@gm.com",
     firstname: "Admin",
     lastname: "User",
     bio: "Admin User",
@@ -49,7 +49,7 @@ async function createAdmin() {
 
 async function createUser() {
   await new User({
-    username: "user",
+    email: "user@gm.com",
     firstname: "Test",
     lastname: "User",
     bio: "Test User",
@@ -61,7 +61,7 @@ async function createUser() {
 
 async function createSuspendedUser() {
   await new User({
-    username: "suspended",
+    email: "suspended@gm.com",
     firstname: "Suspended",
     lastname: "User",
     bio: "Suspended User",
@@ -76,7 +76,7 @@ async function generate(adminId) {
   for (let i = 0; i < 20; i++) {
     const username = "user" + i;
     await new User({
-      username: username,
+      email: `${username}@gm.com`,
       firstname: faker.name.firstName(),
       lastname: faker.name.lastName(),
       bio: faker.company.catchPhrase(),

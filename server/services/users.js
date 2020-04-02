@@ -9,7 +9,7 @@ const error = new Error("Record not found...");
 const LIMIT = 10;
 
 function authenticate(obj, cb) {
-  User.findOne({ username: obj.username }).exec((err, user) => {
+  User.findOne({ email: obj.email }).exec((err, user) => {
     if (err) return cb(new Error("Invalid username and password"));
     if (user && user.validPassword(obj.password)) {
       if (user.status === 0) {
@@ -77,14 +77,14 @@ function getPost(id, cb) {
   Post.findById(id)
     .populate("postedBy")
     .exec((err, post) => {
-      console.log(err, post);
       if (err) return cb(err);
       return cb(err, post);
     });
 }
 
-function createPost(post, cb) {
-  if (getPostStatus(post.text)) {
+async function createPost(post, cb) {
+  const res = await getPostStatus(post.text);
+  if (res) {
     post.status = POST_STATUS.DISABLED;
     // TODO: check and notify admin
   } else {
@@ -101,13 +101,13 @@ function createPost(post, cb) {
 }
 
 async function getPostStatus(text) {
-  const filter = await Word.findOne({ text: { $in: text.split(" ") } });
-  return !!filter;
+  const words = text.split(" ");
+  const filter = await Word.findOne({ text: { $in: words } });
+  return filter;
 }
 
-
 function createUser(obj, cb) {
-  User.findOne({ username: obj.username }, (err, user) => {
+  User.findOne({ email: obj.email }, (err, user) => {
     if (user) {
       return cb(new Error("User with username already exists"));
     }
@@ -119,7 +119,7 @@ function createUser(obj, cb) {
       bio = `Hey there! I'm ${obj.firstname}`;
     }
     var newUser = new User({
-      username: obj.username,
+      email: obj.email,
       firstname: obj.firstname,
       lastname: obj.lastname,
       dob: obj.dob,

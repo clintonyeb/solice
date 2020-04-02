@@ -52,11 +52,7 @@ export class DashboardComponent implements OnInit {
       );
     });
 
-    setTimeout(() => this.userService.goActive(), 0);
-
-    // setTimeout(() => {
-    //   ;
-    // }, 500);
+    setTimeout(() => this.userService.goActive(), 500);
   }
 
   editProfile(value: string) {

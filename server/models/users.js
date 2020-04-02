@@ -3,7 +3,7 @@ var bcrypt = require("bcrypt-nodejs");
 const jwt = require("jsonwebtoken");
 
 var userSchema = mongoose.Schema({
-  username: {
+  email: {
     type: String,
     required: true,
     unique: true
@@ -101,7 +101,6 @@ userSchema.methods.generateToken = function(cb) {
   jwt.sign(
     {
       _id: user._id,
-      username: user.username,
       iat: Math.floor(Date.now() / 1000) - 30,
       role: user.role
     },

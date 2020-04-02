@@ -102,12 +102,12 @@ export class StoryComponent implements OnInit {
   }
 
   hasLiked(post: { likes: string | string[] }): boolean {
-    const userId = localStorage.getItem("userId");
+    const userId = sessionStorage.getItem("userId");
     return post.likes.indexOf(userId) > -1;
   }
 
   hasCommented(post: { comments: any[] }): boolean {
-    const userId = localStorage.getItem("userId");
+    const userId = sessionStorage.getItem("userId");
     return (
       post.comments.find(
         (comm: { postedBy: string }) => comm.postedBy === userId
@@ -129,7 +129,7 @@ export class StoryComponent implements OnInit {
   }
 
   isMyComment(postedBy) {
-    const userId = localStorage.getItem("userId");
+    const userId = sessionStorage.getItem("userId");
     return postedBy._id === userId;
   }
 

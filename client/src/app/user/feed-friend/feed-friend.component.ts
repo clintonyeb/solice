@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from "@angular/core";
 import { IUser } from "../../utils/interfaces";
 import { UsersService } from "../../services/users.service";
 import { FormControl } from "@angular/forms";
@@ -51,7 +51,7 @@ export class FeedFriendComponent implements OnInit {
 
   isFollowing(user): boolean {
     if (!user || !user.followers) return false;
-    const id = localStorage.getItem("userId");
+    const id = sessionStorage.getItem("userId");
     return user.followers.indexOf(id) > -1;
   }
 

@@ -28,9 +28,9 @@ export class RegisterComponent implements OnInit {
 
   form = new FormGroup(
     {
-      username: new FormControl("", [
+      email: new FormControl("", [
         Validators.required,
-        matchesPattern(/^[a-zA-Z0-9]+$/)
+        Validators.email
       ]),
       firstname: new FormControl("", [Validators.required]),
       lastname: new FormControl("", [Validators.required]),
