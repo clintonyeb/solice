@@ -12,7 +12,6 @@ mongoose.connect(require("../config/app").db.connectionUri, {
 // populate models
 var User = require("../models/users");
 var Post = require("../models/posts");
-var Comment = require("../models/comments");
 var Word = require("../models/words");
 
 // populate user
@@ -21,7 +20,6 @@ seed();
 async function seed() {
   await Post.deleteMany({});
   await User.deleteMany({});
-  await Comment.deleteMany({});
   await Word.deleteMany({});
 
   const admin = await createAdmin();

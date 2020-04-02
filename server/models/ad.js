@@ -4,7 +4,7 @@ const AdSchema = new mongoose.Schema({
   text: String,
   url: String,
   image: String,
-  created: { type: Date, default: Date.now },
+  created: { type: Date, default: Date.now }
 });
 
 // CommentSchema.index({ text: "text" });

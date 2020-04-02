@@ -1,6 +1,5 @@
 var User = require("../models/users");
 var Post = require("../models/posts");
-var Comment = require("../models/comments");
 var Word = require("../models/words");
 const POST_STATUS = require("../utils/post-status");
 
@@ -237,22 +236,19 @@ async function commentPost(userId, postId, text, cb) {
   getPost(postId, async (err, post) => {
     if (err) return cb(err);
 
-    const comment = await new Comment({
+    const comment = {
       text: text,
       postedBy: userId
-    }).save();
+    };
 
-    post.comments.push(comment._id);
+    post.comments.push(comment);
 
     post.save(err => {
       Post.findById(post._id)
         .populate("postedBy")
         .populate({
-          path: "comments",
-          populate: {
-            path: "postedBy",
-            model: "users"
-          }
+          path: "comments.postedBy",
+          model: "users"
         })
         .exec((err, post) => {
           if (err) return cb(err);
@@ -263,31 +259,29 @@ async function commentPost(userId, postId, text, cb) {
 }
 
 function deleteComment(postId, commentId, cb) {
-  Post.update({ _id: postId }, { $pull: { comments: commentId } }, err => {
-    Post.findById(postId)
-      .populate("postedBy")
-      .populate({
-        path: "comments",
-        populate: {
-          path: "postedBy",
+  Post.update(
+    { _id: postId },
+    { $pull: { comments: { _id: commentId } } },
+    err => {
+      Post.findById(postId)
+        .populate("postedBy")
+        .populate({
+          path: "comments.postedBy",
           model: "users"
-        }
-      })
-      .exec((err, post) => {
-        if (err) return cb(err);
-        return cb(err, post);
-      });
-  });
+        })
+        .exec((err, post) => {
+          if (err) return cb(err);
+          return cb(err, post);
+        });
+    }
+  );
 }
 
 function getComments(postId, cb) {
   Post.findById(postId)
     .populate({
-      path: "comments",
-      populate: {
-        path: "postedBy",
-        model: "users"
-      }
+      path: "comments.postedBy",
+      model: "users"
     })
     .exec((err, post) => {
       if (err) return cb(err);

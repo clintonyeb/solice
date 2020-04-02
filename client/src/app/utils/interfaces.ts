@@ -47,7 +47,7 @@ export interface IPost {
   text: string;
   photo: string;
   likes: Array<IUser>;
-  comments: Array<Comment>;
+  comments: Array<IComment>;
   postedBy: IUser;
   created: Date;
   status: number;
