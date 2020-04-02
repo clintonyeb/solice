@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { UsersService } from "../../services/users.service";
-import { INotification } from "../../utils/interfaces";
+import { INotification, IAd } from "../../utils/interfaces";
 
 @Component({
   selector: "app-activity",
@@ -8,12 +8,14 @@ import { INotification } from "../../utils/interfaces";
   styleUrls: ["./activity.component.css"]
 })
 export class ActivityComponent implements OnInit {
+  ad: IAd;
   constructor(private userService: UsersService) {}
   notifications: Array<INotification>;
 
   ngOnInit(): void {
     this.getNotifications();
     this.watchForNotif();
+    this.getAd();
   }
 
   getNotifications() {
@@ -37,5 +39,11 @@ export class ActivityComponent implements OnInit {
       },
       err => {}
     );
+  }
+
+  getAd() {
+    this.userService.getAds().subscribe((data: IAd) => {
+      this.ad = data;
+    });
   }
 }

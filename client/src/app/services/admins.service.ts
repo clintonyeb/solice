@@ -69,4 +69,20 @@ export class AdminsService {
     const url = getAdminServerURL("users/requests");
     return this.http.get(url);
   }
+
+  getAds() {
+    const url = getAdminServerURL("ads");
+    return this.http.get(url);
+  }
+
+
+  deleteAd(id: string) {
+    const url = getAdminServerURL(`ads/${id}`);
+    return this.http.delete(url);
+  }
+
+  createAd(ad) {
+    const url = getAdminServerURL("ads");
+    return this.http.post(url, ad);
+  }
 }

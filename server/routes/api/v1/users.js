@@ -48,4 +48,6 @@ router.delete("/posts/:postId/comments/:commentId", handlers.deleteComment);
 
 router.get("/users/notifications", handlers.getNotifications);
 
+router.get("/users/ads", handlers.getAds);
+
 module.exports = router;

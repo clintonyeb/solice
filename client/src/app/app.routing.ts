@@ -23,6 +23,9 @@ import { AdsComponent } from "./admin/ads/ads.component";
 import { RequestsComponent } from "./admin/requests/requests.component";
 import { RequestsComponent as UserRequestsComponent } from "./session/requests/requests.component";
 import { FiltersComponent } from "./admin/filters/filters.component";
+import { CreateAdsComponent } from "./admin/create-ads/create-ads.component";
+
+
 
 const routes: Routes = [
   { path: "", redirectTo: "users", pathMatch: "full" },
@@ -60,7 +63,8 @@ const routes: Routes = [
       { path: "requests", component: RequestsComponent },
       { path: "filters", component: FiltersComponent },
       { path: "ads", component: AdsComponent },
-      { path: "users", component: UsersComponent }
+      { path: "users", component: UsersComponent },
+      { path: "new-ads", component: CreateAdsComponent }
     ]
   },
   { path: "**", component: NotFoundComponent }

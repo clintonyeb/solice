@@ -66,3 +66,17 @@ export interface IFilter {
   _id: string;
   text: string;
 }
+
+export interface IAd {
+  _id: string;
+  text: string;
+  url: string;
+  image: string;
+  created: Date;
+}
+
+export interface ITarget {
+  field: string;
+  operator: string;
+  value: string;
+}

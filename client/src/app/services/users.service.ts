@@ -178,4 +178,9 @@ export class UsersService {
     const url: string = getServerURL("users/active");
     return this.http.get(url);
   }
+
+  getAds() {
+    const url: string = getServerURL("users/ads");
+    return this.http.get(url);
+  }
 }

@@ -41,11 +41,24 @@ async function updateUsers(req, res, next) {
   res.json(user);
 }
 
-async function postAds(req, res, next) {}
+async function postAds(req, res, next) {
+  const ad = await adminService.postAds(req.body);
+  res.json(ad);
+}
 
 async function getRequests(req, res, next) {
   const users = await adminService.getRequests();
   res.json(users);
+}
+
+async function getAds(req, res, next) {
+  const ads = await adminService.getAds();
+  res.json(ads);
+}
+
+async function deleteAds(req, res, next) {
+  await adminService.deleteAds(req.params.id);
+  res.json(true);
 }
 
 module.exports = {
@@ -58,5 +71,7 @@ module.exports = {
   updateUsers,
   postAds,
   deleteWords,
-  getRequests
+  getRequests,
+  getAds,
+  deleteAds
 };

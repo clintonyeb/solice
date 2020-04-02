@@ -162,7 +162,7 @@ function commentPost(req, res, next) {
       if (err)
         return res
           .status(HttpStatus.UNPROCESSABLE_ENTITY)
-          .send("Error retrieving posts");
+          .json({ error: err ? err.message : "Error retrieving posts" });
       res.json(post);
       notiService.commentedPost(req.app, req.user._id, post._id);
     }
@@ -229,6 +229,16 @@ async function getActiveUsers(req, res, next) {
   }
 }
 
+async function getAds(req, res, next) {
+  try {
+    const ad = await userService.getAds(req.user._id);
+    res.json(ad);
+  } catch (error) {
+    console.error(error);
+    res.json(error);
+  }
+}
+
 module.exports = {
   authenticate,
   getUser,
@@ -251,5 +261,6 @@ module.exports = {
   updateUser,
   getUserForId,
   getNotifications,
-  getActiveUsers
+  getActiveUsers,
+  getAds
 };

@@ -1,1 +1,87 @@
-<p>ads works!</p>
+<div class="main-content">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="title">Manage Ads</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive overflow-auto">
+            <table class="table table-hover">
+              <thead class=" text-primary">
+                <th>
+                  Created on
+                </th>
+                <th>
+                  Content
+                </th>
+                <th>
+                  Url
+                </th>
+                <th>
+                  Image
+                </th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let ad of ads; index as i" (click)="showAd(ad)">
+                  <td>
+                    {{ ad.created }}
+                  </td>
+                  <td>
+                    {{ ad.text }}
+                  </td>
+                  <td>
+                    {{ ad.url }}
+                  </td>
+                  <td>
+                    {{ ad.image }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4" *ngIf="ad">
+      <div class="card card-user">
+        <div class="card-body" style="min-height: auto;">
+          <div class="table-responsive overflow-auto">
+            <table class="table">
+              <thead class=" text-primary">
+                <th>
+                  Field
+                </th>
+                <th>
+                  Operator
+                </th>
+                <th>
+                  Value
+                </th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let target of ad.targets; index as j">
+                  <td>
+                    {{ target.field }}
+                  </td>
+                  <td>
+                    {{ target.operator }}
+                  </td>
+                  <td>
+                    {{ target.value }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <hr />
+        <div class="button-container px-4">
+          <button class="btn btn-secondary float-right" (click)="deleteAd(ad, i)">
+            Delete Ad
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

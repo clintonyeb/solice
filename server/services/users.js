@@ -1,6 +1,7 @@
 var User = require("../models/users");
 var Post = require("../models/posts");
 var Word = require("../models/words");
+var Ad = require("../models/ads");
 const POST_STATUS = require("../utils/post-status");
 
 const error = new Error("Record not found...");
@@ -39,7 +40,7 @@ function getUserFull(id, type, cb) {
 }
 
 function getAllUsers(user, cb) {
-  User.find({ role: 0, _id: { $ne: user } }, (err, users) => {
+  User.find({ _id: { $ne: user } }, (err, users) => {
     if (err) return cb(err, false);
     return cb(err, users);
   });
@@ -92,8 +93,6 @@ async function createPost(post, cb) {
 
   var newPost = new Post(post);
   newPost.save((err, res) => {
-    console.log(err, res);
-
     if (err) return err;
     return getPost(res._id, cb);
   });
@@ -169,7 +168,6 @@ function unfollow(userId, otherId, cb) {
 function searchUsers(userId, query, cb, page) {
   User.find(
     {
-      role: 0,
       _id: { $ne: userId },
       $or: [
         { firstname: { $regex: query, $options: "i" } },
@@ -233,6 +231,11 @@ function likePost(userId, postId, cb) {
 }
 
 async function commentPost(userId, postId, text, cb) {
+  const res = await getPostStatus(text);
+  if (res) {
+    cb(new Error("Comment flagged as containing sensitive words"));
+    return;
+  }
   getPost(postId, async (err, post) => {
     if (err) return cb(err);
 
@@ -315,8 +318,8 @@ async function getNotifications(userId) {
       path: "notifications.targetPost",
       model: "posts"
     })
-    .sort({ created: "desc" })
-    .limit(LIMIT)
+    // .sort({ created: "desc" })
+    // .limit(LIMIT)
     .exec();
 
   return user.notifications;
@@ -374,7 +377,44 @@ async function createRequest(username, text) {
   return true;
 }
 
-// Expose all the api...
+async function getAds(userId) {
+  const user = await User.findOne({ _id: userId });
+  let ad = null;
+
+  if (user.dob) {
+    const age = computeAge(user.dob);
+    const matchedAds = await Ad.find({ "targets.field": "age" })
+      .sort({ created: "desc" })
+      .exec();
+
+    if (matchedAds) {
+      ad = matchedAds.find(ad => {
+        return ad.targets.find(req => {
+          const value = Number(req.value);
+          if (req.operator == "==" && age == value) return true;
+          if (req.operator == "<" && age < value) return true;
+          if (req.operator == ">" && age > value) return true;
+          if (req.operator == "!=" && age != value) return true;
+          return false;
+        });
+      });
+    }
+  }
+
+  if (!ad) {
+    ad = await Ad.findOne()
+      .sort({ created: "desc" })
+      .exec();
+  }
+
+  return ad;
+}
+
+function computeAge(dob) {
+  const now = new Date();
+  return now.getFullYear() - dob.year;
+}
+
 module.exports = {
   createUser,
   authenticate,
@@ -398,5 +438,6 @@ module.exports = {
   logout,
   deleteNotifications,
   getActiveFollowing,
-  createRequest
+  createRequest,
+  getAds
 };

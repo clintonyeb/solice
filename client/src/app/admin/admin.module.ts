@@ -15,7 +15,12 @@ import { RequestsComponent } from "./requests/requests.component";
 import { AdsComponent } from "./ads/ads.component";
 import { UsersComponent } from "./users/users.component";
 import { TimeagoModule } from "ngx-timeago";
-import { FiltersComponent } from './filters/filters.component';
+import { FiltersComponent } from "./filters/filters.component";
+import { CreateAdsComponent } from "./create-ads/create-ads.component";
+
+import { FilePondModule, registerPlugin } from "ngx-filepond";
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+registerPlugin(FilePondPluginFileValidateType);
 
 @NgModule({
   declarations: [
@@ -27,7 +32,8 @@ import { FiltersComponent } from './filters/filters.component';
     RequestsComponent,
     AdsComponent,
     UsersComponent,
-    FiltersComponent
+    FiltersComponent,
+    CreateAdsComponent
   ],
   imports: [
     CommonModule,
@@ -37,6 +43,7 @@ import { FiltersComponent } from './filters/filters.component';
     RouterModule,
     SharedModule,
     BrowserModule,
+    FilePondModule,
     TimeagoModule.forRoot()
   ]
 })

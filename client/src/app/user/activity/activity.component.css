@@ -1,0 +1,6 @@
+.has-image {
+  background-position: center;
+  background-size: cover;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}

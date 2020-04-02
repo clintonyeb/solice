@@ -13,23 +13,17 @@ import { ActivityComponent } from "./activity/activity.component";
 import { BioComponent } from "./bio/bio.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
 import { StoryComponent } from "./story/story.component";
-
-// import filepond module
-import { FilePondModule, registerPlugin } from "ngx-filepond";
-// import and register filepond file type validation plugin
-import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
-// import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-
 import { BrowserModule } from "@angular/platform-browser";
-registerPlugin(FilePondPluginFileValidateType);
-// registerPlugin(FilePondPluginImagePreview);
-
 import { TimeagoModule } from "ngx-timeago";
 import { FeedFriendComponent } from "./feed-friend/feed-friend.component";
 import { UpdateProfileComponent } from "./update-profile/update-profile.component";
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { UsersService } from "../services/users.service";
 import { PostComponent } from './post/post.component';
+
+import { FilePondModule, registerPlugin } from "ngx-filepond";
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+registerPlugin(FilePondPluginFileValidateType);
 
 @NgModule({
   imports: [

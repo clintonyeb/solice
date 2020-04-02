@@ -1,5 +1,42 @@
-<!-- Advertisement
-
+<!-- Advertisement -->
+<div class="my-3">
+  <a
+    class="row border border-black m-auto text-decoration-none"
+    style="background-color: mediumaquamarine; max-width: 25rem; height: 5rem; border-radius: 5px;"
+    *ngIf="ad"
+    [href]="ad.url"
+    target="_blank"
+  >
+    <div
+      class="col-3 has-image"
+      [ngStyle]="{
+        background: 'url(' + ad.image + ')'
+      }"
+    >
+      <!-- <img [src]="ad.image" alt="Ad Image" style="" /> -->
+    </div>
+    <div class="col-6 p-3 text-secondary">
+      {{ ad.text }}
+    </div>
+    <div class="col-3 text-center py-3">
+      <svg
+        class="bi bi-caret-right-fill"
+        width="3em"
+        height="3em"
+        viewBox="0 0 16 16"
+        fill="gray"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M12.14 8.753l-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 011.659-.753l5.48 4.796a1 1 0 010 1.506z"
+        />
+      </svg>
+    </div>
+  </a>
+  <p class="text-right font-italic text-muted font-smaller mr-3">
+    This is an Ad
+  </p>
+</div>
 
 <!-- Notifications -->
 

@@ -1,6 +1,7 @@
 var User = require("../models/users");
 var Post = require("../models/posts");
 var Word = require("../models/words");
+var Ad = require("../models/ads");
 
 const LIMIT = 25;
 
@@ -67,18 +68,31 @@ async function deletePosts(id) {
 
 async function updateUsers(id, _user) {
   await User.updateOne({ _id: id }, _user);
-  await User.update({ _id: id, 'requests.status': 0 }, { $set: { "requests.$.status": 1 } });
+  await User.update(
+    { _id: id, "requests.status": 0 },
+    { $set: { "requests.$.status": 1 } }
+  );
   const user = await User.findOne({ _id: id });
   return user;
 }
 
-async function postAds(ad) {
-  // const ad = await new Ad({ text: word }).save();
+async function postAds(_ad) {
+  const ad = await new Ad(_ad).save();
+  return ad;
 }
 
 async function getRequests() {
   const users = await User.find({ status: 1, "requests.status": 0 });
   return users;
+}
+
+async function getAds() {
+  const ads = await Ad.find();
+  return ads;
+}
+
+async function deleteAds(id) {
+  await Ad.deleteOne({ _id: id });
 }
 
 module.exports = {
@@ -92,5 +106,7 @@ module.exports = {
   updateUsers,
   postAds,
   deleteWords,
-  getRequests
+  getRequests,
+  getAds,
+  deleteAds
 };
