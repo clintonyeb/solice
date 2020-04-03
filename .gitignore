@@ -5,3 +5,6 @@
 !.vscode/extensions.json
 *.code-workspace
 .env**
+
+# Local Netlify folder
+.netlify
