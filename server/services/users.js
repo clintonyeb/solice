@@ -25,10 +25,10 @@ function authenticate(obj, cb) {
           )
         );
       }
+    } else {
+      return cb(new Error("Invalid username and password"));
     }
   });
-
-  return cb(new Error("Invalid username and password"));
 }
 
 function getUser(id, cb) {

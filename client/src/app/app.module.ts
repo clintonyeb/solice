@@ -5,7 +5,6 @@ import { FormsModule } from "@angular/forms";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { RouterModule } from "@angular/router";
 import { AppRoutingModule } from "./app.routing";
-import { ComponentsModule } from "./components/components.module";
 import { UserModule } from "./user/user.module";
 import { AppComponent } from "./app.component";
 import { AdminModule } from "./admin/admin.module";
@@ -19,7 +18,6 @@ import { ToastrModule } from "ngx-toastr";
     FormsModule,
     RouterModule,
     AppRoutingModule,
-    ComponentsModule,
     SessionModule,
     UserModule,
     AdminModule,

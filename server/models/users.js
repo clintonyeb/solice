@@ -102,7 +102,7 @@ userSchema.methods.validPassword = function(password) {
   return bcrypt.compareSync(password, this.password);
 };
 
-userSchema.methods.generateToken = function(cb) {
+userSchema.statics.generateToken = function(cb) {
   const user = this;
   const secret = process.env["SECRET_KEY"];
   jwt.sign(
@@ -123,7 +123,15 @@ userSchema.methods.generateToken = function(cb) {
   );
 };
 
-// userSchema.index({ username: "text", firstname: "text", lastname: "text" });
+userSchema.virtual("name").get(function() {
+  return this.lastname + ", " + this.firstname;
+});
+userSchema.virtual("age").get(function() {
+  if (!this.dob) return -1;
+  const now = new Date();
+  return now.getFullYear() - this.dob.year;
+});
+userSchema.index({ username: "text" });
 module.exports = mongoose.model("users", userSchema);
 
 // create the model for users and expose it to our app

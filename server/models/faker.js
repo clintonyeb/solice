@@ -40,7 +40,8 @@ async function createAdmin() {
     bio: "Admin User",
     profile_pic: "https://bootdey.com/img/Content/avatar/avatar2.png",
     password: "adminuser",
-    role: 2
+    role: 2,
+    status: 0
   }).save();
   return user;
 }
@@ -53,7 +54,8 @@ async function createUser() {
     bio: "Test User",
     profile_pic: "https://bootdey.com/img/Content/avatar/avatar2.png",
     password: "testuser",
-    role: 0
+    role: 0,
+    status: 0
   }).save();
 }
 

@@ -6,6 +6,7 @@ var HttpStatus = require("http-status-codes");
 const email = require("../../../services/email");
 const axios = require("axios");
 const qs = require("qs");
+const User = require('../../../models/users');
 
 router.post("/signup", async function(req, res) {
   try {
@@ -18,7 +19,7 @@ router.post("/signup", async function(req, res) {
       }
       res.json(data);
 
-      data.generateToken((err, token) => {
+      User.generateToken((err, token) => {
         const url = req.protocol + "://" + req.headers.host + "/api/v1";
         email.sendEmailVerification(data, url, token);
       });
@@ -52,7 +53,7 @@ router.post("/login", function(req, res) {
       });
     }
 
-    user.generateToken((err, token) => {
+    User.generateToken((err, token) => {
       if (err) {
         return res.status(HttpStatus.UNAUTHORIZED).json({
           error: err.message
