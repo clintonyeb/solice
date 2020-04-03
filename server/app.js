@@ -8,7 +8,7 @@ var hbs = require("hbs");
 const roleName = require("./utils/helpers").roleName;
 var HttpStatus = require("http-status-codes");
 const cron = require("node-cron");
-const userService = require('./services/users')
+const userService = require("./services/users");
 
 var indexRouter = require("./routes/index");
 const apiRoutes = require("./routes/api/v1");
@@ -42,6 +42,6 @@ app.use(function(err, req, res, next) {
   });
 });
 
-cron.schedule("* 30 * * *", userService.runCronJob);
+cron.schedule("30 * * * *", userService.runCronJob);
 
 module.exports = app;

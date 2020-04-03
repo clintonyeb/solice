@@ -35,6 +35,7 @@
     "filepond-plugin-image-preview": "^4.6.1",
     "font-awesome": "4.7.0",
     "jw-bootstrap-switch-ng2": "2.0.5",
+    "ng-recaptcha": "^5.0.0",
     "ng2-nouislider": "1.7.13",
     "ngx-filepond": "^5.0.1",
     "ngx-infinite-scroll": "^8.0.1",

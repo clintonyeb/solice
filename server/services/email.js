@@ -7,6 +7,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const userWelcomeTemplate = _compile("user-welcome.hbs");
 const emailConfirmTemplate = _compile("email-confirm.hbs");
 const userNotificationTemplate = _compile("user-notification.hbs");
+const userDisabledTemplate = _compile("user-disabled.hbs");
 
 async function _sendMail(msg) {
   msg["from"] = "solice@example.com";
@@ -60,8 +61,20 @@ async function sendUserNotification(user) {
   await _sendMail(email);
 }
 
+async function sendAccountDisableEmail(user) {
+  const data = { firstname: user.firstname };
+  const email = {
+    subject: "Solice: Account Disabled",
+    html: userDisabledTemplate(data),
+    to: user.email
+  };
+
+  await _sendMail(email);
+}
+
 module.exports = {
   sendUserWelcome,
   sendEmailVerification,
-  sendUserNotification
+  sendUserNotification,
+  sendAccountDisableEmail
 };

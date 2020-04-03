@@ -1,8 +1,9 @@
-import { IAlert } from 'app/utils/alert';
+import { IAlert } from "app/utils/alert";
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { SessionService } from '../../services/session.service';
-import { MessageAlert, ErrorAlert } from '../../utils/alert';
+import { SessionService } from "../../services/session.service";
+import { MessageAlert, ErrorAlert } from "../../utils/alert";
+import { environment } from "../../../environments/environment";
 
 @Component({
   selector: "app-requests",
@@ -10,9 +11,11 @@ import { MessageAlert, ErrorAlert } from '../../utils/alert';
   styleUrls: ["./requests.component.css"]
 })
 export class RequestsComponent implements OnInit {
+  captchaSiteKey = environment.CAPTCHA_SITE_KEY;
   form = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
-    text: new FormControl("", [Validators.required])
+    text: new FormControl("", [Validators.required]),
+    captcha: new FormControl()
   });
   focus: any;
   focus1: any;

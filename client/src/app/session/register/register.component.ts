@@ -10,6 +10,8 @@ import {
 } from "../../utils/validators";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
+import { ReCaptchaV3Service } from "ng-recaptcha";
+import { environment } from "../../../environments/environment";
 
 @Component({
   selector: "app-register",
@@ -25,20 +27,19 @@ export class RegisterComponent implements OnInit {
   focus4;
   alert: IAlert;
   formAlert: IAlert;
+  captchaSiteKey = environment.CAPTCHA_SITE_KEY;
 
   form = new FormGroup(
     {
-      email: new FormControl("", [
-        Validators.required,
-        Validators.email
-      ]),
+      email: new FormControl("", [Validators.required, Validators.email]),
       firstname: new FormControl("", [Validators.required]),
       lastname: new FormControl("", [Validators.required]),
       password: new FormControl("", [
         Validators.required,
         Validators.minLength(6)
       ]),
-      cpassword: new FormControl("", [Validators.required])
+      cpassword: new FormControl("", [Validators.required]),
+      captcha: new FormControl()
     },
     { validators: checkPasswords }
   );
@@ -50,6 +51,10 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit() {}
+
+  resolved($event) {
+    console.log($event);
+  }
 
   onSubmit() {
     if (this.formAlert && this.formAlert.status) {

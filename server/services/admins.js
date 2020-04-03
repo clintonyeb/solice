@@ -2,6 +2,7 @@ var User = require("../models/users");
 var Post = require("../models/posts");
 var Word = require("../models/words");
 var Ad = require("../models/ads");
+const email = require("../services/email");
 
 const LIMIT = 25;
 
@@ -62,6 +63,7 @@ async function deletePosts(id) {
   );
   if (user.deletedPosts > 20) {
     await User.findOneAndUpdate({ _id: postedBy }, { status: 1 });
+    email.sendAccountDisableEmail(user);
   }
   return post;
 }
