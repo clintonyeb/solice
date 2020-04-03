@@ -2,7 +2,9 @@ var User = require("../models/users");
 var Post = require("../models/posts");
 var Word = require("../models/words");
 var Ad = require("../models/ads");
+const jwt = require("jsonwebtoken");
 const POST_STATUS = require("../utils/post-status");
+const email = require("../services/email");
 
 const error = new Error("Record not found...");
 
@@ -13,14 +15,20 @@ function authenticate(obj, cb) {
     if (err) return cb(new Error("Invalid username and password"));
     if (user && user.validPassword(obj.password)) {
       if (user.status === 0) {
-        cb(null, user);
+        return cb(null, user);
+      } else if (user.status === 1) {
+        return cb(new Error("Your Account has been suspended"));
       } else {
-        cb(new Error("Your Account has been suspended"));
+        return cb(
+          new Error(
+            "Please confirm your email address. We have sent you an email with instructions"
+          )
+        );
       }
-    } else {
-      cb(new Error("Invalid username and password"));
     }
   });
+
+  return cb(new Error("Invalid username and password"));
 }
 
 function getUser(id, cb) {
@@ -81,12 +89,21 @@ function getPost(id, cb) {
       return cb(err, post);
     });
 }
-
+const TYPES = require("../utils/noti-types");
 async function createPost(post, cb) {
   const res = await getPostStatus(post.text);
   if (res) {
     post.status = POST_STATUS.DISABLED;
-    // TODO: check and notify admin
+    const noti = {
+      type: TYPES.POST_FLAGGED,
+      postedBy: post.postedBy
+    };
+
+    await User.updateOne(
+      { _id: post.postedBy },
+      { notifications: { $push: noti } }
+    );
+    await User.update({ role: 2 }, { notifications: { $push: noti } });
   } else {
     post.status = POST_STATUS.ENABLED;
   }
@@ -234,6 +251,14 @@ async function commentPost(userId, postId, text, cb) {
   const res = await getPostStatus(text);
   if (res) {
     cb(new Error("Comment flagged as containing sensitive words"));
+    const noti = {
+      type: TYPES.COMMENT_FLAGGED,
+      postedBy: userId,
+      targetPost: postId
+    };
+
+    await User.updateOne({ _id: userId }, { notifications: { $push: noti } });
+    await User.update({ role: 2 }, { notifications: { $push: noti } });
     return;
   }
   getPost(postId, async (err, post) => {
@@ -415,6 +440,19 @@ function computeAge(dob) {
   return now.getFullYear() - dob.year;
 }
 
+async function verifyEmailToken(token) {
+  const user = jwt.verify(token, process.env.SECRET_KEY);
+  const data = await User.findByIdAndUpdate(user._id, { status: 0 });
+  email.sendUserWelcome(data);
+}
+
+async function runCronJob() {
+  const users = await User.find({ "notifications.4": { $exists: true } });
+  users.forEach(user => {
+    email.sendUserNotification(user);
+  });
+}
+
 module.exports = {
   createUser,
   authenticate,
@@ -439,5 +477,7 @@ module.exports = {
   deleteNotifications,
   getActiveFollowing,
   createRequest,
-  getAds
+  getAds,
+  verifyEmailToken,
+  runCronJob
 };

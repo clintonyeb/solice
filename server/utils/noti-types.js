@@ -4,5 +4,7 @@ module.exports = Object.freeze({
   COMMENT_POST: 2,
   FOLLOWED_USER: 3,
   UPDATED_PROFILE: 4,
-  ONLINE: 5
+  ONLINE: 5,
+  POST_FLAGGED: 6,
+  COMMENT_FLAGGED: 7
 });

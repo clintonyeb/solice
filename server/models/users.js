@@ -59,7 +59,7 @@ var userSchema = mongoose.Schema({
     type: Number,
     enum: Object.values(require("../utils/user-status")),
     required: true,
-    default: 0
+    default: 2
   },
   deletedPosts: Number,
   requests: [

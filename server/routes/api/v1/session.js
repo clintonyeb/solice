@@ -3,17 +3,21 @@ const jwt = require("express-jwt");
 var router = express.Router();
 var userService = require("../../../services").users;
 var HttpStatus = require("http-status-codes");
+const email = require("../../../services/email");
 
 router.post("/signup", function(req, res) {
   userService.createUser(req.body, (err, data) => {
-    console.log("here");
-
     if (err) {
       return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
         error: err.message
       });
     }
     res.json(data);
+
+    data.generateToken((err, token) => {
+      const url = req.protocol + "://" + req.headers.host + "/api/v1";
+      email.sendEmailVerification(data, url, token);
+    });
   });
 });
 
@@ -71,6 +75,35 @@ router.post("/requests", async function(req, res) {
     res.json(status);
   } catch (error) {
     res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({ error: error.message });
+  }
+});
+
+router.post("/requests", async function(req, res) {
+  try {
+    const status = await userService.createRequest(
+      req.body.email,
+      req.body.text
+    );
+    res.json(status);
+  } catch (error) {
+    res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({ error: error.message });
+  }
+});
+
+router.get("/verify-email", function(req, res) {
+  const token = req.query.token;
+  if (!token)
+    return res
+      .status(HttpStatus.UNAUTHORIZED)
+      .send("Request cannot be authenticated");
+  try {
+    userService.verifyEmailToken(token);
+    res.send("Congratulations, Your Email Address has successfully verified..");
+  } catch (error) {
+    console.log(error);
+    res
+      .status(HttpStatus.UNPROCESSABLE_ENTITY)
+      .send("There was an error whiles processing your request");
   }
 });
 

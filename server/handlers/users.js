@@ -97,8 +97,6 @@ function createPost(req, res, next) {
   const _post = req.body;
   _post["postedBy"] = user;
   userService.createPost(_post, (err, post) => {
-    console.log("created");
-
     if (err)
       return res
         .status(HttpStatus.UNPROCESSABLE_ENTITY)
