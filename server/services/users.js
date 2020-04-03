@@ -460,9 +460,7 @@ async function forgotPassword(_email) {
 
 async function resetPassword(token, password) {
   const user = jwt.verify(token, process.env.SECRET_KEY);
-  console.log(user);
   const data = await User.findByIdAndUpdate(user._id, { password: password });
-  console.log(data);
   email.sendPasswordChangeEmail(data);
 }
 
