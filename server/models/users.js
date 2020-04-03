@@ -102,7 +102,7 @@ userSchema.methods.validPassword = function(password) {
   return bcrypt.compareSync(password, this.password);
 };
 
-userSchema.statics.generateToken = function(cb) {
+userSchema.methods.generateToken = function(cb) {
   const user = this;
   const secret = process.env["SECRET_KEY"];
   jwt.sign(

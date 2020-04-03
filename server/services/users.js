@@ -5,9 +5,6 @@ var Ad = require("../models/ads");
 const jwt = require("jsonwebtoken");
 const POST_STATUS = require("../utils/post-status");
 const email = require("../services/email");
-
-const error = new Error("Record not found...");
-
 const LIMIT = 10;
 
 function authenticate(obj, cb) {
@@ -453,6 +450,22 @@ async function runCronJob() {
   });
 }
 
+async function forgotPassword(_email) {
+  const user = await User.findOne({ email: _email });
+  if (!user) throw new Error("User record not found");
+  user.generateToken(async (err, token) => {
+    email.sendRecoverPasswordEmail(user, token);
+  });
+}
+
+async function resetPassword(token, password) {
+  const user = jwt.verify(token, process.env.SECRET_KEY);
+  console.log(user);
+  const data = await User.findByIdAndUpdate(user._id, { password: password });
+  console.log(data);
+  email.sendPasswordChangeEmail(data);
+}
+
 module.exports = {
   createUser,
   authenticate,
@@ -479,5 +492,7 @@ module.exports = {
   createRequest,
   getAds,
   verifyEmailToken,
-  runCronJob
+  runCronJob,
+  forgotPassword,
+  resetPassword
 };

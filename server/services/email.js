@@ -8,6 +8,8 @@ const userWelcomeTemplate = _compile("user-welcome.hbs");
 const emailConfirmTemplate = _compile("email-confirm.hbs");
 const userNotificationTemplate = _compile("user-notification.hbs");
 const userDisabledTemplate = _compile("user-disabled.hbs");
+const recoverPasswordTemplate = _compile("recover-password.hbs");
+const passwordChangeTemplate = _compile("password-change.hbs");
 
 async function _sendMail(msg) {
   msg["from"] = "solice@example.com";
@@ -72,9 +74,34 @@ async function sendAccountDisableEmail(user) {
   await _sendMail(email);
 }
 
+async function sendRecoverPasswordEmail(user, token) {
+  const link = `${process.env.FRONTEND_URL}/session/recover-password/${token}`;
+  const data = { firstname: user.firstname, link: link };
+  const email = {
+    subject: "Solice: Reset Account Password",
+    html: recoverPasswordTemplate(data),
+    to: user.email
+  };
+
+  await _sendMail(email);
+}
+
+async function sendPasswordChangeEmail(user) {
+  const data = { firstname: user.firstname };
+  const email = {
+    subject: "Solice: Account Password Changed",
+    html: passwordChangeTemplate(data),
+    to: user.email
+  };
+
+  await _sendMail(email);
+}
+
 module.exports = {
   sendUserWelcome,
   sendEmailVerification,
   sendUserNotification,
-  sendAccountDisableEmail
+  sendAccountDisableEmail,
+  sendRecoverPasswordEmail,
+  sendPasswordChangeEmail
 };

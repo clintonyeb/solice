@@ -153,7 +153,7 @@ export class UsersService {
   logout() {
     const url: string = getServerURL("logout");
     return this.http.get(url).subscribe(res => {
-      this.socket.close();
+      this.socket && this.socket.close();
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("userId");
 

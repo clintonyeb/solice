@@ -4,7 +4,6 @@ import { FormGroup } from "@angular/forms";
 import { SessionService } from "app/services/session.service";
 import { MessageAlert, ErrorAlert, IAlert, Notify } from "app/utils/alert";
 import {
-  matchesPattern,
   checkPasswords,
   getFormValidationErrors
 } from "../../utils/validators";

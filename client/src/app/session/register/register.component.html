@@ -152,10 +152,12 @@
                   formControlName="cpassword"
                 />
               </div>
-              <re-captcha
-                [siteKey]="captchaSiteKey"
-                formControlName="captcha"
-              ></re-captcha>
+              <p class="text-center d-inline-block">
+                <re-captcha
+                  [siteKey]="captchaSiteKey"
+                  formControlName="captcha"
+                ></re-captcha>
+              </p>
             </div>
             <div class="footer text-center">
               <button

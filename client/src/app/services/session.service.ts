@@ -68,4 +68,14 @@ export class SessionService {
     const url: string = getServerURL("requests");
     return this.http.post(url, request);
   }
+
+  forgotPassword(data) {
+    const url: string = getServerURL("forgot_password");
+    return this.http.post(url, data);
+  }
+
+  resetPassword(data) {
+    const url: string = getServerURL("reset_password");
+    return this.http.post(url, data);
+  }
 }

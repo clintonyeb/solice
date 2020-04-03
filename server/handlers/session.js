@@ -16,7 +16,7 @@ async function signUp(req, res) {
       }
       res.json(data);
 
-      User.generateToken((err, token) => {
+      data.generateToken((err, token) => {
         const url = req.protocol + "://" + req.headers.host + "/api/v1";
         email.sendEmailVerification(data, url, token);
       });
@@ -38,7 +38,7 @@ async function validateCaptcha(req) {
       "content-type": "application/x-www-form-urlencoded;charset=utf-8"
     }
   });
-  if (!captchaRes.data.success)
+  if (captchaRes.data.success !== true)
     throw new Error("Could not authenticate captcha");
 }
 
@@ -50,7 +50,7 @@ function login(req, res) {
       });
     }
 
-    User.generateToken((err, token) => {
+    user.generateToken((err, token) => {
       if (err) {
         return res.status(HttpStatus.UNAUTHORIZED).json({
           error: err.message
@@ -72,22 +72,25 @@ async function logout(req, res) {
 async function forgotPassword(req, res) {
   try {
     await validateCaptcha(req);
-    userService.forgotPassword(req.body, (err, token) => {
-      if (err) return res.json({ error: err.message });
-      res.json({ token });
-    });
+    await userService.forgotPassword(req.body.email);
+    res.json({ status: true });
   } catch (error) {
     return res
-      .status(HttpStatus.UNAUTHORIZED)
-      .json({ error: "Could not authenticate captcha" });
+      .status(HttpStatus.UNPROCESSABLE_ENTITY)
+      .json({ error: error.message });
   }
 }
 
-function updatePassword(req, res) {
-  userService.updatePassword(req.body, err => {
-    if (err) return res.json({ error: err.message });
+async function resetPassword(req, res) {
+  try {
+    const res = await userService.resetPassword(
+      req.body.token,
+      req.body.password
+    );
     res.json({ status: true });
-  });
+  } catch (error) {
+    res.json({ error: error.message });
+  }
 }
 
 async function requests(req, res) {
@@ -125,7 +128,7 @@ module.exports = {
   login,
   logout,
   forgotPassword,
-  updatePassword,
+  resetPassword,
   requests,
   verifyEmail
 };

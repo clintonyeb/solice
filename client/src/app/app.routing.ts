@@ -24,8 +24,8 @@ import { RequestsComponent } from "./admin/requests/requests.component";
 import { RequestsComponent as UserRequestsComponent } from "./session/requests/requests.component";
 import { FiltersComponent } from "./admin/filters/filters.component";
 import { CreateAdsComponent } from "./admin/create-ads/create-ads.component";
-
-
+import { ForgotPasswordComponent } from "./session/forgot-password/forgot-password.component";
+import { RecoverPasswordComponent } from "./session/recover-password/recover-password.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "users", pathMatch: "full" },
@@ -40,8 +40,8 @@ const routes: Routes = [
       },
       { path: "register", component: RegisterComponent },
       { path: "request", component: UserRequestsComponent },
-      { path: "forgot-password", component: LoginComponent },
-      { path: "recover-password", component: LoginComponent }
+      { path: "forgot-password", component: ForgotPasswordComponent },
+      { path: "recover-password/:token", component: RecoverPasswordComponent }
     ]
   },
   {

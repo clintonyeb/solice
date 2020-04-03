@@ -15,7 +15,7 @@ router.get(
 
 router.post("/forgot_password", handlers.forgotPassword);
 
-router.post("/update_password", handlers.updatePassword);
+router.post("/reset_password", handlers.resetPassword);
 
 router.post("/requests", handlers.requests);
 

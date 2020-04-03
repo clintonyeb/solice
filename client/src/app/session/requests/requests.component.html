@@ -70,10 +70,12 @@
                     formControlName="text"
                   ></textarea>
                 </div>
-                <re-captcha
-                  [siteKey]="captchaSiteKey"
-                  formControlName="captcha"
-                ></re-captcha>
+                <p class="text-center d-inline-block">
+                  <re-captcha
+                    [siteKey]="captchaSiteKey"
+                    formControlName="captcha"
+                  ></re-captcha>
+                </p>
                 <div class="send-button my-4">
                   <button
                     type="submit"
