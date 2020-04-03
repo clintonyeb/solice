@@ -23,7 +23,7 @@
               "src/assets/sass/now-ui-dashboard.scss",
               "src/assets/css/demo.css"
             ],
-            "scripts": ["node_modules/rellax/rellax.min.js"]
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -69,7 +69,7 @@
             "karmaConfig": "./karma.conf.js",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.spec.json",
-            "scripts": ["node_modules/rellax/rellax.min.js"],
+            "scripts": [],
             "styles": [
               "src/styles.scss",
               "src/assets/sass/now-ui-kit.scss",
