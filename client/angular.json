@@ -75,7 +75,7 @@
               "src/assets/sass/now-ui-kit.scss",
               "src/assets/css/demo.css"
             ],
-            "assets": ["src/assets", "src/favicon.ico"]
+            "assets": ["src/assets", "src/favicon.ico", "_redirects"]
           }
         },
         "lint": {
