@@ -9,7 +9,7 @@ const qs = require("qs");
 
 router.post("/signup", async function(req, res) {
   try {
-    validateCaptcha(req);
+    await validateCaptcha(req);
     userService.createUser(req.body, (err, data) => {
       if (err) {
         return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
@@ -24,25 +24,24 @@ router.post("/signup", async function(req, res) {
       });
     });
   } catch (error) {
-    return res
-      .status(HttpStatus.UNAUTHORIZED)
-      .json({ error: error.message });
+    return res.status(HttpStatus.UNAUTHORIZED).json({ error: error.message });
   }
 });
 
-function validateCaptcha(req) {
+async function validateCaptcha(req) {
   const captchaRes = await axios({
-      method: "post",
-      url: "https://www.google.com/recaptcha/api/siteverify",
-      data: qs.stringify({
-        secret: process.env.CAPTCHA_SECRET_KEY,
-        response: req.body.captcha
-      }),
-      headers: {
-        "content-type": "application/x-www-form-urlencoded;charset=utf-8"
-      }
-    });
-    if (!captchaRes.data.success) throw new Error("Could not authenticate captcha");
+    method: "post",
+    url: "https://www.google.com/recaptcha/api/siteverify",
+    data: qs.stringify({
+      secret: process.env.CAPTCHA_SECRET_KEY,
+      response: req.body.captcha
+    }),
+    headers: {
+      "content-type": "application/x-www-form-urlencoded;charset=utf-8"
+    }
+  });
+  if (!captchaRes.data.success)
+    throw new Error("Could not authenticate captcha");
 }
 
 router.post("/login", function(req, res) {
@@ -76,15 +75,15 @@ router.get(
   }
 );
 
-router.post("/forgot_password", function (req, res) {
+router.post("/forgot_password", async function(req, res) {
   try {
-    validateCaptcha(req);
+    await validateCaptcha(req);
     userService.forgotPassword(req.body, (err, token) => {
-    if (err) return res.json({ error: err.message });
-    res.json({ token });
-  });
+      if (err) return res.json({ error: err.message });
+      res.json({ token });
+    });
   } catch (error) {
-        return res
+    return res
       .status(HttpStatus.UNAUTHORIZED)
       .json({ error: "Could not authenticate captcha" });
   }
@@ -99,7 +98,7 @@ router.post("/update_password", function(req, res) {
 
 router.post("/requests", async function(req, res) {
   try {
-     validateCaptcha(req);
+    await validateCaptcha(req);
     const status = await userService.createRequest(
       req.body.email,
       req.body.text
