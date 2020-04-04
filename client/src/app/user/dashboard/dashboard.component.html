@@ -7,6 +7,7 @@
       <app-feed
         *ngIf="mainSection === 'feed'"
         (profile)="viewProfile($event)"
+        [user]="user"
       ></app-feed>
       <app-update-profile
         *ngIf="mainSection === 'profile'"

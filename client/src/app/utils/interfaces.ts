@@ -18,7 +18,7 @@ export interface IUser {
   bio: string;
   profile_pic: string;
   lastLogin: Date;
-  role: string;
+  role: number;
   dob: IDOB;
   token: string;
   status: number;

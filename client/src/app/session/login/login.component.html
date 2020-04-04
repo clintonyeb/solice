@@ -83,20 +83,29 @@
                 type="submit"
                 class="btn btn-primary btn-round btn-lg btn-block"
               >
-              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="loading"></span>
+                <span
+                  class="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                  *ngIf="loading"
+                ></span>
                 Log me in
               </button>
             </div>
             <div class="text-center">
               <p class="my-2">
-                <a [routerLink]="['/session/register']" class="link"
-                 style="text-decoration: underline; font-size: 1rem;"
+                <a
+                  [routerLink]="['/session/register']"
+                  class="link"
+                  style="font-size: 1rem;"
                   >Don't have an account? Create Account</a
                 >
               </p>
               <p class="my-2">
-                <a [routerLink]="['/session/forgot-password']" class="link"
-                 style="text-decoration: underline; font-size: 1rem;"
+                <a
+                  [routerLink]="['/session/forgot-password']"
+                  class="link"
+                  style="font-size: 1rem;"
                   >Forgot your password? Recover Password</a
                 >
               </p>
@@ -106,7 +115,7 @@
                 <a
                   [routerLink]="['/session/request']"
                   class="link"
-                  style="text-decoration: underline; font-size: 1rem;"
+                  style="font-size: 1rem;"
                   >Account suspended? Submit a request here</a
                 >
               </p>

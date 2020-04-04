@@ -3,7 +3,7 @@ import { SessionService } from "../../services/session.service";
 import { Router } from "@angular/router";
 import { UsersService } from "../../services/users.service";
 import { BioComponent } from "../bio/bio.component";
-import { INotify, INotification } from "../../utils/interfaces";
+import { INotify, INotification, IUser } from "../../utils/interfaces";
 
 @Component({
   selector: "app-dashboard",
@@ -16,6 +16,7 @@ export class DashboardComponent implements OnInit {
   mainSection = "feed"; // feed, profile, view-profile
   @ViewChild("bio") bio: BioComponent;
   userId: string;
+  user: IUser;
 
   constructor(
     private sessionService: SessionService,
@@ -39,6 +40,7 @@ export class DashboardComponent implements OnInit {
           { message: "Please login to continue" }
         ]);
       }
+      this.user = res;
       this.authenticated = true;
       this.userService.subject.subscribe(
         (d: any) => {

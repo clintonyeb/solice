@@ -1,9 +1,12 @@
 var userService = require("../services").users;
 const notiService = require("../services").noti;
 var HttpStatus = require("http-status-codes");
+const util = require("util");
 
-function authenticate(req, res, next) {
-  res.json(req.user);
+async function authenticate(req, res, next) {
+  const getUser = util.promisify(userService.getUser);
+  const user = await getUser(req.user._id);
+  res.json(user);
 }
 
 function getUser(req, res, next) {
@@ -72,9 +75,7 @@ function getPosts(req, res, next) {
     user._id,
     (err, posts) => {
       if (err)
-        return res
-          .status(HttpStatus.NOT_FOUND)
-          .send({ message: err.message });
+        return res.status(HttpStatus.NOT_FOUND).send({ message: err.message });
       res.json(posts);
     },
     req.query.page
@@ -87,9 +88,7 @@ function getFeed(req, res, next) {
     user._id,
     (err, posts) => {
       if (err)
-        return res
-          .status(HttpStatus.NOT_FOUND)
-          .send({ message: err.message });
+        return res.status(HttpStatus.NOT_FOUND).send({ message: err.message });
       res.json(posts);
     },
     req.query.page
@@ -121,7 +120,7 @@ function searchUsers(req, res, next) {
   const user = req.user;
   userService.searchUsers(user._id, query, (err, users) => {
     if (err)
-      return res.status(HttpStatus.NOT_FOUND).send({ message: err.message });;
+      return res.status(HttpStatus.NOT_FOUND).send({ message: err.message });
     res.json(users);
   });
 }

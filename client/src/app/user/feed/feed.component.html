@@ -9,7 +9,7 @@
           Post on your feed
         </button>
       </div>
-      <div class="text-center mt-4 mt-md-0">
+      <div class="text-center mt-4 mt-md-0" *ngIf="user && user.role === 2">
         <button
           class="btn btn-secondary btn-round btn-lg btn-block"
           (click)="goToAdmin()"
@@ -68,15 +68,6 @@
             ></app-feed-friend>
           </ng-template>
         </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="#">
-            <i class="mdi mdi-attachment"></i>
-            Posts
-          </a>
-          <ng-template ngbNavContent>
-            <app-story type="posts"></app-story>
-          </ng-template>
-        </li> -->
       </ul>
     </div>
 

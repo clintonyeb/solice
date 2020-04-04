@@ -8,11 +8,12 @@ import {
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { UsersService } from "../../services/users.service";
-import { IPost } from "../../utils/interfaces";
+import { IPost, IUser } from '../../utils/interfaces';
 import { UploadService } from "../../services/upload.service";
 import { HttpResponse, HttpEventType } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { ToastrService } from 'ngx-toastr';
+import { Input } from '@angular/core';
 
 @Component({
   selector: "app-feed",
@@ -24,6 +25,7 @@ export class FeedComponent implements OnInit {
   @ViewChild("feed") feed: any;
   @ViewChild("feed") posts: any;
   @Output() profile = new EventEmitter<string>();
+  @Input() user: IUser;
   focus;
 
   // post form
