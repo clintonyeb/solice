@@ -27,6 +27,7 @@ export class RegisterComponent implements OnInit {
   alert: IAlert;
   formAlert: IAlert;
   captchaSiteKey = environment.CAPTCHA_SITE_KEY;
+  loading = false;
 
   form = new FormGroup(
     {
@@ -73,6 +74,8 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
+    this.loading = true;
+
     this.sessionService.register(this.form.value).subscribe(
       data => {
         this.form.reset();
@@ -89,6 +92,7 @@ export class RegisterComponent implements OnInit {
           "/session/login",
           { message: "Account registration successful" }
         ]);
+        this.loading = false;
       },
       err => {
         this.form.patchValue({
@@ -100,6 +104,7 @@ export class RegisterComponent implements OnInit {
           this.sessionService.handleError(err)
         );
         this.alert.status = true;
+        this.loading = false;
       }
     );
   }

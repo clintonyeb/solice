@@ -26,8 +26,6 @@ export class SessionService {
   handleError(error: HttpErrorResponse): string {
     if (error.error instanceof ErrorEvent) {
       return error.error.message;
-    } else if (error.error) {
-      return error.error.error;
     }
     return "Something bad happened; please try again later.";
   }

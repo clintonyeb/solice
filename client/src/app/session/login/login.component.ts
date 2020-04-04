@@ -16,6 +16,7 @@ export class LoginComponent implements OnInit {
   focus1;
   alert: IAlert;
   suspended = false;
+  loading = false;
 
   // controls
   form = new FormGroup({
@@ -42,6 +43,7 @@ export class LoginComponent implements OnInit {
     if (this.alert && this.alert.status) {
       this.alert.status = false;
     }
+    this.loading = true;
     this.sessionService.login(this.form.value).subscribe(
       data => {
         this.form.reset();
@@ -58,6 +60,7 @@ export class LoginComponent implements OnInit {
           this.toastService.success("Login", "Logged in as User");
           this.router.navigate(["/"]);
         }
+        this.loading = false;
       },
       err => {
         this.form.patchValue({
@@ -70,6 +73,7 @@ export class LoginComponent implements OnInit {
         if (mess === "Your Account has been suspended") {
           this.suspended = true;
         }
+        this.loading = false;
       }
     );
   }

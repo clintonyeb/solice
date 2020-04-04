@@ -164,12 +164,14 @@
                 type="submit"
                 class="btn btn-primary btn-round btn-lg btn-block"
               >
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="loading"></span>
                 Get Started
               </button>
             </div>
             <div class="text-center">
               <h6>
                 <a [routerLink]="['/session/login']" class="link"
+                 style="text-decoration: underline; font-size: 1rem;"
                   >Already have an account? Log in</a
                 >
               </h6>
