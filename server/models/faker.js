@@ -1,9 +1,10 @@
 var faker = require("faker");
 var mongoose = require("mongoose");
+const fs = require("fs");
+const path = require("path");
+require("dotenv").config();
 
 // connect to db
-// mongoose.connection.db.dropDatabase();
-
 mongoose.connect(require("../config/app").db.connectionUri, {
   useUnifiedTopology: true,
   useNewUrlParser: true
@@ -27,7 +28,7 @@ async function seed() {
   await createSuspendedUser();
   await generate(admin._id);
   await addFilters();
-  mongoose.connection.close();
+  await mongoose.connection.close();
   process.exit(0);
 }
 
@@ -39,7 +40,7 @@ async function createAdmin() {
     lastname: "User",
     bio: "Admin User",
     profile_pic: "https://bootdey.com/img/Content/avatar/avatar2.png",
-    password: "adminuser",
+    password: "testuser",
     role: 2,
     status: 0
   }).save();
@@ -52,6 +53,28 @@ async function createUser() {
     firstname: "Test",
     lastname: "User",
     bio: "Test User",
+    profile_pic: "https://bootdey.com/img/Content/avatar/avatar2.png",
+    password: "testuser",
+    role: 0,
+    status: 0
+  }).save();
+
+  await new User({
+    email: "user2@gm.com",
+    firstname: "Test2",
+    lastname: "User",
+    bio: "Test2 User",
+    profile_pic: "https://bootdey.com/img/Content/avatar/avatar2.png",
+    password: "testuser",
+    role: 0,
+    status: 0
+  }).save();
+
+  await new User({
+    email: "user1@gm.com",
+    firstname: "Test1",
+    lastname: "User",
+    bio: "Test1 User",
     profile_pic: "https://bootdey.com/img/Content/avatar/avatar2.png",
     password: "testuser",
     role: 0,
@@ -73,8 +96,8 @@ async function createSuspendedUser() {
 }
 
 async function generate(adminId) {
-  for (let i = 0; i < 20; i++) {
-    const username = "user" + i;
+  for (let i = 0; i < 5; i++) {
+    const username = "test" + i;
     await new User({
       email: `${username}@gm.com`,
       firstname: faker.name.firstName(),
@@ -85,7 +108,7 @@ async function generate(adminId) {
     }).save();
   }
 
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 5; i++) {
     await new Post({
       text: faker.lorem.text(),
       postedBy: adminId,
@@ -95,5 +118,19 @@ async function generate(adminId) {
 }
 
 async function addFilters() {
-  await new Word({ text: "fuck" }).save();
+  const words = fs.readFileSync(
+    path.join(__dirname, "../utils/banned-words.txt"),
+    "utf8"
+  );
+  await asyncForEach(words.split(/\r?\n/), async word => {
+    if (word) {
+      await new Word({ text: word }).save();
+    }
+  });
+}
+
+async function asyncForEach(array, callback) {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
 }
