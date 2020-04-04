@@ -14,7 +14,7 @@ export class ActivityComponent implements OnInit {
 
   ngOnInit(): void {
     this.getNotifications();
-    this.watchForNotif();
+    this.watchForNotifications();
     this.getAd();
   }
 
@@ -26,16 +26,10 @@ export class ActivityComponent implements OnInit {
       });
   }
 
-  watchForNotif() {
-    this.userService.subject.subscribe(
-      (d: any) => {
-        if (!this.notifications) return;
-        if (!(d === true || d === false)) {
-          if (this.notifications.length > 10) {
-            this.notifications.shift();
-          }
-          this.notifications.unshift(d);
-        }
+  watchForNotifications() {
+    this.userService.notificationSubject.subscribe(
+      (notifications: INotification[]) => {
+        this.notifications = notifications;
       },
       err => {}
     );

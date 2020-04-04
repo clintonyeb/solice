@@ -42,19 +42,16 @@ export class DashboardComponent implements OnInit {
       }
       this.user = res;
       this.authenticated = true;
-      this.userService.subject.subscribe(
-        (d: any) => {
-          if (d === true || d === false) {
-            this.active = d;
-          }
+      this.userService.activeSubject.subscribe(
+        (d: boolean) => {
+          this.active = d;
         },
         err => {
           console.log(err);
         }
       );
+      this.userService.goActive();
     });
-
-    setTimeout(() => this.userService.goActive(), 500);
   }
 
   editProfile(value: string) {

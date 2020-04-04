@@ -2,13 +2,16 @@ import { Injectable } from "@angular/core";
 import { getServerURL } from "../utils/helpers";
 import { HttpClientService } from "./http-client.service";
 import { environment } from "../../environments/environment";
-import { Subject } from "rxjs/Rx";
+import { Subject, BehaviorSubject } from "rxjs/Rx";
 import { Router } from "@angular/router";
+import { INotification } from "../utils/interfaces";
 
 @Injectable()
 export class UsersService {
-  socket;
-  public subject = new Subject();
+  private socket: WebSocket;
+  public activeSubject = new BehaviorSubject<boolean>(false);
+  public notificationSubject = new BehaviorSubject<Array<INotification>>([]);
+
   constructor(private http: HttpClientService, private router: Router) {}
 
   getUser() {
@@ -34,7 +37,16 @@ export class UsersService {
 
   closeConnections() {
     this.socket.close();
-    // this.subject.complete();
+    this.socket = null;
+    this.activeSubject.complete();
+    this.notificationSubject.complete();
+  }
+
+  addNotification(notification) {
+    const past = this.notificationSubject.value;
+    if (past.length > 10) past.shift();
+    const updatedValue = [notification, ...past];
+    this.notificationSubject.next(updatedValue);
   }
 
   goActive() {
@@ -46,20 +58,20 @@ export class UsersService {
     this.socket.onopen = e => {
       console.log("Successfully connected: " + url);
       this.socket.send(JSON.stringify(message));
-      this.subject.next(true);
+      this.activeSubject.next(true);
     };
 
     this.socket.onmessage = e => {
       console.log(`[message] Data received from server: ${e.data}`);
       const data = JSON.parse(e.data);
-      if (data.type == "notifications") {
-        this.subject.next(data.data);
+      if (data.type === "notifications") {
+        this.addNotification(data.data);
       } else {
-        this.subject.next(true);
+        this.activeSubject.next(true);
       }
     };
 
-    this.socket.onclose = function(event) {
+    this.socket.onclose = event => {
       if (event.wasClean) {
         console.log(
           `[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`
@@ -69,12 +81,12 @@ export class UsersService {
         // event.code is usually 1006 in this case
         console.log("[close] Connection died");
       }
-      this.subject && this.subject.next(false);
+      this.activeSubject.next(false);
     };
 
-    this.socket.onerror = function(error) {
-      console.log(`[error] ${error.message}`);
-      this.subject && this.subject.next(false);
+    this.socket.onerror = error => {
+      console.log(`[error] ${error["message"]}`);
+      this.activeSubject.next(false);
     };
   }
 
