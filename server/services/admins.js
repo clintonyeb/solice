@@ -59,10 +59,15 @@ async function deletePosts(id) {
   await Post.deleteOne({ _id: id });
   let user = await User.findOneAndUpdate(
     { _id: postedBy },
-    { $inc: { deletedPosts: 1 } }
+    { $inc: { deletedPosts: 1 } },
+    {new: true}
   );
   if (user.deletedPosts > 20) {
-    await User.findOneAndUpdate({ _id: postedBy }, { status: 1 });
+    await User.findOneAndUpdate(
+      { _id: postedBy },
+      { status: 1 },
+      { new: true }
+    );
     email.sendAccountDisableEmail(user);
   }
   return post;

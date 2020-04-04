@@ -116,7 +116,7 @@ async function generate(adminId) {
     await new Post({
       text: faker.lorem.paragraphs(),
       postedBy: adminId,
-      photo: faker.image.imageUrl(),
+      photo: "https://i.ibb.co/SNd5ydX/coro.jpg",
       status: 0
     }).save();
   }
@@ -173,7 +173,7 @@ async function createAds() {
     await new Ad({
       text: faker.lorem.sentence(),
       url: faker.internet.url(),
-      image: faker.image.imageUrl(),
+      image: "https://i.ibb.co/SNd5ydX/coro.jpg",
       targets: [targets[i]]
     }).save();
   }

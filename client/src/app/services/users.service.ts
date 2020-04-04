@@ -38,8 +38,6 @@ export class UsersService {
   closeConnections() {
     this.socket.close();
     this.socket = null;
-    // this.activeSubject.complete();
-    // this.notificationSubject.complete();
   }
 
   addNotification(notification) {
@@ -120,8 +118,6 @@ export class UsersService {
     const url: string = getServerURL("users/unfollow");
     return this.http.post(url, { _id: userId });
   }
-
-  visitUser(userId) {}
 
   searchPeople(query, type) {
     const url: string = getServerURL(

@@ -21,7 +21,9 @@ app.use(express.static(path.join(__dirname, "public")));
 
 mongoose.connect(require("./config/app").db.connectionUri, {
   useUnifiedTopology: true,
-  useNewUrlParser: true
+  useNewUrlParser: true,
+  useFindAndModify: false,
+  useCreateIndex: true
 });
 
 // mongoose.set("debug", true);

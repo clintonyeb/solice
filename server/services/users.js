@@ -40,7 +40,7 @@ function getUserFull(id, type, cb) {
     .populate(type)
     .exec((err, user) => {
       if (err) return cb(err, false);
-      return cb(err, user);
+      return cb(err, user[type]);
     });
 }
 
@@ -152,30 +152,38 @@ function createUser(obj, cb) {
  * @param {String} otherId other user id
  * @param {Function} cb callback function
  */
-function follow(userId, otherId, cb) {
-  User.findById(userId, (err, user) => {
-    if (err) return cb(err, false);
-    User.findById(otherId, (err, other) => {
-      if (err) return cb(err, false);
-      user.following.push(other._id);
-      other.followers.push(user._id);
-      user.save(err => other.save(err => cb(err, other)));
-    });
-  });
+async function followUser(userId, otherId, cb) {
+  await User.updateOne(
+    { _id: userId },
+    {
+      $addToSet: { following: otherId }
+    }
+  );
+  const other = await User.findByIdAndUpdate(
+    otherId,
+    {
+      $addToSet: { followers: userId }
+    },
+    { new: true }
+  );
+  return other;
 }
 
-function unfollow(userId, otherId, cb) {
-  User.findById(userId, (err, user) => {
-    if (err) return cb(err, false);
-    User.findById(otherId, (err, other) => {
-      if (err) return cb(err, false);
-      const uI = user.following.findIndex(d => d === otherId);
-      const oI = user.followers.findIndex(d => d === userId);
-      user.following.splice(uI, 1);
-      other.followers.splice(oI, 1);
-      user.save(err => other.save(err => cb(err, other)));
-    });
-  });
+async function unFollowUser(userId, otherId, cb) {
+  await User.updateOne(
+    { _id: userId },
+    {
+      $pull: { following: otherId }
+    }
+  );
+  const other = await User.findByIdAndUpdate(
+    otherId,
+    {
+      $pull: { followers: userId }
+    },
+    { new: true }
+  );
+  return other;
 }
 
 // sort by textscore
@@ -461,7 +469,11 @@ async function forgotPassword(_email) {
 
 async function resetPassword(token, password) {
   const user = jwt.verify(token, process.env.SECRET_KEY);
-  const data = await User.findByIdAndUpdate(user._id, { password: password });
+  const data = await User.findByIdAndUpdate(
+    user._id,
+    { password: password },
+    { new: true }
+  );
   email.sendPasswordChangeEmail(data);
 }
 
@@ -472,8 +484,8 @@ module.exports = {
   createPost,
   getPosts,
   getAllUsers,
-  follow,
-  unfollow,
+  followUser,
+  unFollowUser,
   getUserFull,
   getFeed,
   searchPosts,

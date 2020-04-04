@@ -34,30 +34,35 @@ function getUsers(req, res, next) {
       res.json(users);
     });
   } else {
-    userService.getUserFull(user._id, type, (err, user) => {
+    userService.getUserFull(user._id, type, (err, users) => {
       if (err) return res.status(404).send("No user found");
-      res.json(user[type]);
+      res.json(users);
     });
   }
 }
 
-function followUser(req, res, next) {
+async function followUser(req, res, next) {
   const user = req.user;
   const body = req.body;
-  userService.follow(user._id, body._id, (err, user) => {
-    if (err || !user) return res.status(404).send("No user found");
-    res.json(user);
+  try {
+    const other = await userService.followUser(user._id, body._id);
+    res.json(other);
     notiService.followedUser(req.app, req.user._id, body._id);
-  });
+  } catch (error) {
+    res.status(404).send("No user found");
+  }
 }
 
-function unFollowUser(req, res, next) {
+async function unFollowUser(req, res, next) {
   const user = req.user;
   const body = req.body;
-  userService.unfollow(user._id, body._id, (err, user) => {
-    if (err || !user) return res.status(404).send("No user found");
-    res.json(user);
-  });
+  try {
+    const other = await userService.unFollowUser(user._id, body._id);
+    res.json(other);
+    notiService.followedUser(req.app, req.user._id, body._id);
+  } catch (error) {
+    res.status(404).send("No user found");
+  }
 }
 
 function goOnline(req, res, next) {
@@ -247,7 +252,6 @@ async function getAds(req, res, next) {
 module.exports = {
   authenticate,
   getUser,
-  getUsers,
   getUsers,
   getFeed,
   getPosts,
