@@ -1,4 +1,4 @@
-var DB_URL = process.env.DATABASE_ULR;
+var DB_URL = process.env.DATABASE_URL;
 module.exports = {
   name: "solice",
   title: "solice",
