@@ -90,7 +90,10 @@ export class RegisterComponent implements OnInit {
         this.alert.status = true;
         this.router.navigate([
           "/session/login",
-          { message: "Account registration successful" }
+          {
+            message:
+              "Account registration successful. Please confirm your email"
+          }
         ]);
         this.loading = false;
       },
