@@ -60,7 +60,7 @@ function unFollowUser(req, res, next) {
 function goOnline(req, res, next) {
   const user = req.user;
   userService.getUser(user._id, (err, user) => {
-    if (err) return res.status(404).send("No user found");
+    if (err) return res.status(404).send({ message: err.message });
     res.json(user);
     notiService.online(req.app, req.user._id);
   });
@@ -72,7 +72,9 @@ function getPosts(req, res, next) {
     user._id,
     (err, posts) => {
       if (err)
-        return res.status(HttpStatus.NOT_FOUND).send("Error retrieving posts");
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .send({ message: err.message });
       res.json(posts);
     },
     req.query.page
@@ -85,7 +87,9 @@ function getFeed(req, res, next) {
     user._id,
     (err, posts) => {
       if (err)
-        return res.status(HttpStatus.NOT_FOUND).send("Error retrieving posts");
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .send({ message: err.message });
       res.json(posts);
     },
     req.query.page
@@ -100,7 +104,7 @@ function createPost(req, res, next) {
     if (err)
       return res
         .status(HttpStatus.UNPROCESSABLE_ENTITY)
-        .send("Error creating post");
+        .send({ message: err.message });
     res.status(HttpStatus.CREATED).json(post);
     if (req.body.notify) {
       notiService.newPost(req.app, req.user._id, post._id);
@@ -117,7 +121,7 @@ function searchUsers(req, res, next) {
   const user = req.user;
   userService.searchUsers(user._id, query, (err, users) => {
     if (err)
-      return res.status(HttpStatus.NOT_FOUND).send("Error retrieving users");
+      return res.status(HttpStatus.NOT_FOUND).send({ message: err.message });;
     res.json(users);
   });
 }
@@ -175,7 +179,7 @@ function deleteComment(req, res, next) {
       if (err)
         return res
           .status(HttpStatus.UNPROCESSABLE_ENTITY)
-          .send("Error retrieving posts");
+          .send({ message: err.message });
       return res.json(post);
     }
   );
@@ -186,7 +190,7 @@ function getComments(req, res, next) {
     if (err)
       return res
         .status(HttpStatus.UNPROCESSABLE_ENTITY)
-        .send("Error retrieving posts");
+        .send({ message: err.message });
     return res.json(comments);
   });
 }
@@ -197,7 +201,9 @@ async function updateUser(req, res, next) {
     res.json(user);
     notiService.updatedProfile(req.app, req.user._id);
   } catch (error) {
-    res.status(HttpStatus.UNPROCESSABLE_ENTITY).send("Error retrieving posts");
+    res
+      .status(HttpStatus.UNPROCESSABLE_ENTITY)
+      .send({ message: error.message });
   }
 }
 
@@ -209,7 +215,7 @@ async function getNotifications(req, res, next) {
   } catch (error) {
     res
       .status(HttpStatus.UNPROCESSABLE_ENTITY)
-      .send("Error retrieving notifications");
+      .send({ message: error.message });
   }
 }
 
@@ -223,7 +229,7 @@ async function getActiveUsers(req, res, next) {
   } catch (error) {
     res
       .status(HttpStatus.UNPROCESSABLE_ENTITY)
-      .send("Error retrieving active users...");
+      .send({ message: error.message });
   }
 }
 
@@ -233,7 +239,9 @@ async function getAds(req, res, next) {
     res.json(ad);
   } catch (error) {
     console.error(error);
-    res.json(error);
+    res
+      .status(HttpStatus.UNPROCESSABLE_ENTITY)
+      .json({ message: error.message });
   }
 }
 

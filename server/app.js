@@ -33,10 +33,10 @@ apiRoutes.forEach(route => app.use("/api/v1", route));
 app.use(function(err, req, res, next) {
   console.error(err);
   if (err.name === "UnauthorizedError") {
-    return res.status(401).json({ error: "Cannot authenticate request..." });
+    return res.status(401).json({ message: "Cannot authenticate request..." });
   }
   res.status(HttpStatus.NOT_FOUND).json({
-    error: "An error occurred whiles processing request.."
+    message: "An error occurred whiles processing request.."
   });
 });
 

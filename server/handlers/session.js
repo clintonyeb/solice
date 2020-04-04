@@ -11,7 +11,7 @@ async function signUp(req, res) {
     userService.createUser(req.body, (err, data) => {
       if (err) {
         return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
-          error: err.message
+          message: err.message
         });
       }
       res.json(data);
@@ -22,7 +22,7 @@ async function signUp(req, res) {
       });
     });
   } catch (error) {
-    return res.status(HttpStatus.UNAUTHORIZED).json({ error: error.message });
+    return res.status(HttpStatus.UNAUTHORIZED).json({ message: error.message });
   }
 }
 
@@ -46,14 +46,14 @@ function login(req, res) {
   userService.authenticate(req.body, (err, user) => {
     if (err) {
       return res.status(HttpStatus.UNAUTHORIZED).json({
-        error: err.message
+        message: err.message
       });
     }
 
     user.generateToken((err, token) => {
       if (err) {
         return res.status(HttpStatus.UNAUTHORIZED).json({
-          error: err.message
+          message: err.message
         });
       }
       user.lastLogin = new Date();
@@ -77,7 +77,7 @@ async function forgotPassword(req, res) {
   } catch (error) {
     return res
       .status(HttpStatus.UNPROCESSABLE_ENTITY)
-      .json({ error: error.message });
+      .json({ message: error.message });
   }
 }
 
@@ -89,7 +89,9 @@ async function resetPassword(req, res) {
     );
     res.json({ status: true });
   } catch (error) {
-    res.json({ error: error.message });
+    res
+      .status(HttpStatus.UNPROCESSABLE_ENTITY)
+      .json({ message: error.message });
   }
 }
 
@@ -102,7 +104,7 @@ async function requests(req, res) {
     );
     res.json(status);
   } catch (error) {
-    res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({ error: error.message });
+    res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({ message: error.message });
   }
 }
 
@@ -119,7 +121,7 @@ function verifyEmail(req, res) {
     console.log(error);
     res
       .status(HttpStatus.UNPROCESSABLE_ENTITY)
-      .send("There was an error whiles processing your request");
+      .send({ message: "There was an error whiles processing your request" });
   }
 }
 
