@@ -45,7 +45,7 @@ function getUserFull(id, type, cb) {
 }
 
 function getAllUsers(user, cb) {
-  User.find({ _id: { $ne: user } }, (err, users) => {
+  User.find({ _id: { $ne: user }, status: 0 }, (err, users) => {
     if (err) return cb(err, false);
     return cb(err, users);
   });
@@ -183,6 +183,7 @@ function searchUsers(userId, query, cb, page) {
   User.find(
     {
       _id: { $ne: userId },
+      status: 0,
       $or: [
         { firstname: { $regex: query, $options: "i" } },
         { lastname: { $regex: query, $options: "i" } }

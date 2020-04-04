@@ -8,23 +8,25 @@
     target="_blank"
   >
     <div
-      class="col-3 has-image"
+      class="col-2 has-image m-auto"
+      style="max-height: 100%;"
       [ngStyle]="{
         background: 'url(' + ad.image + ')'
       }"
-    >
-      <!-- <img [src]="ad.image" alt="Ad Image" style="" /> -->
+    ></div>
+    <div class="col-8 text-secondary" style="max-height: 100%;">
+      <p class="text-white">{{ ad.text }}</p>
+      <p class="text-right text-white font-italic font-smaller">
+        Ad
+      </p>
     </div>
-    <div class="col-6 p-3 text-secondary">
-      {{ ad.text }}
-    </div>
-    <div class="col-3 text-center py-3">
+    <div class="col-2 text-center my-auto text-white" style="max-height: 100%;">
       <svg
         class="bi bi-caret-right-fill"
         width="3em"
         height="3em"
         viewBox="0 0 16 16"
-        fill="gray"
+        fill="currentColor"
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
@@ -33,9 +35,6 @@
       </svg>
     </div>
   </a>
-  <p class="text-right font-italic text-muted font-smaller mr-3" *ngIf="ad">
-    This is an Ad
-  </p>
 </div>
 
 <!-- Notifications -->

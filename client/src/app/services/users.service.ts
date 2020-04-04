@@ -38,8 +38,8 @@ export class UsersService {
   closeConnections() {
     this.socket.close();
     this.socket = null;
-    this.activeSubject.complete();
-    this.notificationSubject.complete();
+    // this.activeSubject.complete();
+    // this.notificationSubject.complete();
   }
 
   addNotification(notification) {
