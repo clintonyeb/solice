@@ -88,7 +88,7 @@ function getPost(id, cb) {
 }
 const TYPES = require("../utils/noti-types");
 async function createPost(post, cb) {
-  const res = await getPostStatus(post.text);
+  const res = await _getPostStatus(post.text);
   if (res) {
     post.status = POST_STATUS.DISABLED;
     const noti = {
@@ -112,8 +112,8 @@ async function createPost(post, cb) {
   });
 }
 
-async function getPostStatus(text) {
-  const words = text.split(" ");
+async function _getPostStatus(text) {
+  const words = text.split(" ").map(word => new RegExp(word, "i"));
   const filter = await Word.findOne({ text: { $in: words } });
   return filter;
 }
@@ -254,7 +254,7 @@ function likePost(userId, postId, cb) {
 }
 
 async function commentPost(userId, postId, text, cb) {
-  const res = await getPostStatus(text);
+  const res = await _getPostStatus(text);
   if (res) {
     cb(new Error("Comment flagged as containing sensitive words"));
     const noti = {
