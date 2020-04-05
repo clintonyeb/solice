@@ -9,10 +9,7 @@
   >
     <div
       class="col-2 has-image m-auto"
-      style="max-height: 100%;"
-      [ngStyle]="{
-        background: 'url(' + ad.image + ')'
-      }"
+      [ngStyle]="{ 'background-image': 'url(' + ad.image + ')' }"
     ></div>
     <div class="col-8 text-secondary" style="max-height: 100%;">
       <p class="text-white">{{ ad.text }}</p>
