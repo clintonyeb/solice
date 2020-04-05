@@ -34,7 +34,7 @@ Admin Account:
 3. Create posts, Like posts and comment on posts, delete comments on posts
 4. Update user profile, profile image, date of birth
 5. Targeted advertisement to users
-6. Like notifications of activities from following-users
+6. Live notifications of activities from following-users
 7. Know which user you follow is online
 8. Follow other users, un-follow other users.
 9. User posts and comments are reviewed by the system for blacklisted words
