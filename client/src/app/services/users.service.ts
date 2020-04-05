@@ -51,7 +51,7 @@ export class UsersService {
     setInterval(() => {
       if (this.socket && this.socket.readyState === WebSocket.OPEN) {
         console.log("ping server");
-        const message = 'ping';
+        const message = "ping";
         this.socket.send(JSON.stringify(message));
       }
     }, 30000);
@@ -60,27 +60,28 @@ export class UsersService {
   goActive() {
     const url = environment.WEB_SOCKET_URL;
     const message = {
-      token: sessionStorage.getItem("token")
+      token: sessionStorage.getItem("token"),
     };
     this.socket = new WebSocket(url);
-    this.socket.onopen = e => {
+    this.socket.onopen = (e) => {
       console.log("Successfully connected: " + url);
       this.socket.send(JSON.stringify(message));
       this.activeSubject.next(true);
       this.pingServer();
     };
 
-    this.socket.onmessage = e => {
+    this.socket.onmessage = (e) => {
       console.log(`[message] Data received from server: ${e.data}`);
       const data = JSON.parse(e.data);
       if (data.type === "notifications") {
+        console.log(data.data["created"], "created at");
         this.addNotification(data.data);
       } else {
         this.activeSubject.next(true);
       }
     };
 
-    this.socket.onclose = event => {
+    this.socket.onclose = (event) => {
       if (event.wasClean) {
         console.log(
           `[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`
@@ -93,7 +94,7 @@ export class UsersService {
       this.activeSubject.next(false);
     };
 
-    this.socket.onerror = error => {
+    this.socket.onerror = (error) => {
       console.log(`[error] ${error["message"]}`);
       this.activeSubject.next(false);
     };
@@ -171,14 +172,14 @@ export class UsersService {
 
   logout() {
     const url: string = getServerURL("logout");
-    return this.http.get(url).subscribe(res => {
+    return this.http.get(url).subscribe((res) => {
       this.socket && this.socket.close();
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("userId");
 
       this.router.navigate([
         "/session/login",
-        { message: "You have been logged out..." }
+        { message: "You have been logged out..." },
       ]);
     });
   }

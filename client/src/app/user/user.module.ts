@@ -19,11 +19,20 @@ import { FeedFriendComponent } from "./feed-friend/feed-friend.component";
 import { UpdateProfileComponent } from "./update-profile/update-profile.component";
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { UsersService } from "../services/users.service";
-import { PostComponent } from './post/post.component';
+import { PostComponent } from "./post/post.component";
 
 import { FilePondModule, registerPlugin } from "ngx-filepond";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import FilePondPluginImageResize from "filepond-plugin-image-resize";
+import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+import FilePondPluginImageCrop from "filepond-plugin-image-crop";
+
 registerPlugin(FilePondPluginFileValidateType);
+registerPlugin(FilePondPluginImagePreview);
+registerPlugin(FilePondPluginImageResize);
+registerPlugin(FilePondPluginImageExifOrientation);
+registerPlugin(FilePondPluginImageCrop);
 
 @NgModule({
   imports: [
@@ -36,7 +45,7 @@ registerPlugin(FilePondPluginFileValidateType);
     BrowserModule,
     FilePondModule,
     InfiniteScrollModule,
-    TimeagoModule.forRoot()
+    TimeagoModule.forRoot(),
   ],
   declarations: [
     ProfileComponent,
@@ -48,8 +57,8 @@ registerPlugin(FilePondPluginFileValidateType);
     StoryComponent,
     FeedFriendComponent,
     UpdateProfileComponent,
-    PostComponent
+    PostComponent,
   ],
-  providers: [UsersService]
+  providers: [UsersService],
 })
 export class UserModule {}

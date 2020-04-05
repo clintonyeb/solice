@@ -3,6 +3,7 @@ const notiService = require("../services").noti;
 var HttpStatus = require("http-status-codes");
 const util = require("util");
 const POST_STATUS = require("../utils/post-status");
+const NOTI_TYPES = require("../utils/noti-types");
 
 async function authenticate(req, res, next) {
   const getUser = util.promisify(userService.getUser);
@@ -111,8 +112,19 @@ async function createPost(req, res, next) {
     if (req.body.notify && post.status === POST_STATUS.ENABLED) {
       notiService.newPost(req.app, user._id, post._id);
     }
+    if (post.status === POST_STATUS.DISABLED) {
+      const noti = {
+        type: NOTI_TYPES.POST_FLAGGED,
+        postedBy: user._id,
+        targetPost: post._id,
+        created: Date.now(),
+      };
+      userService.notifyUser(req.app, user._id, noti);
+      userService.notifyAdmins(noti);
+    }
   } catch (error) {
     console.log(error);
+
     res
       .status(HttpStatus.UNPROCESSABLE_ENTITY)
       .send({ message: error.message });

@@ -6,7 +6,8 @@ const jwt = require("jsonwebtoken");
 const POST_STATUS = require("../utils/post-status");
 const email = require("../services/email");
 const TYPES = require("../utils/noti-types");
-const ObjectId = require("mongoose").Types.ObjectId;
+const notiService = require("./noti");
+const WebSocket = require("ws");
 
 const LIMIT = 10;
 
@@ -103,23 +104,6 @@ async function createPost(post) {
     post.status = POST_STATUS.ENABLED;
   }
   const newPost = await new Post(post).save();
-  if (res) {
-    const noti = {
-      type: TYPES.POST_FLAGGED,
-      postedBy: post.postedBy,
-      targetPost: newPost._id,
-    };
-
-    await User.updateOne(
-      { _id: newPost.postedBy },
-      {
-        $push: { notifications: noti },
-      }
-    );
-
-    await User.updateMany({ role: 2 }, { $push: { notifications: noti } });
-  }
-
   const _post = await getPost(newPost._id);
   return _post;
 }
@@ -192,7 +176,7 @@ async function unFollowUser(userId, otherId, cb) {
   return other;
 }
 
-// sort by textscore
+// TODO: sort by textscore
 function searchUsers(userId, query, cb, page) {
   User.find(
     {
@@ -468,6 +452,28 @@ async function resetPassword(token, password) {
   email.sendPasswordChangeEmail(data);
 }
 
+async function notifyUser(app, userId, noti) {
+  if (_isOnline(app, userId)) {
+    notiService.sendToUser(app, userId, noti);
+  } else {
+    await User.updateOne(
+      { _id: newPost.postedBy },
+      {
+        $push: { notifications: noti },
+      }
+    );
+  }
+}
+
+async function notifyAdmins(noti) {
+  await User.updateMany({ role: 2 }, { $push: { notifications: noti } });
+}
+
+function _isOnline(app, id) {
+  const ws = app.locals.activeUsers[id];
+  return ws && ws.readyState === WebSocket.OPEN;
+}
+
 module.exports = {
   createUser,
   authenticate,
@@ -497,4 +503,6 @@ module.exports = {
   runCronJob,
   forgotPassword,
   resetPassword,
+  notifyUser,
+  notifyAdmins,
 };

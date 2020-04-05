@@ -8,7 +8,7 @@ async function newPost(app, userId, postId) {
     type: TYPES.NEW_POST,
     postedBy: userId,
     targetPost: postId,
-    created: Date.now()
+    created: Date.now(),
   };
 
   _updateFollowers(app, userId, not);
@@ -19,7 +19,7 @@ async function likedPost(app, userId, postId) {
     type: TYPES.LIKE_POST,
     postedBy: userId,
     targetPost: postId,
-    created: Date.now()
+    created: Date.now(),
   };
 
   _updateFollowers(app, userId, not);
@@ -30,7 +30,7 @@ async function commentedPost(app, userId, postId) {
     type: TYPES.COMMENT_POST,
     postedBy: userId,
     targetPost: postId,
-    created: Date.now()
+    created: Date.now(),
   };
 
   _updateFollowers(app, userId, not);
@@ -41,7 +41,7 @@ async function followedUser(app, userId, targetId) {
     type: TYPES.FOLLOWED_USER,
     postedBy: userId,
     targetUser: targetId,
-    created: Date.now()
+    created: Date.now(),
   };
 
   _updateFollowers(app, userId, not);
@@ -51,7 +51,7 @@ async function updatedProfile(app, userId) {
   const not = {
     type: TYPES.UPDATED_PROFILE,
     postedBy: userId,
-    created: Date.now()
+    created: Date.now(),
   };
 
   _updateFollowers(app, userId, not);
@@ -61,7 +61,7 @@ async function online(app, userId) {
   const not = {
     type: TYPES.ONLINE,
     postedBy: userId,
-    created: Date.now()
+    created: Date.now(),
   };
 
   _updateFollowers(app, userId, not);
@@ -70,7 +70,7 @@ async function online(app, userId) {
 async function _updateFollowers(app, userId, noti) {
   const user = await User.findById(userId);
 
-  user.followers.forEach(async ff => {
+  user.followers.forEach(async (ff) => {
     if (isOnline(app, ff)) {
       sendToUser(app, ff, noti);
     } else {
@@ -81,7 +81,7 @@ async function _updateFollowers(app, userId, noti) {
 
 function isOnline(app, id) {
   const ws = app.locals.activeUsers[id];
-  return ws && (ws.readyState === WebSocket.OPEN);
+  return ws && ws.readyState === WebSocket.OPEN;
 }
 
 async function sendToUser(app, id, noti) {
@@ -104,5 +104,6 @@ module.exports = {
   commentedPost,
   followedUser,
   updatedProfile,
-  online
+  online,
+  sendToUser,
 };
