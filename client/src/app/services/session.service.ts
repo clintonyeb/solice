@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import {
   HttpClient,
   HttpErrorResponse,
-  HttpHeaders
+  HttpHeaders,
 } from "@angular/common/http";
 import { getServerURL } from "../utils/helpers";
 
@@ -24,10 +24,11 @@ export class SessionService {
   }
 
   handleError(error: HttpErrorResponse): string {
+    console.log(error.error);
     if (error.error instanceof ErrorEvent) {
       return error.error.message;
-    } else if (error.error.error) {
-      return error.error.error;
+    } else if (error.error.message) {
+      return error.error.message; 
     }
     return "Something bad happened; please try again later.";
   }
@@ -47,11 +48,11 @@ export class SessionService {
     const url: string = getServerURL("authenticate");
     this.http
       .get(url, {
-        headers
+        headers,
       })
       .subscribe(
-        data => cb(null, data),
-        e => cb(e)
+        (data) => cb(null, data),
+        (e) => cb(e)
       );
   }
 
