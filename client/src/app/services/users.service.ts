@@ -47,6 +47,16 @@ export class UsersService {
     this.notificationSubject.next(updatedValue);
   }
 
+  pingServer() {
+    setInterval(() => {
+      if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+        console.log("ping server");
+        const message = 'ping';
+        this.socket.send(JSON.stringify(message));
+      }
+    }, 30000);
+  }
+
   goActive() {
     const url = environment.WEB_SOCKET_URL;
     const message = {
@@ -57,6 +67,7 @@ export class UsersService {
       console.log("Successfully connected: " + url);
       this.socket.send(JSON.stringify(message));
       this.activeSubject.next(true);
+      this.pingServer();
     };
 
     this.socket.onmessage = e => {

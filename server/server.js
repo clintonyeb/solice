@@ -37,6 +37,11 @@ app.ws("/ws", function(ws, req) {
   ws.on("message", function(msg) {
     // authenticate client before registering: msg.token
     const body = JSON.parse(msg);
+    if (body === "ping") {
+      console.log("ping from client " + ws._id);
+      return;
+    }
+
     const token = body.token;
     if (!token) return closeSocket(ws);
     var decoded = jwt.verify(token, process.env.SECRET_KEY);
