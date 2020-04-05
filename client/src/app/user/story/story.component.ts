@@ -7,7 +7,7 @@ import { ToastrService } from "ngx-toastr";
 @Component({
   selector: "app-story",
   templateUrl: "./story.component.html",
-  styleUrls: ["./story.component.css"]
+  styleUrls: ["./story.component.css"],
 })
 export class StoryComponent implements OnInit {
   feed: Array<IPost>;
@@ -19,7 +19,7 @@ export class StoryComponent implements OnInit {
   page = 1;
 
   commentForm = new FormGroup({
-    text: new FormControl("", [Validators.required])
+    text: new FormControl("", [Validators.required]),
   });
 
   constructor(
@@ -37,10 +37,10 @@ export class StoryComponent implements OnInit {
 
   getFeed() {
     this.userService.getFeed().subscribe(
-      data => {
+      (data) => {
         this.feed = <IPost[]>data;
       },
-      err => console.log(err)
+      (err) => console.log(err)
     );
   }
 
@@ -58,15 +58,15 @@ export class StoryComponent implements OnInit {
               "More posts have been loaded..."
             );
           },
-          err => console.error(err)
+          (err) => console.error(err)
         );
     }
     this.userService.getFeed(_page).subscribe(
-      data => {
+      (data) => {
         this.feed = this.feed.concat(<IPost[]>data);
         this.page = _page;
       },
-      err => console.log(err)
+      (err) => console.log(err)
     );
   }
 
@@ -77,14 +77,14 @@ export class StoryComponent implements OnInit {
   search() {
     this.userService.searchFeed(this.query.value, "feed").subscribe(
       (data: Array<IPost>) => (this.feed = data),
-      err => console.error(err)
+      (err) => console.error(err)
     );
   }
 
   likePost(post: IPost, index: number) {
     this.userService.likePost(post._id).subscribe(
       (d: IPost) => this.feed.splice(index, 1, d),
-      err => console.error(err)
+      (err) => console.error(err)
     );
   }
 
@@ -97,7 +97,7 @@ export class StoryComponent implements OnInit {
           this.getComments(data);
           this.toastService.success("Comment", "Comment saved!");
         },
-        err => {}
+        (err) => {}
       );
   }
 
@@ -120,10 +120,11 @@ export class StoryComponent implements OnInit {
   }
 
   getComments(post: IPost) {
+    this.commentActive = null;
     this.commentForm.reset();
     this.userService.getComments(post._id).subscribe(
       (d: Array<IComment>) => (this.comments = d),
-      err => {}
+      (err) => {}
     );
     this.commentActive = post;
   }
@@ -139,7 +140,7 @@ export class StoryComponent implements OnInit {
         this.feed.splice(index, 1, data);
         this.getComments(data);
       },
-      err => {}
+      (err) => {}
     );
   }
 
