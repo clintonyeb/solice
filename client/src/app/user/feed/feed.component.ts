@@ -3,22 +3,22 @@ import {
   OnInit,
   ViewChild,
   Output,
-  EventEmitter
+  EventEmitter,
 } from "@angular/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { UsersService } from "../../services/users.service";
-import { IPost, IUser } from '../../utils/interfaces';
+import { IPost, IUser } from "../../utils/interfaces";
 import { UploadService } from "../../services/upload.service";
 import { HttpResponse, HttpEventType } from "@angular/common/http";
 import { Router } from "@angular/router";
-import { ToastrService } from 'ngx-toastr';
-import { Input } from '@angular/core';
+import { ToastrService } from "ngx-toastr";
+import { Input } from "@angular/core";
 
 @Component({
   selector: "app-feed",
   templateUrl: "./feed.component.html",
-  styleUrls: ["./feed.component.css"]
+  styleUrls: ["./feed.component.css"],
 })
 export class FeedComponent implements OnInit {
   @ViewChild("myPond") myPond: any;
@@ -31,14 +31,14 @@ export class FeedComponent implements OnInit {
   // post form
   form = new FormGroup({
     text: new FormControl("", [Validators.required]),
-    notify: new FormControl(true)
+    notify: new FormControl(true),
   });
 
   pondOptions = {
     class: "my-filepond",
     multiple: false,
     labelIdle: "Drop files here or click to browse",
-    acceptedFileTypes: "image/jpeg, image/png"
+    acceptedFileTypes: "image/jpeg, image/png",
   };
 
   pondFiles = [];
@@ -69,7 +69,7 @@ export class FeedComponent implements OnInit {
   onPostSubmit() {
     if (this.pondFiles.length) {
       this.processPhoto(this.pondFiles[0]).subscribe(
-        event => {
+        (event) => {
           if (event.type == HttpEventType.UploadProgress) {
             const percentDone = Math.round((100 * event.loaded) / event.total);
             console.log(`File is ${percentDone}% loaded.`);
@@ -99,6 +99,7 @@ export class FeedComponent implements OnInit {
         this.modalService.dismissAll();
         this.toastService.success("Post", "Post created successfully...");
         this.form.reset();
+        this.pondFiles = [];
 
         if (this.feed) {
           this.feed.add(data);
@@ -106,7 +107,7 @@ export class FeedComponent implements OnInit {
           this.posts.add(data);
         }
       },
-      err => console.log(err)
+      (err) => console.log(err)
     );
   }
 
