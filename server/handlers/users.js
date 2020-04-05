@@ -2,6 +2,7 @@ var userService = require("../services").users;
 const notiService = require("../services").noti;
 var HttpStatus = require("http-status-codes");
 const util = require("util");
+const POST_STATUS = require("../utils/post-status");
 
 async function authenticate(req, res, next) {
   const getUser = util.promisify(userService.getUser);
@@ -100,20 +101,22 @@ function getFeed(req, res, next) {
   );
 }
 
-function createPost(req, res, next) {
+async function createPost(req, res, next) {
   const user = req.user;
   const _post = req.body;
-  _post["postedBy"] = user;
-  userService.createPost(_post, (err, post) => {
-    if (err)
-      return res
-        .status(HttpStatus.UNPROCESSABLE_ENTITY)
-        .send({ message: err.message });
+  _post["postedBy"] = user._id;
+  try {
+    const post = await userService.createPost(_post);
     res.status(HttpStatus.CREATED).json(post);
-    if (req.body.notify) {
-      notiService.newPost(req.app, req.user._id, post._id);
+    if (req.body.notify && post.status === POST_STATUS.ENABLED) {
+      notiService.newPost(req.app, user._id, post._id);
     }
-  });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(HttpStatus.UNPROCESSABLE_ENTITY)
+      .send({ message: error.message });
+  }
 }
 
 function searchUsers(req, res, next) {
@@ -148,31 +151,32 @@ function searchFeed(req, res, next) {
   );
 }
 
-function likePost(req, res, next) {
-  return userService.likePost(req.user._id, req.body.postId, (err, post) => {
-    if (err)
-      return res
-        .status(HttpStatus.UNPROCESSABLE_ENTITY)
-        .send("Error retrieving posts");
+async function likePost(req, res, next) {
+  try {
+    const post = await userService.likePost(req.user._id, req.body.postId);
     res.json(post);
     notiService.likedPost(req.app, req.user._id, post._id);
-  });
+  } catch (error) {
+    res
+      .status(HttpStatus.UNPROCESSABLE_ENTITY)
+      .send({ message: error.message });
+  }
 }
 
-function commentPost(req, res, next) {
-  return userService.commentPost(
-    req.user._id,
-    req.body.postId,
-    req.body.text,
-    (err, post) => {
-      if (err)
-        return res
-          .status(HttpStatus.UNPROCESSABLE_ENTITY)
-          .json({ error: err ? err.message : "Error retrieving posts" });
-      res.json(post);
-      notiService.commentedPost(req.app, req.user._id, post._id);
-    }
-  );
+async function commentPost(req, res, next) {
+  try {
+    const post = await userService.commentPost(
+      req.user._id,
+      req.body.postId,
+      req.body.text
+    );
+    res.json(post);
+    notiService.commentedPost(req.app, req.user._id, post._id);
+  } catch (error) {
+    res
+      .status(HttpStatus.UNPROCESSABLE_ENTITY)
+      .json({ message: err ? err.message : "Error retrieving posts" });
+  }
 }
 
 function deleteComment(req, res, next) {
@@ -271,5 +275,5 @@ module.exports = {
   getUserForId,
   getNotifications,
   getActiveUsers,
-  getAds
+  getAds,
 };

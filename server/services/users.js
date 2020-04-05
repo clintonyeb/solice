@@ -5,7 +5,19 @@ var Ad = require("../models/ads");
 const jwt = require("jsonwebtoken");
 const POST_STATUS = require("../utils/post-status");
 const email = require("../services/email");
+const TYPES = require("../utils/noti-types");
+const ObjectId = require("mongoose").Types.ObjectId;
+
 const LIMIT = 10;
+
+// helpers
+async function _getPostStatus(text) {
+  const words = text.split(" ").map((word) => new RegExp(word, "i"));
+  const filter = await Word.findOne({ text: { $in: words } });
+  return filter;
+}
+
+// functions
 
 function authenticate(obj, cb) {
   User.findOne({ email: obj.email }).exec((err, user) => {
@@ -78,44 +90,38 @@ function getFeed(userId, cb, page) {
   });
 }
 
-function getPost(id, cb) {
-  Post.findById(id)
-    .populate("postedBy")
-    .exec((err, post) => {
-      if (err) return cb(err);
-      return cb(err, post);
-    });
+async function getPost(id) {
+  const post = await Post.findById(id).populate("postedBy").exec();
+  return post;
 }
-const TYPES = require("../utils/noti-types");
-async function createPost(post, cb) {
+
+async function createPost(post) {
   const res = await _getPostStatus(post.text);
   if (res) {
     post.status = POST_STATUS.DISABLED;
-    const noti = {
-      type: TYPES.POST_FLAGGED,
-      postedBy: post.postedBy
-    };
-
-    await User.updateOne(
-      { _id: post.postedBy },
-      { notifications: { $push: noti } }
-    );
-    await User.update({ role: 2 }, { notifications: { $push: noti } });
   } else {
     post.status = POST_STATUS.ENABLED;
   }
+  const newPost = await new Post(post).save();
+  if (res) {
+    const noti = {
+      type: TYPES.POST_FLAGGED,
+      postedBy: post.postedBy,
+      targetPost: newPost._id,
+    };
 
-  var newPost = new Post(post);
-  newPost.save((err, res) => {
-    if (err) return err;
-    return getPost(res._id, cb);
-  });
-}
+    await User.updateOne(
+      { _id: newPost.postedBy },
+      {
+        $push: { notifications: noti },
+      }
+    );
 
-async function _getPostStatus(text) {
-  const words = text.split(" ").map(word => new RegExp(word, "i"));
-  const filter = await Word.findOne({ text: { $in: words } });
-  return filter;
+    await User.updateMany({ role: 2 }, { $push: { notifications: noti } });
+  }
+
+  const _post = await getPost(newPost._id);
+  return _post;
 }
 
 function createUser(obj, cb) {
@@ -137,7 +143,7 @@ function createUser(obj, cb) {
       dob: obj.dob,
       bio: bio,
       profile_pic: "https://bootdey.com/img/Content/avatar/avatar2.png",
-      password: obj.password
+      password: obj.password,
     });
 
     newUser.save((err, res) => {
@@ -156,13 +162,13 @@ async function followUser(userId, otherId, cb) {
   await User.updateOne(
     { _id: userId },
     {
-      $addToSet: { following: otherId }
+      $addToSet: { following: otherId },
     }
   );
   const other = await User.findByIdAndUpdate(
     otherId,
     {
-      $addToSet: { followers: userId }
+      $addToSet: { followers: userId },
     },
     { new: true }
   );
@@ -173,13 +179,13 @@ async function unFollowUser(userId, otherId, cb) {
   await User.updateOne(
     { _id: userId },
     {
-      $pull: { following: otherId }
+      $pull: { following: otherId },
     }
   );
   const other = await User.findByIdAndUpdate(
     otherId,
     {
-      $pull: { followers: userId }
+      $pull: { followers: userId },
     },
     { new: true }
   );
@@ -194,8 +200,8 @@ function searchUsers(userId, query, cb, page) {
       status: 0,
       $or: [
         { firstname: { $regex: query, $options: "i" } },
-        { lastname: { $regex: query, $options: "i" } }
-      ]
+        { lastname: { $regex: query, $options: "i" } },
+      ],
     },
     (err, users) => {
       if (err) return cb(err, false);
@@ -227,7 +233,7 @@ function searchFeed(userId, query, cb, page) {
     following.push(userId); // include self
     Post.find({
       postedBy: { $in: following },
-      text: { $regex: query, $options: "i" }
+      text: { $regex: query, $options: "i" },
     })
       .populate("postedBy")
       .sort({ created: "desc" })
@@ -239,69 +245,57 @@ function searchFeed(userId, query, cb, page) {
   });
 }
 
-function likePost(userId, postId, cb) {
-  getPost(postId, (err, post) => {
-    if (err) return cb(err);
-    const f = post.likes.indexOf(userId);
-    if (f > -1) {
-      post.likes.splice(f, 1);
-    } else {
-      post.likes.push(userId);
-    }
-
-    post.save(err => cb(err, post));
-  });
+async function likePost(userId, postId) {
+  const post = Post.findByIdAndUpdate(
+    postId,
+    { $addToSet: { likes: userId } },
+    { new: true }
+  );
+  return post;
 }
 
-async function commentPost(userId, postId, text, cb) {
+async function commentPost(userId, postId, text) {
   const res = await _getPostStatus(text);
   if (res) {
-    cb(new Error("Comment flagged as containing sensitive words"));
     const noti = {
       type: TYPES.COMMENT_FLAGGED,
       postedBy: userId,
-      targetPost: postId
+      targetPost: postId,
     };
 
-    await User.updateOne({ _id: userId }, { notifications: { $push: noti } });
-    await User.update({ role: 2 }, { notifications: { $push: noti } });
-    return;
+    await User.updateOne({ _id: userId }, { $push: { notifications: noti } });
+    await User.update({ role: 2 }, { $push: { notifications: noti } });
+    throw new Error("Comment flagged as containing sensitive words");
   }
-  getPost(postId, async (err, post) => {
-    if (err) return cb(err);
+  const comment = {
+    text: text,
+    postedBy: userId,
+  };
 
-    const comment = {
-      text: text,
-      postedBy: userId
-    };
-
-    post.comments.push(comment);
-
-    post.save(err => {
-      Post.findById(post._id)
-        .populate("postedBy")
-        .populate({
-          path: "comments.postedBy",
-          model: "users"
-        })
-        .exec((err, post) => {
-          if (err) return cb(err);
-          return cb(err, post);
-        });
-    });
-  });
+  const post = await Post.findByIdAndUpdate(
+    postId,
+    { $push: { comments: comment } },
+    { new: true }
+  )
+    .populate("postedBy")
+    .populate({
+      path: "comments.postedBy",
+      model: "users",
+    })
+    .exec();
+  return post;
 }
 
 function deleteComment(postId, commentId, cb) {
   Post.update(
     { _id: postId },
     { $pull: { comments: { _id: commentId } } },
-    err => {
+    (err) => {
       Post.findById(postId)
         .populate("postedBy")
         .populate({
           path: "comments.postedBy",
-          model: "users"
+          model: "users",
         })
         .exec((err, post) => {
           if (err) return cb(err);
@@ -315,7 +309,7 @@ function getComments(postId, cb) {
   Post.findById(postId)
     .populate({
       path: "comments.postedBy",
-      model: "users"
+      model: "users",
     })
     .exec((err, post) => {
       if (err) return cb(err);
@@ -336,23 +330,22 @@ async function updateUser(userId, data) {
 }
 
 async function getNotifications(userId) {
-  const user = await User.findById(userId)
+  const user = await User.findById(userId, { notifications: 1 })
     .populate({
       path: "notifications.postedBy",
-      model: "users"
+      model: "users",
     })
     .populate({
       path: "notifications.targetUser",
-      model: "users"
+      model: "users",
     })
     .populate({
       path: "notifications.targetPost",
-      model: "posts"
+      model: "posts",
     })
-    // .sort({ created: "desc" })
-    // .limit(LIMIT)
+    .sort({ "notifications.created": "desc" })
+    .limit(LIMIT)
     .exec();
-
   return user.notifications;
 }
 
@@ -362,7 +355,7 @@ async function deleteNotifications(userId) {
 
 async function getActiveFollowing(app, userId) {
   const user = await User.findById(userId);
-  const active = user.following.filter(ff =>
+  const active = user.following.filter((ff) =>
     app.locals.activeUsers.hasOwnProperty(ff)
   );
   const users = await User.find({ _id: { $in: active } });
@@ -373,7 +366,7 @@ async function createRequest(username, text) {
   // find user by username
   // if not error
   const user = await User.findOne({
-    email: username
+    email: username,
   });
 
   if (!user) {
@@ -387,21 +380,21 @@ async function createRequest(username, text) {
 
   // check if user does not have pending requests
   // else error
-  const found = user.requests.find(r => r.status === 0);
+  const found = user.requests.find((r) => r.status === 0);
   if (found) {
     throw new Error("You already have pending requests");
   }
 
   const request = {
     text: text,
-    status: 0
+    status: 0,
   };
 
   // created and add request
   await User.updateOne(
     { _id: user._id },
     {
-      $push: { requests: request }
+      $push: { requests: request },
     }
   );
 
@@ -419,8 +412,8 @@ async function getAds(userId) {
       .exec();
 
     if (matchedAds) {
-      ad = matchedAds.find(ad => {
-        return ad.targets.find(req => {
+      ad = matchedAds.find((ad) => {
+        return ad.targets.find((req) => {
           const value = Number(req.value);
           if (req.operator == "==" && age == value) return true;
           if (req.operator == "<" && age < value) return true;
@@ -433,9 +426,7 @@ async function getAds(userId) {
   }
 
   if (!ad) {
-    ad = await Ad.findOne()
-      .sort({ created: "desc" })
-      .exec();
+    ad = await Ad.findOne().sort({ created: "desc" }).exec();
   }
 
   return ad;
@@ -454,7 +445,7 @@ async function verifyEmailToken(token) {
 
 async function runCronJob() {
   const users = await User.find({ "notifications.4": { $exists: true } });
-  users.forEach(user => {
+  users.forEach((user) => {
     email.sendUserNotification(user);
   });
 }
@@ -505,5 +496,5 @@ module.exports = {
   verifyEmailToken,
   runCronJob,
   forgotPassword,
-  resetPassword
+  resetPassword,
 };

@@ -23,22 +23,22 @@ mongoose.connect(require("./config/app").db.connectionUri, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
   useFindAndModify: false,
-  useCreateIndex: true
+  useCreateIndex: true,
 });
 
-// mongoose.set("debug", true);
+mongoose.set("debug", true);
 
 // set api routes
 app.use("/", indexRouter);
-apiRoutes.forEach(route => app.use("/api/v1", route));
+apiRoutes.forEach((route) => app.use("/api/v1", route));
 
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   console.error(err);
   if (err.name === "UnauthorizedError") {
     return res.status(401).json({ message: "Cannot authenticate request..." });
   }
   res.status(HttpStatus.NOT_FOUND).json({
-    message: "An error occurred whiles processing request.."
+    message: "An error occurred whiles processing request..",
   });
 });
 

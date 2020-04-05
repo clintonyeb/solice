@@ -5,7 +5,7 @@ import { INotification, IAd } from "../../utils/interfaces";
 @Component({
   selector: "app-activity",
   templateUrl: "./activity.component.html",
-  styleUrls: ["./activity.component.css"]
+  styleUrls: ["./activity.component.css"],
 })
 export class ActivityComponent implements OnInit {
   ad: IAd;
@@ -22,6 +22,8 @@ export class ActivityComponent implements OnInit {
     this.userService
       .getNotifications()
       .subscribe((data: Array<INotification>) => {
+        console.log(data);
+
         this.notifications = data;
       });
   }
@@ -31,7 +33,7 @@ export class ActivityComponent implements OnInit {
       (notifications: INotification[]) => {
         this.notifications = notifications;
       },
-      err => {}
+      (err) => {}
     );
   }
 

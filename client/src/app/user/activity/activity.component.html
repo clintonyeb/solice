@@ -2,7 +2,12 @@
 <div class="my-3">
   <a
     class="row border border-black m-auto text-decoration-none"
-    style="background-color: mediumaquamarine; max-width: 25rem; height: 5rem; border-radius: 5px;"
+    style="
+      background-color: mediumaquamarine;
+      max-width: 25rem;
+      height: 5rem;
+      border-radius: 5px;
+    "
     *ngIf="ad"
     [href]="ad.url"
     target="_blank"
@@ -45,8 +50,7 @@
 
 <div class="ui cards mt-3" *ngIf="notifications">
   <a
-    class="border-bottom primary border-primary
-     ui raised centered card"
+    class="border-bottom primary border-primary ui raised centered card"
     *ngFor="let noti of notifications; index as i"
   >
     <div class="content" *ngIf="noti.type === 0">
@@ -91,6 +95,26 @@
       </div>
     </div>
 
+    <div class="content" *ngIf="noti.type === 5">
+      <div class="center aligned header text-primary">Is Online</div>
+      <div class="description">
+        <p>{{ noti.postedBy.firstname }} is online.</p>
+      </div>
+    </div>
+
+    <div class="content" *ngIf="noti.type === 6">
+      <div class="center aligned header text-primary">Post Flagged</div>
+      <div class="description">
+        <p>Your recent post was flagged as inappropriate.</p>
+      </div>
+    </div>
+
+    <div class="content" *ngIf="noti.type === 7">
+      <div class="center aligned header text-primary">Comment Flagged</div>
+      <div class="description">
+        <p>Your recent comment was flagged as inappropriate.</p>
+      </div>
+    </div>
     <div class="extra content">
       <div class="center aligned author">
         <img class="ui avatar image" [src]="noti.postedBy.profile_pic" />
