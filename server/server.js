@@ -31,7 +31,9 @@ app.ws("/ws", function(ws, req) {
   ws.on("open", function() {
     console.log("new websocket connection...");
 
-    // TODO: timeout to check if ws got authenticated
+    setTimeout(() => {
+      if (!ws._id) closeSocket(ws);
+    }, 60000);
   });
 
   ws.on("message", function(msg) {
