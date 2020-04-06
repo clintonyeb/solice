@@ -138,11 +138,19 @@ function searchUsers(req, res, next) {
   }
   const type = req.query.type;
   const user = req.user;
-  userService.searchUsers(user._id, query, (err, users) => {
-    if (err)
-      return res.status(HttpStatus.NOT_FOUND).send({ message: err.message });
-    res.json(users);
-  });
+  if (!type || type === "all") {
+    userService.searchUsers(user._id, query, (err, users) => {
+      if (err)
+        return res.status(HttpStatus.NOT_FOUND).send({ message: err.message });
+      res.json(users);
+    });
+  } else {
+    userService.searchUsersByType(user._id, type, query, (err, users) => {
+      if (err)
+        return res.status(HttpStatus.NOT_FOUND).send({ message: err.message });
+      res.json(users);
+    });
+  }
 }
 
 function searchFeed(req, res, next) {
@@ -150,17 +158,36 @@ function searchFeed(req, res, next) {
   if (!query) {
     return getFeed(req, res, next);
   }
+  const type = req.query.type;
   const user = req.user;
-  userService.searchFeed(
-    user._id,
-    query,
-    (err, posts) => {
-      if (err)
-        return res.status(HttpStatus.NOT_FOUND).send("Error retrieving posts");
-      res.json(posts);
-    },
-    req.query.page
-  );
+
+  if (type === "feed") {
+    userService.searchFeed(
+      user._id,
+      query,
+      (err, posts) => {
+        if (err)
+          return res
+            .status(HttpStatus.NOT_FOUND)
+            .send("Error retrieving posts");
+        res.json(posts);
+      },
+      req.query.page
+    );
+  } else {
+    userService.searchPosts(
+      user._id,
+      query,
+      (err, posts) => {
+        if (err)
+          return res
+            .status(HttpStatus.NOT_FOUND)
+            .send("Error retrieving posts");
+        res.json(posts);
+      },
+      req.query.page
+    );
+  }
 }
 
 async function likePost(req, res, next) {

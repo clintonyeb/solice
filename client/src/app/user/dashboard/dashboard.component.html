@@ -4,7 +4,7 @@
       <app-bio [status]="active" (main)="editProfile($event)" #bio></app-bio>
     </div>
     <div class="col-6 p-4">
-      <app-feed
+      <!-- <app-feed
         *ngIf="mainSection === 'feed'"
         (profile)="viewProfile($event)"
         [user]="user"
@@ -17,9 +17,10 @@
         *ngIf="mainSection === 'view-profile'"
         (main)="editProfile($event)"
         [userId]="userId"
-      ></app-profile>
+      ></app-profile> -->
+      <router-outlet></router-outlet>
     </div>
-    <div class="col p-4 " style="border-left: 1px dashed gray;">
+    <div class="col p-4" style="border-left: 1px dashed gray;">
       <app-activity></app-activity>
     </div>
   </div>

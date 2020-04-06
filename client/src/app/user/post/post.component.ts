@@ -32,9 +32,9 @@ export class PostComponent implements OnInit {
     this.userService.newPostObserver.subscribe((data: IPost) => this.add(data));
   }
 
-  getUser(userId: any) {
-    return this.userService.getUserById(userId);
-  }
+  // getUser(userId: any) {
+  //   return this.userService.getUserById(userId);
+  // }
 
   getFeed() {
     this.userService.getPosts().subscribe(

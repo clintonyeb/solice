@@ -2,34 +2,45 @@ import { Component, OnInit, Input, EventEmitter, Output } from "@angular/core";
 import { IUser } from "../../utils/interfaces";
 import { UsersService } from "../../services/users.service";
 import { FormControl } from "@angular/forms";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-feed-friend",
   templateUrl: "./feed-friend.component.html",
-  styleUrls: ["./feed-friend.component.css"]
+  styleUrls: ["./feed-friend.component.css"],
 })
 export class FeedFriendComponent implements OnInit {
-  @Input() type: string;
-  @Output() profile = new EventEmitter<string>();
   people: Array<IUser>;
   query = new FormControl("");
 
-  constructor(private userService: UsersService) {}
+  constructor(private userService: UsersService, private router: Router) {}
 
   ngOnInit(): void {
     this.getPeople();
   }
 
+  getFeedType() {
+    const url = this.router.url;
+    if (url === "/users/main/feeds/following") {
+      return "following";
+    } else if (url === "/users/main/feeds/followers") {
+      return "followers";
+    } else {
+      return "all";
+    }
+  }
+
   getPeople() {
-    if (this.type === "all") {
+    let type = this.getFeedType();
+    if (type === "all") {
       return this.userService.getUsers().subscribe(
         (data: Array<IUser>) => (this.people = data),
-        err => console.error(err)
+        (err) => console.error(err)
       );
     }
-    return this.userService.getUsersFilter(this.type).subscribe(
+    return this.userService.getUsersFilter(type).subscribe(
       (data: Array<IUser>) => (this.people = data),
-      err => console.error(err)
+      (err) => console.error(err)
     );
   }
 
@@ -46,7 +57,7 @@ export class FeedFriendComponent implements OnInit {
   }
 
   visitProfile(personId) {
-    this.profile.emit(personId);
+    this.router.navigate(["/users/main/profiles", personId]);
   }
 
   isFollowing(user): boolean {
@@ -56,9 +67,10 @@ export class FeedFriendComponent implements OnInit {
   }
 
   searchPeople() {
-    this.userService.searchPeople(this.query.value, this.type).subscribe(
+    let type = this.getFeedType();
+    this.userService.searchPeople(this.query.value, type).subscribe(
       (data: Array<IUser>) => (this.people = data),
-      err => console.error(err)
+      (err) => console.error(err)
     );
   }
 }

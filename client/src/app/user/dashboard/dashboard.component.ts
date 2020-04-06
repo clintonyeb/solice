@@ -8,12 +8,12 @@ import { INotify, INotification, IUser } from "../../utils/interfaces";
 @Component({
   selector: "app-dashboard",
   templateUrl: "./dashboard.component.html",
-  styleUrls: ["./dashboard.component.css"]
+  styleUrls: ["./dashboard.component.css"],
 })
 export class DashboardComponent implements OnInit {
   authenticated = false;
   active = false;
-  mainSection = "feed"; // feed, profile, view-profile
+  // mainSection = "feed"; // feed, profile, view-profile
   @ViewChild("bio") bio: BioComponent;
   userId: string;
   user: IUser;
@@ -37,7 +37,7 @@ export class DashboardComponent implements OnInit {
       if (err) {
         return this.router.navigate([
           "/session/login",
-          { message: "Please login to continue" }
+          { message: "Please login to continue" },
         ]);
       }
       this.user = res;
@@ -46,7 +46,7 @@ export class DashboardComponent implements OnInit {
         (d: boolean) => {
           this.active = d;
         },
-        err => {
+        (err) => {
           console.log(err);
         }
       );
@@ -56,11 +56,10 @@ export class DashboardComponent implements OnInit {
 
   editProfile(value: string) {
     this.bio.refresh();
-    this.mainSection = value;
+    this.router.navigate(["/users/main/profile"]);
   }
 
   viewProfile(value: string) {
-    this.userId = value;
-    this.mainSection = "view-profile";
+    this.router.navigate(["/users/main/profiles", { id: value }]);
   }
 }

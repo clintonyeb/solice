@@ -19,47 +19,19 @@
       </div>
     </div>
     <div class="mt-4 py-2 border-top">
-      <ul class="nav profile-navbar" ngbNav>
-        <li class="nav-item" *ngFor="let link of routes;" ngbNavItem>
+      <ul class="nav profile-navbar" #navbar ngbNav [activeId]="router.url">
+        <li
+          class="nav-item"
+          *ngFor="let link of routes"
+          [ngbNavItem]="link.path"
+        >
           <a class="nav-link" [routerLink]="link.path" ngbNavLink>
             <!-- <i class="fa fa-user-circle"></i> -->
             {{ link.title }}
           </a>
         </li>
-        <!--
-        <li class="nav-item" ngbNavItem>
-          <a class="nav-link" ngbNavLink>
-            <i class="mdi mdi-newspaper"></i>
-            Following
-          </a>
-          <ng-template ngbNavContent>
-            <app-feed-friend type="following"></app-feed-friend>
-          </ng-template>
-        </li>
-        <li class="nav-item" ngbNavItem>
-          <a class="nav-link" ngbNavLink>
-            <i class="mdi mdi-newspaper"></i>
-            Followers
-          </a>
-          <ng-template ngbNavContent>
-            <app-feed-friend type="followers"></app-feed-friend>
-          </ng-template>
-        </li>
-        <li class="nav-item" ngbNavItem>
-          <a class="nav-link" ngbNavLink>
-            <i class="mdi mdi-newspaper"></i>
-            People
-          </a>
-          <ng-template ngbNavContent>
-            <app-feed-friend
-              type="all"
-              (profile)="profile.emit($event)"
-            ></app-feed-friend>
-          </ng-template>
-        </li> -->
       </ul>
     </div>
-
     <div class="mt-4">
       <router-outlet></router-outlet>
     </div>

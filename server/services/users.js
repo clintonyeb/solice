@@ -193,19 +193,33 @@ function searchUsers(userId, query, cb, page) {
   );
 }
 
-function searchPosts(userId, query, cb) {
+function searchUsersByType(userId, type, query, cb, page) {
   User.findById(userId, (err, user) => {
-    if (err) return cb(err, false);
-    const following = user.following;
-    following.push(userId); // include self
-    Post.find({ postedBy: { $in: following } })
-      .populate("postedBy")
-      .sort({ created: "desc" })
-      .limit(LIMIT)
-      .exec((err, posts) => {
-        return cb(err, posts);
-      });
+    User.find(
+      {
+        _id: { $in: user[type] },
+        status: 0,
+        $or: [
+          { firstname: { $regex: query, $options: "i" } },
+          { lastname: { $regex: query, $options: "i" } },
+        ],
+      },
+      (err, users) => {
+        if (err) return cb(err, false);
+        return cb(err, users);
+      }
+    );
   });
+}
+
+function searchPosts(userId, query, cb) {
+  Post.find({ postedBy: userId, text: { $regex: query, $options: "i" } })
+    .populate("postedBy")
+    .sort({ created: "desc" })
+    .limit(LIMIT)
+    .exec((err, posts) => {
+      return cb(err, posts);
+    });
 }
 
 function searchFeed(userId, query, cb, page) {
@@ -217,6 +231,7 @@ function searchFeed(userId, query, cb, page) {
     Post.find({
       postedBy: { $in: following },
       text: { $regex: query, $options: "i" },
+      status: POST_STATUS.ENABLED,
     })
       .populate("postedBy")
       .sort({ created: "desc" })
@@ -229,11 +244,22 @@ function searchFeed(userId, query, cb, page) {
 }
 
 async function likePost(userId, postId) {
-  const post = Post.findByIdAndUpdate(
-    postId,
-    { $addToSet: { likes: userId } },
-    { new: true }
-  );
+  const _post = await Post.findOne({ _id: postId });
+  let query = null;
+  console.log(_post.likes, "likes");
+
+  if (_post.likes.indexOf(userId) > -1) {
+    query = { $pull: { likes: userId } };
+  } else {
+    query = { $addToSet: { likes: userId } };
+  }
+  const post = await Post.findByIdAndUpdate(postId, query, { new: true })
+    .populate("postedBy")
+    .populate({
+      path: "comments.postedBy",
+      model: "users",
+    })
+    .exec();
   return post;
 }
 
@@ -504,4 +530,5 @@ module.exports = {
   resetPassword,
   notifyUser,
   notifyAdmins,
+  searchUsersByType,
 };

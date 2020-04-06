@@ -26,6 +26,7 @@ export class FeedComponent implements OnInit {
   @ViewChild("feed") posts: any;
   @Output() profile = new EventEmitter<string>();
   @Input() user: IUser;
+  @ViewChild("navbar") nav: any;
   focus;
 
   // post form
@@ -42,21 +43,32 @@ export class FeedComponent implements OnInit {
   };
 
   pondFiles = [];
+  active;
 
   constructor(
     private modalService: NgbModal,
     private userService: UsersService,
     private toastService: ToastrService,
     private uploadService: UploadService,
-    private router: Router
+    public router: Router
   ) {}
 
   routes = [
-    { path: "/users/feeds/timeline", title: "Timeline", value: "" },
-    { path: "/users/feeds/posts", title: "Posts", value: "" },
-    { path: "/users/feeds/following", title: "Following", value: "" },
-    { path: "/users/feeds/followers", title: "Followers", value: "" },
-    { path: "/users/feeds/people", title: "People", value: "" },
+    { id: 1, path: "/users/main/feeds/timeline", title: "Timeline", value: "" },
+    { id: 2, path: "/users/main/feeds/posts", title: "Posts", value: "" },
+    {
+      id: 3,
+      path: "/users/main/feeds/following",
+      title: "Following",
+      value: "",
+    },
+    {
+      id: 4,
+      path: "/users/main/feeds/followers",
+      title: "Followers",
+      value: "",
+    },
+    { id: 5, path: "/users/main/feeds/people", title: "People", value: "" },
   ];
 
   ngOnInit(): void {}

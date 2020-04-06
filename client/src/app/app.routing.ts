@@ -29,6 +29,9 @@ import { RecoverPasswordComponent } from "./session/recover-password/recover-pas
 import { StoryComponent } from "./user/story/story.component";
 import { PostComponent } from "./user/post/post.component";
 import { FeedFriendComponent } from "./user/feed-friend/feed-friend.component";
+import { ProfileComponent } from "./user/profile/profile.component";
+import { UpdateProfileComponent } from "./user/update-profile/update-profile.component";
+import { FeedComponent } from './user/feed/feed.component';
 
 const routes: Routes = [
   { path: "", redirectTo: "users", pathMatch: "full" },
@@ -52,17 +55,32 @@ const routes: Routes = [
     component: UserComponent,
     canActivate: [AuthGuardService],
     children: [
-      { path: "", redirectTo: "feeds", pathMatch: "full" },
+      { path: "", redirectTo: "main", pathMatch: "full" },
       {
-        path: "feeds",
+        path: "main",
         component: DashboardComponent,
         children: [
-          { path: "", redirectTo: "timeline", pathMatch: "full" },
-          { path: "timeline", component: StoryComponent },
-          { path: "posts", component: PostComponent },
-          { path: "following", component: FeedFriendComponent },
-          { path: "followers", component: FeedFriendComponent },
-          { path: "people", component: FeedFriendComponent },
+          { path: "", redirectTo: "feeds", pathMatch: "full" },
+          {
+            path: "feeds",
+            component: FeedComponent,
+            children: [
+              { path: "", redirectTo: "timeline", pathMatch: "full" },
+              { path: "timeline", component: StoryComponent },
+              { path: "posts", component: PostComponent },
+              { path: "following", component: FeedFriendComponent },
+              { path: "followers", component: FeedFriendComponent },
+              { path: "people", component: FeedFriendComponent },
+            ],
+          },
+          {
+            path: "profiles/:id",
+            component: ProfileComponent,
+          },
+          {
+            path: "profile",
+            component: UpdateProfileComponent,
+          },
         ],
       },
     ],

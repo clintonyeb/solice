@@ -4,8 +4,8 @@ import { HttpClientService } from "./http-client.service";
 import { environment } from "../../environments/environment";
 import { Subject, BehaviorSubject } from "rxjs/Rx";
 import { Router } from "@angular/router";
-import { INotification, IPost } from '../utils/interfaces';
-import { Observable } from 'rxjs';
+import { INotification, IPost } from "../utils/interfaces";
+import { Observable } from "rxjs";
 
 @Injectable()
 export class UsersService {
@@ -32,6 +32,8 @@ export class UsersService {
   }
 
   getUserById(id) {
+    console.log(id, "id");
+
     let url: string = `user/${id}`;
     url = getServerURL(url);
     return this.http.get(url);
