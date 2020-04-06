@@ -4,7 +4,7 @@ import { HttpClientService } from "./http-client.service";
 import { environment } from "../../environments/environment";
 import { Subject, BehaviorSubject } from "rxjs/Rx";
 import { Router } from "@angular/router";
-import { INotification, IPost, IUser } from '../utils/interfaces';
+import { INotification, IPost, IUser } from "../utils/interfaces";
 import { Observable } from "rxjs";
 
 @Injectable()
@@ -13,12 +13,16 @@ export class UsersService {
   public activeSubject = new BehaviorSubject<boolean>(false);
   public notificationSubject = new BehaviorSubject<Array<INotification>>([]);
   public newPostObserver = new Subject<IPost>();
+  public currentUserSubject = new BehaviorSubject<IUser>(null);
+  public onlineUsersSubject = new BehaviorSubject<Array<IUser>>([]);
 
   constructor(private http: HttpClientService, private router: Router) {}
 
   getUser() {
     const url: string = getServerURL("user");
-    return this.http.get(url);
+    return this.http.get(url).subscribe((data: IUser) => {
+      this.currentUserSubject.next(data);
+    });
   }
 
   getUsers() {
@@ -51,6 +55,20 @@ export class UsersService {
     this.notificationSubject.next(updatedValue);
   }
 
+  addUserOnline(user: IUser) {
+    const past = this.onlineUsersSubject.value;
+    if (past.length > 10) past.shift();
+    const updatedValue = [user, ...past];
+    this.onlineUsersSubject.next(updatedValue);
+  }
+
+  remUserOnline(userId: string) {
+    const current = this.onlineUsersSubject.value.filter(
+      (user: IUser) => user._id !== userId
+    );
+    this.onlineUsersSubject.next(current);
+  }
+
   pingServer() {
     setInterval(() => {
       if (this.socket && this.socket.readyState === WebSocket.OPEN) {
@@ -80,6 +98,10 @@ export class UsersService {
       if (data.type === "notifications") {
         console.log(data.data["created"], "created at");
         this.addNotification(data.data);
+      } else if (data.type === "user-online") {
+        this.addUserOnline(data.data);
+      } else if (data.type === "user-offline") {
+        this.remUserOnline(data.data);
       } else {
         this.activeSubject.next(true);
       }
@@ -194,12 +216,16 @@ export class UsersService {
 
   getNotifications() {
     const url: string = getServerURL("users/notifications");
-    return this.http.get(url);
+    return this.http.get(url).subscribe((data: Array<INotification>) => {
+      this.notificationSubject.next(data);
+    });
   }
 
   getActive() {
     const url: string = getServerURL("users/active");
-    return this.http.get(url);
+    return this.http.get(url).subscribe((data: Array<IUser>) => {
+      this.onlineUsersSubject.next(data);
+    });
   }
 
   getAds() {

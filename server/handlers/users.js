@@ -118,6 +118,7 @@ async function createPost(req, res, next) {
         postedBy: user._id,
         targetPost: post._id,
         created: Date.now(),
+        status: true,
       };
       userService.notifyUser(req.app, user._id, noti);
       userService.notifyAdmins(noti);
@@ -258,11 +259,13 @@ async function getNotifications(req, res, next) {
   try {
     const notifications = await userService.getNotifications(req.user._id);
     res.json(notifications);
-    await userService.deleteNotifications(req.user._id);
+    await userService.clearNotifications(req.user._id);
   } catch (error) {
-    res
-      .status(HttpStatus.UNPROCESSABLE_ENTITY)
-      .send({ message: error.message });
+    console.log(error);
+
+    // res
+    //   .status(HttpStatus.UNPROCESSABLE_ENTITY)
+    //   .send({ message: error.message });
   }
 }
 
@@ -274,6 +277,8 @@ async function getActiveUsers(req, res, next) {
     );
     res.json(activeUsers);
   } catch (error) {
+    console.log(error);
+
     res
       .status(HttpStatus.UNPROCESSABLE_ENTITY)
       .send({ message: error.message });

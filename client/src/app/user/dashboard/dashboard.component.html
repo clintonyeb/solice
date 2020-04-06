@@ -1,26 +1,12 @@
 <div class="container-fluid" *ngIf="authenticated">
   <div class="row">
-    <div class="col p-4">
+    <div class="col-12 col-lg-3 p-lg-4">
       <app-bio [status]="active" (main)="editProfile($event)" #bio></app-bio>
     </div>
-    <div class="col-6 p-4">
-      <!-- <app-feed
-        *ngIf="mainSection === 'feed'"
-        (profile)="viewProfile($event)"
-        [user]="user"
-      ></app-feed>
-      <app-update-profile
-        *ngIf="mainSection === 'profile'"
-        (main)="editProfile($event)"
-      ></app-update-profile>
-      <app-profile
-        *ngIf="mainSection === 'view-profile'"
-        (main)="editProfile($event)"
-        [userId]="userId"
-      ></app-profile> -->
+    <div class="col-12 col-lg-6 p-lg-4">
       <router-outlet></router-outlet>
     </div>
-    <div class="col p-4" style="border-left: 1px dashed gray;">
+    <div class="col-12 col-lg-3 p-lg-4" style="border-left: 1px dashed gray;">
       <app-activity></app-activity>
     </div>
   </div>

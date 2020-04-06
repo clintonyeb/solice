@@ -24,6 +24,7 @@ export class UpdateProfileComponent implements OnInit {
   minDate = { year: 1985, month: 1, day: 1 };
   maxDate = { year: new Date().getFullYear(), month: 1, day: 1 };
   startDate = { year: 1988, month: 1, day: 1 };
+  loading = false;
 
   @ViewChild("myPond") myPond: any;
   pondOptions = {
@@ -72,6 +73,7 @@ export class UpdateProfileComponent implements OnInit {
   }
 
   onSubmit() {
+    this.loading = true;
     if (this.pondFiles.length) {
       this.processPhoto(this.pondFiles[0]).subscribe(
         (event) => {
@@ -99,17 +101,21 @@ export class UpdateProfileComponent implements OnInit {
   }
 
   submit(data) {
-    this.userService.updateUser(data).subscribe(
-      (data: IUser) => {
-        this.toastService.success(
-          "User Profile",
-          "Profile update successful..."
-        );
-        this.form.reset();
-        this.goToFeed();
-      },
-      (err) => console.log(err)
-    );
+    this.userService
+      .updateUser(data)
+      .finally(() => (this.loading = false))
+      .subscribe(
+        (data: IUser) => {
+          this.toastService.success(
+            "User Profile",
+            "Profile update successful..."
+          );
+          this.form.reset();
+          this.userService.getUser();
+          this.goToFeed();
+        },
+        (err) => console.log(err)
+      );
   }
 
   processPhoto(file: File) {
@@ -118,7 +124,8 @@ export class UpdateProfileComponent implements OnInit {
   }
 
   getUserInfo() {
-    this.userService.getUser().subscribe((data: IUser) => {
+    this.userService.getUser();
+    this.userService.currentUserSubject.subscribe((data: IUser) => {
       this.form.patchValue({
         firstname: data.firstname,
         lastname: data.lastname,

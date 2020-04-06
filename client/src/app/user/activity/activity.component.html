@@ -40,17 +40,20 @@
 </div>
 
 <!-- Notifications -->
-
-<div class="row mt-4" *ngIf="notifications && notifications.length > 0">
+<hr class="my-4" />
+<div class="row mt-4">
   <div class="col-md-12">
-    <p class="text-center text-info">Notifications</p>
-    <!--  Friends Here-->
+    <p class="text-center text-info font-italic">Notifications</p>
   </div>
 </div>
 
-<div class="ui cards mt-3" *ngIf="notifications">
+<div class="ui cards mt-1">
   <a
-    class="border-bottom primary border-primary ui raised centered card"
+    class="ui raised centered card"
+    [ngClass]="{
+      'border-bottom primary border-primary': noti.status === true
+    }"
+    style="width: 25rem;"
     *ngFor="let noti of notifications; index as i"
   >
     <div class="content" *ngIf="noti.type === 0">

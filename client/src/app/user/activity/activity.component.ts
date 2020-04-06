@@ -14,21 +14,11 @@ export class ActivityComponent implements OnInit {
 
   ngOnInit(): void {
     this.getNotifications();
-    this.watchForNotifications();
     this.getAd();
   }
 
   getNotifications() {
-    this.userService
-      .getNotifications()
-      .subscribe((data: Array<INotification>) => {
-        console.log(data);
-
-        this.notifications = data;
-      });
-  }
-
-  watchForNotifications() {
+    this.userService.getNotifications();
     this.userService.notificationSubject.subscribe(
       (notifications: INotification[]) => {
         this.notifications = notifications;

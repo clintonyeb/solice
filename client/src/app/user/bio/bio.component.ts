@@ -5,7 +5,7 @@ import { IUser } from "../../utils/interfaces";
 @Component({
   selector: "app-bio",
   templateUrl: "./bio.component.html",
-  styleUrls: ["./bio.component.scss"]
+  styleUrls: ["./bio.component.scss"],
 })
 export class BioComponent implements OnInit {
   user: IUser;
@@ -20,14 +20,16 @@ export class BioComponent implements OnInit {
   }
 
   getUserInfo() {
-    this.userService.getUser().subscribe((data: IUser) => {
+    this.userService.getUser();
+    this.userService.currentUserSubject.subscribe((data: IUser) => {
       this.user = data;
-      this.getActiveFriends();
     });
+    this.getActiveFriends();
   }
 
   getActiveFriends() {
-    this.userService.getActive().subscribe((data: Array<IUser>) => {
+    this.userService.getActive();
+    this.userService.onlineUsersSubject.subscribe((data: Array<IUser>) => {
       this.active = data;
     });
   }

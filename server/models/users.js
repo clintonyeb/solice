@@ -27,7 +27,6 @@ var userSchema = mongoose.Schema(
       month: Number,
       year: Number,
     },
-    posts: Array,
     profile_pic: String,
     lastLogin: String,
     notifications: [
@@ -43,7 +42,7 @@ var userSchema = mongoose.Schema(
         postedBy: { type: mongoose.Schema.ObjectId, ref: "users" },
         status: {
           type: Boolean,
-          default: false,
+          default: true,
         },
       },
     ],
@@ -55,7 +54,6 @@ var userSchema = mongoose.Schema(
     },
     following: [{ type: mongoose.Schema.ObjectId, ref: "users" }],
     followers: [{ type: mongoose.Schema.ObjectId, ref: "users" }],
-    ad: { type: mongoose.Schema.ObjectId, ref: "ads" },
     status: {
       type: Number,
       enum: Object.values(require("../utils/user-status")),
@@ -141,12 +139,12 @@ userSchema.methods.generateToken = function (cb) {
 userSchema.virtual("name").get(function () {
   return this.lastname + ", " + this.firstname;
 });
+
 userSchema.virtual("age").get(function () {
   if (!this.dob) return -1;
   const now = new Date();
   return now.getFullYear() - this.dob.year;
 });
-userSchema.index({ username: "text" });
-module.exports = mongoose.model("users", userSchema);
 
-// create the model for users and expose it to our app
+userSchema.index({ email: "text" });
+module.exports = mongoose.model("users", userSchema);

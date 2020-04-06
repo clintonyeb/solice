@@ -29,6 +29,7 @@ export class FeedComponent implements OnInit {
   user: IUser;
   @ViewChild("navbar") nav: any;
   focus;
+  loading = false;
 
   // post form
   form = new FormGroup({
@@ -56,21 +57,36 @@ export class FeedComponent implements OnInit {
   ) {}
 
   routes = [
-    { id: 1, path: "/users/main/feeds/timeline", title: "Timeline", value: "" },
-    { id: 2, path: "/users/main/feeds/posts", title: "Posts", value: "" },
+    {
+      id: 1,
+      path: "/users/main/feeds/timeline",
+      title: "Timeline",
+      icon: "fas fa-stream",
+    },
+    {
+      id: 2,
+      path: "/users/main/feeds/posts",
+      title: "Posts",
+      icon: "fas fa-chalkboard",
+    },
     {
       id: 3,
       path: "/users/main/feeds/following",
       title: "Following",
-      value: "",
+      icon: "fas fa-user-friends",
     },
     {
       id: 4,
       path: "/users/main/feeds/followers",
       title: "Followers",
-      value: "",
+      icon: "fa fa-user-tie",
     },
-    { id: 5, path: "/users/main/feeds/people", title: "People", value: "" },
+    {
+      id: 5,
+      path: "/users/main/feeds/people",
+      title: "People",
+      icon: "fas fa-users",
+    },
   ];
 
   ngOnInit(): void {
@@ -93,6 +109,7 @@ export class FeedComponent implements OnInit {
   }
 
   onPostSubmit() {
+    this.loading = true;
     if (this.pondFiles.length) {
       this.processPhoto(this.pondFiles[0]).subscribe(
         (event) => {
@@ -120,17 +137,20 @@ export class FeedComponent implements OnInit {
   }
 
   submit(data) {
-    this.userService.createPost(data).subscribe(
-      (data: IPost) => {
-        this.modalService.dismissAll();
-        this.toastService.success("Post", "Post created successfully...");
-        this.form.reset();
-        this.pondFiles = [];
+    this.userService
+      .createPost(data)
+      .finally(() => (this.loading = false))
+      .subscribe(
+        (data: IPost) => {
+          this.modalService.dismissAll();
+          this.toastService.success("Post", "Post created successfully...");
+          this.form.reset();
+          this.pondFiles = [];
 
-        this.userService.newPostObserver.next(data);
-      },
-      (err) => console.log(err)
-    );
+          this.userService.newPostObserver.next(data);
+        },
+        (err) => console.log(err)
+      );
   }
 
   processPhoto(file: File) {

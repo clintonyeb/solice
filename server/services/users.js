@@ -8,6 +8,7 @@ const email = require("../services/email");
 const TYPES = require("../utils/noti-types");
 const notiService = require("./noti");
 const WebSocket = require("ws");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 const LIMIT = 10;
 
@@ -339,27 +340,38 @@ async function updateUser(userId, data) {
 }
 
 async function getNotifications(userId) {
-  const user = await User.findById(userId, { notifications: 1 })
-    .populate({
-      path: "notifications.postedBy",
-      model: "users",
-    })
-    .populate({
-      path: "notifications.targetUser",
-      model: "users",
-    })
-    .populate({
-      path: "notifications.targetPost",
-      model: "posts",
-    })
-    .sort({ "notifications.created": "desc" })
-    .limit(LIMIT)
-    .exec();
-  return user.notifications;
+  const notifications = await User.aggregate([
+    { $match: { _id: new ObjectId(userId) } },
+    { $unwind: "$notifications" },
+    { $replaceRoot: { newRoot: "$notifications" } },
+    { $sort: { created: -1 } },
+    { $limit: 10 },
+    {
+      $lookup: {
+        from: "users",
+        localField: "postedBy",
+        foreignField: "_id",
+        as: "postedBy",
+      },
+    },
+    { $unwind: "$postedBy" },
+    {
+      $project: {
+        "postedBy.notifications": 0,
+        "postedBy.password": 0,
+        "postedBy.requests": 0,
+      },
+    },
+  ]);
+
+  return notifications;
 }
 
-async function deleteNotifications(userId) {
-  await User.updateOne({ _id: userId }, { $set: { notifications: [] } });
+async function clearNotifications(userId) {
+  await User.updateMany(
+    { _id: userId },
+    { $set: { "notifications.$[].status": false } }
+  );
 }
 
 async function getActiveFollowing(app, userId) {
@@ -480,14 +492,13 @@ async function resetPassword(token, password) {
 async function notifyUser(app, userId, noti) {
   if (_isOnline(app, userId)) {
     notiService.sendToUser(app, userId, noti);
-  } else {
-    await User.updateOne(
-      { _id: userId },
-      {
-        $push: { notifications: noti },
-      }
-    );
   }
+  await User.updateOne(
+    { _id: userId },
+    {
+      $push: { notifications: noti },
+    }
+  );
 }
 
 async function notifyAdmins(noti) {
@@ -497,6 +508,32 @@ async function notifyAdmins(noti) {
 function _isOnline(app, id) {
   const ws = app.locals.activeUsers[id];
   return ws && ws.readyState === WebSocket.OPEN;
+}
+
+async function broadCastUserJoin(activeUsers, userId) {
+  const user = await User.findById(userId);
+  const following = user.following;
+
+  const data = JSON.stringify({ type: "user-online", data: user });
+  following.forEach((ff) => {
+    const ws = activeUsers[ff];
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(data);
+    }
+  });
+}
+
+async function broadCastUserLeave(activeUsers, userId) {
+  const user = await User.findById(userId);
+  const following = user.following;
+
+  const data = JSON.stringify({ type: "user-offline", data: userId });
+  following.forEach((ff) => {
+    const ws = activeUsers[ff];
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(data);
+    }
+  });
 }
 
 module.exports = {
@@ -520,7 +557,7 @@ module.exports = {
   updateUser,
   getNotifications,
   logout,
-  deleteNotifications,
+  clearNotifications,
   getActiveFollowing,
   createRequest,
   getAds,
@@ -531,4 +568,6 @@ module.exports = {
   notifyUser,
   notifyAdmins,
   searchUsersByType,
+  broadCastUserJoin,
+  broadCastUserLeave,
 };

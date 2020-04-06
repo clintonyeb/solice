@@ -3,7 +3,7 @@ import { IPost, IComment, IUser } from "../../utils/interfaces";
 import { UsersService } from "../../services/users.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ToastrService } from "ngx-toastr";
-import { SessionService } from '../../services/session.service';
+import { SessionService } from "../../services/session.service";
 
 @Component({
   selector: "app-story",
@@ -19,6 +19,7 @@ export class StoryComponent implements OnInit {
   focus1: any;
   page = 1;
   user: IUser;
+  loading = false;
 
   commentForm = new FormGroup({
     text: new FormControl("", [Validators.required]),
@@ -28,7 +29,6 @@ export class StoryComponent implements OnInit {
     private userService: UsersService,
     private toastService: ToastrService,
     private sessionService: SessionService
-
   ) {}
 
   ngOnInit(): void {
@@ -44,15 +44,21 @@ export class StoryComponent implements OnInit {
   // }
 
   getFeed() {
+    this.loading = true;
     this.userService.getFeed().subscribe(
       (data) => {
         this.feed = <IPost[]>data;
+        this.loading = false;
       },
-      (err) => console.log(err)
+      (err) => {
+        console.log(err);
+        this.loading = false;
+      }
     );
   }
 
   getMoreFeed() {
+    this.loading = true;
     const _page = this.page + 1;
     if (this.query.value) {
       return this.userService
@@ -65,16 +71,24 @@ export class StoryComponent implements OnInit {
               "Posts",
               "More posts have been loaded..."
             );
+            this.loading = false;
           },
-          (err) => console.error(err)
+          (err) => {
+            console.error(err);
+            this.loading = false;
+          }
         );
     }
     this.userService.getFeed(_page).subscribe(
       (data) => {
         this.feed = this.feed.concat(<IPost[]>data);
         this.page = _page;
+        this.loading = false;
       },
-      (err) => console.log(err)
+      (err) => {
+        console.log(err);
+        this.loading = false;
+      }
     );
   }
 
@@ -83,9 +97,16 @@ export class StoryComponent implements OnInit {
   }
 
   search() {
+    this.loading = true;
     this.userService.searchFeed(this.query.value, "feed").subscribe(
-      (data: Array<IPost>) => (this.feed = data),
-      (err) => console.error(err)
+      (data: Array<IPost>) => {
+        this.feed = data;
+        this.loading = false;
+      },
+      (err) => {
+        console.error(err);
+        this.loading = false;
+      }
     );
   }
 
@@ -97,6 +118,7 @@ export class StoryComponent implements OnInit {
   }
 
   commentPost(post: IPost, index: number) {
+    this.loading = true;
     this.userService
       .commentPost(post._id, this.commentForm.value.text)
       .subscribe(
@@ -104,8 +126,11 @@ export class StoryComponent implements OnInit {
           this.feed.splice(index, 1, data);
           this.getComments(data);
           this.toastService.success("Comment", "Comment saved!");
+          this.loading = false;
         },
-        (err) => {}
+        (err) => {
+          this.loading = false;
+        }
       );
   }
 

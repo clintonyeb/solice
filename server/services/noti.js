@@ -9,6 +9,7 @@ async function newPost(app, userId, postId) {
     postedBy: userId,
     targetPost: postId,
     created: Date.now(),
+    status: true
   };
 
   _updateFollowers(app, userId, not);
@@ -20,6 +21,7 @@ async function likedPost(app, userId, postId) {
     postedBy: userId,
     targetPost: postId,
     created: Date.now(),
+    status: true,
   };
 
   _updateFollowers(app, userId, not);
@@ -31,6 +33,7 @@ async function commentedPost(app, userId, postId) {
     postedBy: userId,
     targetPost: postId,
     created: Date.now(),
+    status: true,
   };
 
   _updateFollowers(app, userId, not);
@@ -42,6 +45,7 @@ async function followedUser(app, userId, targetId) {
     postedBy: userId,
     targetUser: targetId,
     created: Date.now(),
+    status: true,
   };
 
   _updateFollowers(app, userId, not);
@@ -52,6 +56,7 @@ async function updatedProfile(app, userId) {
     type: TYPES.UPDATED_PROFILE,
     postedBy: userId,
     created: Date.now(),
+    status: true,
   };
 
   _updateFollowers(app, userId, not);
@@ -62,6 +67,7 @@ async function online(app, userId) {
     type: TYPES.ONLINE,
     postedBy: userId,
     created: Date.now(),
+    status: true,
   };
 
   _updateFollowers(app, userId, not);
@@ -73,9 +79,8 @@ async function _updateFollowers(app, userId, noti) {
   user.followers.forEach(async (ff) => {
     if (isOnline(app, ff)) {
       sendToUser(app, ff, noti);
-    } else {
-      await User.updateOne({ _id: ff }, { $push: { notifications: noti } });
     }
+    await User.updateOne({ _id: ff }, { $push: { notifications: noti } });
   });
 }
 

@@ -3,7 +3,7 @@ import { IPost, IComment, IUser } from "../../utils/interfaces";
 import { UsersService } from "../../services/users.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ToastrService } from "ngx-toastr";
-import { SessionService } from '../../services/session.service';
+import { SessionService } from "../../services/session.service";
 
 @Component({
   selector: "app-post",
@@ -19,6 +19,7 @@ export class PostComponent implements OnInit {
   focus1: any;
   page = 1;
   user: IUser;
+  loading = false;
 
   commentForm = new FormGroup({
     text: new FormControl("", [Validators.required]),
@@ -43,19 +44,25 @@ export class PostComponent implements OnInit {
   // }
 
   getFeed() {
-    this.userService.getPosts().subscribe(
-      (data) => {
-        this.feed = <IPost[]>data;
-      },
-      (err) => console.log(err)
-    );
+    this.loading = true;
+    this.userService
+      .getPosts()
+      .finally(() => (this.loading = false))
+      .subscribe(
+        (data) => {
+          this.feed = <IPost[]>data;
+        },
+        (err) => console.log(err)
+      );
   }
 
   getMoreFeed() {
+    this.loading = true;
     const _page = this.page + 1;
     if (this.query.value) {
       return this.userService
         .searchFeed(this.query.value, "posts", _page)
+        .finally(() => (this.loading = false))
         .subscribe(
           (data: Array<IPost>) => {
             this.feed = this.feed.concat(<IPost[]>data);
@@ -68,13 +75,16 @@ export class PostComponent implements OnInit {
           (err) => console.error(err)
         );
     }
-    this.userService.getPosts(_page).subscribe(
-      (data) => {
-        this.feed = this.feed.concat(<IPost[]>data);
-        this.page = _page;
-      },
-      (err) => console.log(err)
-    );
+    this.userService
+      .getPosts(_page)
+      .finally(() => (this.loading = false))
+      .subscribe(
+        (data) => {
+          this.feed = this.feed.concat(<IPost[]>data);
+          this.page = _page;
+        },
+        (err) => console.log(err)
+      );
   }
 
   add(post: IPost) {
@@ -82,10 +92,14 @@ export class PostComponent implements OnInit {
   }
 
   search() {
-    this.userService.searchFeed(this.query.value, "posts").subscribe(
-      (data: Array<IPost>) => (this.feed = data),
-      (err) => console.error(err)
-    );
+    this.loading = true;
+    this.userService
+      .searchFeed(this.query.value, "posts")
+      .finally(() => (this.loading = false))
+      .subscribe(
+        (data: Array<IPost>) => (this.feed = data),
+        (err) => console.error(err)
+      );
   }
 
   likePost(post: IPost, index: number) {
@@ -96,8 +110,10 @@ export class PostComponent implements OnInit {
   }
 
   commentPost(post: IPost, index: number) {
+    this.loading = true;
     this.userService
       .commentPost(post._id, this.commentForm.value.text)
+      .finally(() => (this.loading = false))
       .subscribe(
         (data: IPost) => {
           this.feed.splice(index, 1, data);

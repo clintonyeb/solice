@@ -14,6 +14,7 @@ export class FeedFriendComponent implements OnInit {
   people: Array<IUser>;
   query = new FormControl("");
   user: IUser;
+  loading = false;
 
   constructor(
     private userService: UsersService,
@@ -40,17 +41,24 @@ export class FeedFriendComponent implements OnInit {
   }
 
   getPeople() {
+    this.loading = true;
     let type = this.getFeedType();
     if (type === "all") {
-      return this.userService.getUsers().subscribe(
+      return this.userService
+        .getUsers()
+        .finally(() => (this.loading = false))
+        .subscribe(
+          (data: Array<IUser>) => (this.people = data),
+          (err) => console.error(err)
+        );
+    }
+    return this.userService
+      .getUsersFilter(type)
+      .finally(() => (this.loading = false))
+      .subscribe(
         (data: Array<IUser>) => (this.people = data),
         (err) => console.error(err)
       );
-    }
-    return this.userService.getUsersFilter(type).subscribe(
-      (data: Array<IUser>) => (this.people = data),
-      (err) => console.error(err)
-    );
   }
 
   followUser(personId, index) {
@@ -77,9 +85,12 @@ export class FeedFriendComponent implements OnInit {
 
   searchPeople() {
     let type = this.getFeedType();
-    this.userService.searchPeople(this.query.value, type).subscribe(
-      (data: Array<IUser>) => (this.people = data),
-      (err) => console.error(err)
-    );
+    this.userService
+      .searchPeople(this.query.value, type)
+      .finally(() => (this.loading = false))
+      .subscribe(
+        (data: Array<IUser>) => (this.people = data),
+        (err) => console.error(err)
+      );
   }
 }
