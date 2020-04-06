@@ -29,6 +29,7 @@ export class StoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.getFeed();
+    this.userService.newPostObserver.subscribe((data: IPost) => this.add(data));
   }
 
   getUser(userId: any) {

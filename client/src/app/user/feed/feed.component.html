@@ -22,22 +22,11 @@
       <ul class="nav profile-navbar" ngbNav>
         <li class="nav-item" *ngFor="let link of routes;" ngbNavItem>
           <a class="nav-link" [routerLink]="link.path" ngbNavLink>
-            <i class="fa fa-user-circle"></i>
+            <!-- <i class="fa fa-user-circle"></i> -->
             {{ link.title }}
           </a>
-          <!-- <ng-template ngbNavContent>
-            <app-story #feed></app-story>
-          </ng-template> -->
         </li>
-        <!-- <li class="nav-item" ngbNavItem>
-          <a class="nav-link" ngbNavLink>
-            <i class="mdi mdi-account-outline"></i>
-            Posts
-          </a>
-          <ng-template ngbNavContent>
-            <app-post #posts></app-post>
-          </ng-template>
-        </li>
+        <!--
         <li class="nav-item" ngbNavItem>
           <a class="nav-link" ngbNavLink>
             <i class="mdi mdi-newspaper"></i>

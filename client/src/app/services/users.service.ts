@@ -4,13 +4,15 @@ import { HttpClientService } from "./http-client.service";
 import { environment } from "../../environments/environment";
 import { Subject, BehaviorSubject } from "rxjs/Rx";
 import { Router } from "@angular/router";
-import { INotification } from "../utils/interfaces";
+import { INotification, IPost } from '../utils/interfaces';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class UsersService {
   private socket: WebSocket;
   public activeSubject = new BehaviorSubject<boolean>(false);
   public notificationSubject = new BehaviorSubject<Array<INotification>>([]);
+  public newPostObserver = new Subject<IPost>();
 
   constructor(private http: HttpClientService, private router: Router) {}
 

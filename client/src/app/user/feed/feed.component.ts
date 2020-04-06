@@ -109,11 +109,7 @@ export class FeedComponent implements OnInit {
         this.form.reset();
         this.pondFiles = [];
 
-        if (this.feed) {
-          this.feed.add(data);
-        } else if (this.posts) {
-          this.posts.add(data);
-        }
+        this.userService.newPostObserver.next(data);
       },
       (err) => console.log(err)
     );

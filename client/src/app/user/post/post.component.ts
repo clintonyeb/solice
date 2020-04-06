@@ -7,7 +7,7 @@ import { ToastrService } from "ngx-toastr";
 @Component({
   selector: "app-post",
   templateUrl: "./post.component.html",
-  styleUrls: ["./post.component.css"]
+  styleUrls: ["./post.component.css"],
 })
 export class PostComponent implements OnInit {
   feed: Array<IPost>;
@@ -19,7 +19,7 @@ export class PostComponent implements OnInit {
   page = 1;
 
   commentForm = new FormGroup({
-    text: new FormControl("", [Validators.required])
+    text: new FormControl("", [Validators.required]),
   });
 
   constructor(
@@ -29,6 +29,7 @@ export class PostComponent implements OnInit {
 
   ngOnInit(): void {
     this.getFeed();
+    this.userService.newPostObserver.subscribe((data: IPost) => this.add(data));
   }
 
   getUser(userId: any) {
@@ -37,10 +38,10 @@ export class PostComponent implements OnInit {
 
   getFeed() {
     this.userService.getPosts().subscribe(
-      data => {
+      (data) => {
         this.feed = <IPost[]>data;
       },
-      err => console.log(err)
+      (err) => console.log(err)
     );
   }
 
@@ -58,15 +59,15 @@ export class PostComponent implements OnInit {
               "More posts have been loaded..."
             );
           },
-          err => console.error(err)
+          (err) => console.error(err)
         );
     }
     this.userService.getPosts(_page).subscribe(
-      data => {
+      (data) => {
         this.feed = this.feed.concat(<IPost[]>data);
         this.page = _page;
       },
-      err => console.log(err)
+      (err) => console.log(err)
     );
   }
 
@@ -77,14 +78,14 @@ export class PostComponent implements OnInit {
   search() {
     this.userService.searchFeed(this.query.value, "posts").subscribe(
       (data: Array<IPost>) => (this.feed = data),
-      err => console.error(err)
+      (err) => console.error(err)
     );
   }
 
   likePost(post: IPost, index: number) {
     this.userService.likePost(post._id).subscribe(
       (d: IPost) => this.feed.splice(index, 1, d),
-      err => console.error(err)
+      (err) => console.error(err)
     );
   }
 
@@ -97,7 +98,7 @@ export class PostComponent implements OnInit {
           this.getComments(data);
           this.toastService.success("Comment", "Comment saved!");
         },
-        err => {}
+        (err) => {}
       );
   }
 
@@ -123,7 +124,7 @@ export class PostComponent implements OnInit {
     this.commentForm.reset();
     this.userService.getComments(post._id).subscribe(
       (d: Array<IComment>) => (this.comments = d),
-      err => {}
+      (err) => {}
     );
     this.commentActive = post;
   }
@@ -139,7 +140,7 @@ export class PostComponent implements OnInit {
         this.feed.splice(index, 1, data);
         this.getComments(data);
       },
-      err => {}
+      (err) => {}
     );
   }
 
