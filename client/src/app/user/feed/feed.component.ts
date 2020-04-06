@@ -51,6 +51,14 @@ export class FeedComponent implements OnInit {
     private router: Router
   ) {}
 
+  routes = [
+    { path: "/users/feeds/timeline", title: "Timeline", value: "" },
+    { path: "/users/feeds/posts", title: "Posts", value: "" },
+    { path: "/users/feeds/following", title: "Following", value: "" },
+    { path: "/users/feeds/followers", title: "Followers", value: "" },
+    { path: "/users/feeds/people", title: "People", value: "" },
+  ];
+
   ngOnInit(): void {}
 
   open(content) {

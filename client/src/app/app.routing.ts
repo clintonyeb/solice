@@ -26,6 +26,9 @@ import { FiltersComponent } from "./admin/filters/filters.component";
 import { CreateAdsComponent } from "./admin/create-ads/create-ads.component";
 import { ForgotPasswordComponent } from "./session/forgot-password/forgot-password.component";
 import { RecoverPasswordComponent } from "./session/recover-password/recover-password.component";
+import { StoryComponent } from "./user/story/story.component";
+import { PostComponent } from "./user/post/post.component";
+import { FeedFriendComponent } from "./user/feed-friend/feed-friend.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "users", pathMatch: "full" },
@@ -36,13 +39,13 @@ const routes: Routes = [
       { path: "", redirectTo: "login", pathMatch: "full" },
       {
         path: "login",
-        component: LoginComponent
+        component: LoginComponent,
       },
       { path: "register", component: RegisterComponent },
       { path: "request", component: UserRequestsComponent },
       { path: "forgot-password", component: ForgotPasswordComponent },
-      { path: "recover-password/:token", component: RecoverPasswordComponent }
-    ]
+      { path: "recover-password/:token", component: RecoverPasswordComponent },
+    ],
   },
   {
     path: "users",
@@ -50,8 +53,19 @@ const routes: Routes = [
     canActivate: [AuthGuardService],
     children: [
       { path: "", redirectTo: "feeds", pathMatch: "full" },
-      { path: "feeds", component: DashboardComponent }
-    ]
+      {
+        path: "feeds",
+        component: DashboardComponent,
+        children: [
+          { path: "", redirectTo: "timeline", pathMatch: "full" },
+          { path: "timeline", component: StoryComponent },
+          { path: "posts", component: PostComponent },
+          { path: "following", component: FeedFriendComponent },
+          { path: "followers", component: FeedFriendComponent },
+          { path: "people", component: FeedFriendComponent },
+        ],
+      },
+    ],
   },
   {
     path: "admins",
@@ -64,10 +78,10 @@ const routes: Routes = [
       { path: "filters", component: FiltersComponent },
       { path: "ads", component: AdsComponent },
       { path: "users", component: UsersComponent },
-      { path: "new-ads", component: CreateAdsComponent }
-    ]
+      { path: "new-ads", component: CreateAdsComponent },
+    ],
   },
-  { path: "**", component: NotFoundComponent }
+  { path: "**", component: NotFoundComponent },
 ];
 
 @NgModule({
@@ -79,8 +93,8 @@ const routes: Routes = [
     HttpClientModule,
     BrowserModule,
     SharedModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
   ],
-  providers: [SessionService, AuthGuardService]
+  providers: [SessionService, AuthGuardService],
 })
 export class AppRoutingModule {}

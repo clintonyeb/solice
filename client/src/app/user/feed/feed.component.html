@@ -19,17 +19,17 @@
       </div>
     </div>
     <div class="mt-4 py-2 border-top">
-      <ul class="nav profile-navbar" ngbNav #nav="ngbNav">
-        <li class="nav-item" ngbNavItem>
-          <a class="nav-link" ngbNavLink>
-            <i class="mdi mdi-account-outline"></i>
-            Feed
+      <ul class="nav profile-navbar" ngbNav>
+        <li class="nav-item" *ngFor="let link of routes;" ngbNavItem>
+          <a class="nav-link" [routerLink]="link.path" ngbNavLink>
+            <i class="fa fa-user-circle"></i>
+            {{ link.title }}
           </a>
-          <ng-template ngbNavContent>
+          <!-- <ng-template ngbNavContent>
             <app-story #feed></app-story>
-          </ng-template>
+          </ng-template> -->
         </li>
-        <li class="nav-item" ngbNavItem>
+        <!-- <li class="nav-item" ngbNavItem>
           <a class="nav-link" ngbNavLink>
             <i class="mdi mdi-account-outline"></i>
             Posts
@@ -67,11 +67,13 @@
               (profile)="profile.emit($event)"
             ></app-feed-friend>
           </ng-template>
-        </li>
+        </li> -->
       </ul>
     </div>
 
-    <div [ngbNavOutlet]="nav" class="mt-4"></div>
+    <div class="mt-4">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 
   <ng-template #content let-modal>
