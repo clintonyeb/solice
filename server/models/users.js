@@ -2,79 +2,94 @@ var mongoose = require("mongoose");
 var bcrypt = require("bcrypt-nodejs");
 const jwt = require("jsonwebtoken");
 
-var userSchema = mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  firstname: {
-    type: String,
-    required: true
-  },
-  lastname: {
-    type: String,
-    required: true
-  },
-  bio: String,
-  dob: {
-    day: Number,
-    month: Number,
-    year: Number
-  },
-  posts: Array,
-  profile_pic: String,
-  lastLogin: String,
-  notifications: [
-    {
-      type: {
-        type: Number,
-        enum: Object.values(require("../utils/noti-types")),
-        required: true
+var userSchema = mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    firstname: {
+      type: String,
+      required: true,
+    },
+    lastname: {
+      type: String,
+      required: true,
+    },
+    bio: String,
+    dob: {
+      day: Number,
+      month: Number,
+      year: Number,
+    },
+    posts: Array,
+    profile_pic: String,
+    lastLogin: String,
+    notifications: [
+      {
+        type: {
+          type: Number,
+          enum: Object.values(require("../utils/noti-types")),
+          required: true,
+        },
+        targetUser: { type: mongoose.Schema.ObjectId, ref: "users" },
+        targetPost: { type: mongoose.Schema.ObjectId, ref: "posts" },
+        created: { type: Date, default: Date.now },
+        postedBy: { type: mongoose.Schema.ObjectId, ref: "users" },
+        status: {
+          type: Boolean,
+          default: false,
+        },
       },
-      targetUser: { type: mongoose.Schema.ObjectId, ref: "users" },
-      targetPost: { type: mongoose.Schema.ObjectId, ref: "posts" },
-      created: { type: Date, default: Date.now },
-      postedBy: { type: mongoose.Schema.ObjectId, ref: "users" },
-      status: {
-        type: Boolean,
-        default: false
-      }
-    }
-  ],
-  role: {
-    type: Number,
-    enum: Object.values(require("../utils/user-roles")),
-    required: true,
-    default: 0
+    ],
+    role: {
+      type: Number,
+      enum: Object.values(require("../utils/user-roles")),
+      required: true,
+      default: 0,
+    },
+    following: [{ type: mongoose.Schema.ObjectId, ref: "users" }],
+    followers: [{ type: mongoose.Schema.ObjectId, ref: "users" }],
+    ad: { type: mongoose.Schema.ObjectId, ref: "ads" },
+    status: {
+      type: Number,
+      enum: Object.values(require("../utils/user-status")),
+      required: true,
+      default: 2,
+    },
+    deletedPosts: Number,
+    requests: [
+      {
+        text: String,
+        created: { type: Date, default: Date.now },
+        status: Number, // 0: pending, 1: resolved, 2: rejected
+      },
+    ],
   },
-  following: [{ type: mongoose.Schema.ObjectId, ref: "users" }],
-  followers: [{ type: mongoose.Schema.ObjectId, ref: "users" }],
-  ad: { type: mongoose.Schema.ObjectId, ref: "ads" },
-  status: {
-    type: Number,
-    enum: Object.values(require("../utils/user-status")),
-    required: true,
-    default: 2
-  },
-  deletedPosts: Number,
-  requests: [
-    {
-      text: String,
-      created: { type: Date, default: Date.now },
-      status: Number // 0: pending, 1: resolved, 2: rejected
-    }
-  ]
-});
+  {
+    toObject: {
+      transform: function (doc, ret) {
+        delete ret._id;
+        ret["name"] = ret.firstname + " " + ret.lastname;
+      },
+    },
+    toJSON: {
+      transform: function (doc, ret) {
+        delete ret.password;
+      },
+    },
+  }
+);
 
 // before save has password
 userSchema.pre(
   "save",
-  function(next) {
+  function (next) {
     var user = this;
     if (!user.password) next(new Error("No password found"));
 
@@ -91,42 +106,42 @@ userSchema.pre(
       });
     });
   },
-  function(err) {
+  function (err) {
     next(err); // true or false
   }
 );
 
 // methods ======================
 // checking if password is valid
-userSchema.methods.validPassword = function(password) {
+userSchema.methods.validPassword = function (password) {
   return bcrypt.compareSync(password, this.password);
 };
 
-userSchema.methods.generateToken = function(cb) {
+userSchema.methods.generateToken = function (cb) {
   const user = this;
   const secret = process.env["SECRET_KEY"];
   jwt.sign(
     {
       _id: user._id,
       iat: Math.floor(Date.now() / 1000) - 30,
-      role: user.role
+      role: user.role,
     },
     secret,
     {
       algorithm: "HS256",
-      expiresIn: "24h"
+      expiresIn: "24h",
     },
-    function(err, token) {
+    function (err, token) {
       if (err) return cb(err);
       cb(null, token);
     }
   );
 };
 
-userSchema.virtual("name").get(function() {
+userSchema.virtual("name").get(function () {
   return this.lastname + ", " + this.firstname;
 });
-userSchema.virtual("age").get(function() {
+userSchema.virtual("age").get(function () {
   if (!this.dob) return -1;
   const now = new Date();
   return now.getFullYear() - this.dob.year;

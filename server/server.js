@@ -1,11 +1,10 @@
 #!/usr/bin/env node
-
+require("dotenv").config();
 var app = require("./app");
-var debug = require("debug")("server:server");
+var debug = require("debug")("solice:server");
 var http = require("http");
 var jwt = require("jsonwebtoken");
 const expressWs = require("express-ws");
-var HttpStatus = require("http-status-codes");
 
 /**
  * Get port from environment and store in Express.
