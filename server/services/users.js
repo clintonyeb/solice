@@ -13,9 +13,8 @@ const LIMIT = 10;
 
 // helpers
 async function _getPostStatus(text) {
-  const words = text.split(" ").map((word) => new RegExp(word, "i"));
-  const filter = await Word.findOne({ text: { $in: words } });
-  return filter;
+  const t = await Word.findOne({ $text: { $search: text } });
+  return t;
 }
 
 // functions
@@ -457,7 +456,7 @@ async function notifyUser(app, userId, noti) {
     notiService.sendToUser(app, userId, noti);
   } else {
     await User.updateOne(
-      { _id: newPost.postedBy },
+      { _id: userId },
       {
         $push: { notifications: noti },
       }
