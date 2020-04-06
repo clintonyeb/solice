@@ -3,6 +3,7 @@ import { IPost, IComment, IUser } from "../../utils/interfaces";
 import { UsersService } from "../../services/users.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ToastrService } from "ngx-toastr";
+import { SessionService } from '../../services/session.service';
 
 @Component({
   selector: "app-post",
@@ -17,6 +18,7 @@ export class PostComponent implements OnInit {
   comments: Array<IComment>;
   focus1: any;
   page = 1;
+  user: IUser;
 
   commentForm = new FormGroup({
     text: new FormControl("", [Validators.required]),
@@ -24,12 +26,16 @@ export class PostComponent implements OnInit {
 
   constructor(
     private userService: UsersService,
-    private toastService: ToastrService
+    private toastService: ToastrService,
+    private sessionService: SessionService
   ) {}
 
   ngOnInit(): void {
     this.getFeed();
     this.userService.newPostObserver.subscribe((data: IPost) => this.add(data));
+    this.sessionService.currentUserSubject.subscribe(
+      (user: IUser) => (this.user = user)
+    );
   }
 
   // getUser(userId: any) {
@@ -103,12 +109,12 @@ export class PostComponent implements OnInit {
   }
 
   hasLiked(post: { likes: string | string[] }): boolean {
-    const userId = sessionStorage.getItem("userId");
+    const userId = this.user._id;
     return post.likes.indexOf(userId) > -1;
   }
 
   hasCommented(post: { comments: any[] }): boolean {
-    const userId = sessionStorage.getItem("userId");
+    const userId = this.user._id;
     return (
       post.comments.find(
         (comm: { postedBy: string }) => comm.postedBy === userId
@@ -130,7 +136,7 @@ export class PostComponent implements OnInit {
   }
 
   isMyComment(postedBy) {
-    const userId = sessionStorage.getItem("userId");
+    const userId = this.user._id;
     return postedBy._id === userId;
   }
 

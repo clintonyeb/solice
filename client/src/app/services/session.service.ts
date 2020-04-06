@@ -5,12 +5,14 @@ import {
   HttpHeaders,
 } from "@angular/common/http";
 import { getServerURL } from "../utils/helpers";
+import { BehaviorSubject } from "rxjs/Rx";
+import { IUser } from "../utils/interfaces";
 
 @Injectable()
 export class SessionService {
-  userId: string;
+  public currentUserSubject = new BehaviorSubject<IUser>(null);
+
   constructor(private http: HttpClient) {
-    this.userId = sessionStorage.getItem("userId");
   }
 
   login(data) {
@@ -28,7 +30,7 @@ export class SessionService {
     if (error.error instanceof ErrorEvent) {
       return error.error.message;
     } else if (error.error.message) {
-      return error.error.message; 
+      return error.error.message;
     }
     return "Something bad happened; please try again later.";
   }
@@ -51,14 +53,16 @@ export class SessionService {
         headers,
       })
       .subscribe(
-        (data) => cb(null, data),
+        (data: IUser) => {
+          this.currentUserSubject.next(data);
+          cb(null, data);
+        },
         (e) => cb(e)
       );
   }
 
   saveSession(data) {
     sessionStorage.setItem("token", data.token);
-    sessionStorage.setItem("userId", data._id);
   }
 
   makePost(url, data) {

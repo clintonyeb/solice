@@ -4,7 +4,7 @@ import { HttpClientService } from "./http-client.service";
 import { environment } from "../../environments/environment";
 import { Subject, BehaviorSubject } from "rxjs/Rx";
 import { Router } from "@angular/router";
-import { INotification, IPost } from "../utils/interfaces";
+import { INotification, IPost, IUser } from '../utils/interfaces';
 import { Observable } from "rxjs";
 
 @Injectable()
@@ -179,7 +179,6 @@ export class UsersService {
     return this.http.get(url).subscribe((res) => {
       this.socket && this.socket.close();
       sessionStorage.removeItem("token");
-      sessionStorage.removeItem("userId");
 
       this.router.navigate([
         "/session/login",

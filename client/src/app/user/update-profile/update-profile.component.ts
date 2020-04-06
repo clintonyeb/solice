@@ -3,7 +3,7 @@ import {
   OnInit,
   Output,
   EventEmitter,
-  ViewChild
+  ViewChild,
 } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { UsersService } from "app/services/users.service";
@@ -12,11 +12,12 @@ import { HttpEventType, HttpResponse } from "@angular/common/http";
 import { IPost } from "app/utils/interfaces";
 import { IUser } from "../../utils/interfaces";
 import { ToastrService } from "ngx-toastr";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-update-profile",
   templateUrl: "./update-profile.component.html",
-  styleUrls: ["./update-profile.component.css"]
+  styleUrls: ["./update-profile.component.css"],
 })
 export class UpdateProfileComponent implements OnInit {
   @Output() main = new EventEmitter<string>();
@@ -29,7 +30,7 @@ export class UpdateProfileComponent implements OnInit {
     class: "my-filepond",
     multiple: false,
     labelIdle: "Drop files here or click to browse",
-    acceptedFileTypes: "image/jpeg, image/png"
+    acceptedFileTypes: "image/jpeg, image/png",
   };
 
   pondFiles = [];
@@ -38,13 +39,14 @@ export class UpdateProfileComponent implements OnInit {
     firstname: new FormControl("", [Validators.required]),
     lastname: new FormControl("", [Validators.required]),
     bio: new FormControl("", [Validators.maxLength(100)]),
-    dob: new FormControl("")
+    dob: new FormControl(""),
   });
 
   constructor(
     private userService: UsersService,
     private toastService: ToastrService,
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +54,7 @@ export class UpdateProfileComponent implements OnInit {
   }
 
   goToFeed() {
-    this.main.emit("feed");
+    this.router.navigate(["/users"]);
   }
 
   formatDate(date) {
@@ -72,7 +74,7 @@ export class UpdateProfileComponent implements OnInit {
   onSubmit() {
     if (this.pondFiles.length) {
       this.processPhoto(this.pondFiles[0]).subscribe(
-        event => {
+        (event) => {
           if (event.type == HttpEventType.UploadProgress) {
             const percentDone = Math.round((100 * event.loaded) / event.total);
             console.log(`File is ${percentDone}% loaded.`);
@@ -99,11 +101,14 @@ export class UpdateProfileComponent implements OnInit {
   submit(data) {
     this.userService.updateUser(data).subscribe(
       (data: IUser) => {
-        this.toastService.success("User Profile", "Profile update successful...");
+        this.toastService.success(
+          "User Profile",
+          "Profile update successful..."
+        );
         this.form.reset();
         this.goToFeed();
       },
-      err => console.log(err)
+      (err) => console.log(err)
     );
   }
 
@@ -118,7 +123,7 @@ export class UpdateProfileComponent implements OnInit {
         firstname: data.firstname,
         lastname: data.lastname,
         bio: data.bio,
-        dob: data.dob
+        dob: data.dob,
       });
     });
   }

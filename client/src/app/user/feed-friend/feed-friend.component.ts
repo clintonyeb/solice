@@ -3,6 +3,7 @@ import { IUser } from "../../utils/interfaces";
 import { UsersService } from "../../services/users.service";
 import { FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
+import { SessionService } from "../../services/session.service";
 
 @Component({
   selector: "app-feed-friend",
@@ -12,11 +13,19 @@ import { Router } from "@angular/router";
 export class FeedFriendComponent implements OnInit {
   people: Array<IUser>;
   query = new FormControl("");
+  user: IUser;
 
-  constructor(private userService: UsersService, private router: Router) {}
+  constructor(
+    private userService: UsersService,
+    private router: Router,
+    private sessionService: SessionService
+  ) {}
 
   ngOnInit(): void {
     this.getPeople();
+    this.sessionService.currentUserSubject.subscribe(
+      (user: IUser) => (this.user = user)
+    );
   }
 
   getFeedType() {
@@ -62,7 +71,7 @@ export class FeedFriendComponent implements OnInit {
 
   isFollowing(user): boolean {
     if (!user || !user.followers) return false;
-    const id = sessionStorage.getItem("userId");
+    const id = this.user._id;
     return user.followers.indexOf(id) > -1;
   }
 

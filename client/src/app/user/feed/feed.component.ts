@@ -14,6 +14,7 @@ import { HttpResponse, HttpEventType } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { Input } from "@angular/core";
+import { SessionService } from "../../services/session.service";
 
 @Component({
   selector: "app-feed",
@@ -25,7 +26,7 @@ export class FeedComponent implements OnInit {
   @ViewChild("feed") feed: any;
   @ViewChild("feed") posts: any;
   @Output() profile = new EventEmitter<string>();
-  @Input() user: IUser;
+  user: IUser;
   @ViewChild("navbar") nav: any;
   focus;
 
@@ -50,7 +51,8 @@ export class FeedComponent implements OnInit {
     private userService: UsersService,
     private toastService: ToastrService,
     private uploadService: UploadService,
-    public router: Router
+    public router: Router,
+    private sessionService: SessionService
   ) {}
 
   routes = [
@@ -71,7 +73,11 @@ export class FeedComponent implements OnInit {
     { id: 5, path: "/users/main/feeds/people", title: "People", value: "" },
   ];
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.sessionService.currentUserSubject.subscribe(
+      (user: IUser) => (this.user = user)
+    );
+  }
 
   open(content) {
     this.modalService.open(content, { ariaLabelledBy: "modal-basic-title" });
