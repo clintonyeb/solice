@@ -9,7 +9,7 @@ async function newPost(app, userId, postId) {
     postedBy: userId,
     targetPost: postId,
     created: Date.now(),
-    status: true
+    status: true,
   };
 
   _updateFollowers(app, userId, not);
@@ -55,6 +55,7 @@ async function updatedProfile(app, userId) {
   const not = {
     type: TYPES.UPDATED_PROFILE,
     postedBy: userId,
+    targetUser: userId,
     created: Date.now(),
     status: true,
   };
@@ -66,6 +67,7 @@ async function online(app, userId) {
   const not = {
     type: TYPES.ONLINE,
     postedBy: userId,
+    targetUser: userId,
     created: Date.now(),
     status: true,
   };
