@@ -18,6 +18,7 @@ export class PostDetailComponent implements OnInit {
   user: IUser;
   loading = false;
   focus1: any;
+  postDeleted = false;
 
   commentForm = new FormGroup({
     text: new FormControl("", [Validators.required]),
@@ -46,6 +47,9 @@ export class PostDetailComponent implements OnInit {
   getPost() {
     const postId = this.route.snapshot.paramMap.get("id");
     this.userService.getPostById(postId).subscribe((data: IPost) => {
+      if (!data) {
+        return (this.postDeleted = true);
+      }
       this.post = data;
       this.getComments(this.post);
     });
@@ -123,15 +127,13 @@ export class PostDetailComponent implements OnInit {
 
   deletePost(post) {
     this.loading = true;
-    this.userService
-      .deletePost(post._id)
-      .subscribe(
-        () => {
-          this.goToFeed();
-        },
-        (err) => {
-          this.loading = false;
-        }
-      );
+    this.userService.deletePost(post._id).subscribe(
+      () => {
+        this.goToFeed();
+      },
+      (err) => {
+        this.loading = false;
+      }
+    );
   }
 }
