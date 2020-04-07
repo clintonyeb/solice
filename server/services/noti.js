@@ -91,15 +91,8 @@ function isOnline(app, id) {
 
 async function sendToUser(app, id, noti) {
   const user = await User.findById(noti.postedBy);
-  let targetUser, targetPost;
-  if (noti.targetUser) targetUser = await User.findById(noti.targetUser);
-  if (noti.targetPost) targetPost = await Post.findById(noti.targetPost);
-
   noti.postedBy = user;
-  noti.targetUser = targetUser;
-  noti.targetPost = targetPost;
   const data = { type: "notifications", data: noti };
-
   return app.locals.activeUsers[id].send(JSON.stringify(data));
 }
 

@@ -36,9 +36,13 @@ export class UsersService {
   }
 
   getUserById(id) {
-    console.log(id, "id");
+    let url = `user/${id}`;
+    url = getServerURL(url);
+    return this.http.get(url);
+  }
 
-    let url: string = `user/${id}`;
+  getPostById(id) {
+    let url = `post/${id}`;
     url = getServerURL(url);
     return this.http.get(url);
   }
@@ -231,5 +235,10 @@ export class UsersService {
   getAds() {
     const url: string = getServerURL("users/ads");
     return this.http.get(url);
+  }
+
+  deletePost(postId) {
+    const url: string = getServerURL(`posts/${postId}`);
+    return this.http.delete(url);
   }
 }

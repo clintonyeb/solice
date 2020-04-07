@@ -32,4 +32,19 @@ export class ActivityComponent implements OnInit {
       this.ad = data;
     });
   }
+
+  getLink(noti) {
+    switch (noti.type) {
+      case 0:
+      case 1:
+      case 2:
+      case 6:
+      case 7:
+        return "/users/main/posts/" + noti.targetPost;
+      case 3:
+      case 4:
+      case 5:
+        return "/users/main/profiles/" + noti.targetUser;
+    }
+  }
 }

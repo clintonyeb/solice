@@ -14,16 +14,25 @@ async function authenticate(req, res, next) {
 function getUser(req, res, next) {
   const user = req.user;
   userService.getUser(user._id, (err, user) => {
-    if (err || !user) return res.status(404).send("No user found");
+    if (err || !user) return res.status(404).send({ message: "No user found" });
     res.json(user);
   });
 }
 
 function getUserForId(req, res, next) {
   userService.getUser(req.params.id, (err, user) => {
-    if (err || !user) return res.status(404).send("No user found");
+    if (err || !user) return res.status(404).send(err);
     res.json(user);
   });
+}
+
+async function getPostForId(req, res, next) {
+  try {
+    const post = await userService.getPostForId(req.params.id);
+    res.json(post);
+  } catch (error) {
+    res.status(404).send(error);
+  }
 }
 
 function getUsers(req, res, next) {
@@ -32,12 +41,12 @@ function getUsers(req, res, next) {
 
   if (!type || type === "all") {
     userService.getAllUsers(user._id, (err, users) => {
-      if (err) return res.status(404).send("No users found");
+      if (err) return res.status(404).send({ message: "No users found" });
       res.json(users);
     });
   } else {
     userService.getUserFull(user._id, type, (err, users) => {
-      if (err) return res.status(404).send("No user found");
+      if (err) return res.status(404).send(err);
       res.json(users);
     });
   }
@@ -51,7 +60,7 @@ async function followUser(req, res, next) {
     res.json(other);
     notiService.followedUser(req.app, req.user._id, body._id);
   } catch (error) {
-    res.status(404).send("No user found");
+    res.status(404).send(error);
   }
 }
 
@@ -63,7 +72,7 @@ async function unFollowUser(req, res, next) {
     res.json(other);
     notiService.followedUser(req.app, req.user._id, body._id);
   } catch (error) {
-    res.status(404).send("No user found");
+    res.status(404).send(error);
   }
 }
 
@@ -126,9 +135,7 @@ async function createPost(req, res, next) {
   } catch (error) {
     console.log(error);
 
-    res
-      .status(HttpStatus.UNPROCESSABLE_ENTITY)
-      .send({ message: error.message });
+    res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(error);
   }
 }
 
@@ -197,9 +204,7 @@ async function likePost(req, res, next) {
     res.json(post);
     notiService.likedPost(req.app, req.user._id, post._id);
   } catch (error) {
-    res
-      .status(HttpStatus.UNPROCESSABLE_ENTITY)
-      .send({ message: error.message });
+    res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(error);
   }
 }
 
@@ -249,9 +254,7 @@ async function updateUser(req, res, next) {
     res.json(user);
     notiService.updatedProfile(req.app, req.user._id);
   } catch (error) {
-    res
-      .status(HttpStatus.UNPROCESSABLE_ENTITY)
-      .send({ message: error.message });
+    res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(error);
   }
 }
 
@@ -263,9 +266,7 @@ async function getNotifications(req, res, next) {
   } catch (error) {
     console.log(error);
 
-    // res
-    //   .status(HttpStatus.UNPROCESSABLE_ENTITY)
-    //   .send({ message: error.message });
+    res.status(HttpStatus.UNPROCESSABLE_ENTITY).send(error);
   }
 }
 
@@ -275,10 +276,11 @@ async function getActiveUsers(req, res, next) {
       req.app,
       req.user._id
     );
+    console.log(activeUsers);
+
     res.json(activeUsers);
   } catch (error) {
     console.log(error);
-
     res
       .status(HttpStatus.UNPROCESSABLE_ENTITY)
       .send({ message: error.message });
@@ -291,13 +293,22 @@ async function getAds(req, res, next) {
     res.json(ad);
   } catch (error) {
     console.error(error);
-    res
-      .status(HttpStatus.UNPROCESSABLE_ENTITY)
-      .json({ message: error.message });
+    res.status(HttpStatus.UNPROCESSABLE_ENTITY).json(error);
+  }
+}
+
+async function deletePost(req, res, next) {
+  try {
+    await userService.deletePost(req.params.id);
+    res.json({ status: true });
+  } catch (error) {
+    console.error(error);
+    res.status(HttpStatus.UNPROCESSABLE_ENTITY).json(error);
   }
 }
 
 module.exports = {
+  deletePost,
   authenticate,
   getUser,
   getUsers,
@@ -320,4 +331,5 @@ module.exports = {
   getNotifications,
   getActiveUsers,
   getAds,
+  getPostForId,
 };

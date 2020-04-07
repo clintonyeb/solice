@@ -1,29 +1,22 @@
-<div class="input-group mb-4">
-  <input
-    type="text"
-    class="form-control"
-    placeholder="Search posts here..."
-    [formControl]="query"
-    (keyup.enter)="search()"
-  />
-  <div class="input-group-append">
-    <button class="btn btn-primary search" type="button" (click)="search()">
-      <span
-        class="spinner-border spinner-border-sm"
-        role="status"
-        aria-hidden="true"
-        *ngIf="loading"
-      ></span>
-      <i class="fa fa-search" *ngIf="!loading"></i>
-    </button>
+<div class="row mb-5">
+  <div class="col-lg-12">
+    <div class="d-block d-md-flex justify-content-between mt-4 mt-md-0">
+      <div class="text-center mt-4 mt-md-0">
+        <button
+          class="btn btn-primary btn-round btn-lg btn-block"
+          (click)="goToFeed()"
+        >
+          Go to Timeline
+        </button>
+      </div>
+    </div>
   </div>
 </div>
-<div class="ui feed" infiniteScroll (scrolled)="onScroll()">
-  <div
-    class="event"
-    *ngFor="let post of feed; index as i"
-    (click)="viewPost(post._id)"
-  >
+
+<hr />
+
+<div class="ui feed" infiniteScroll *ngIf="post">
+  <div class="event">
     <div class="label">
       <img [src]="post.postedBy.profile_pic" />
     </div>
@@ -44,7 +37,7 @@
       <div class="meta">
         <a
           class="like mr-4"
-          (click)="likePost(post, i)"
+          (click)="likePost(post)"
           [class.text-primary]="hasLiked(post)"
         >
           <i class="fa fa-thumbs-up"></i>
@@ -59,7 +52,7 @@
           {{ post.comments.length }} Comments
         </a>
       </div>
-      <div class="extra images mb-3" *ngIf="commentActive === post">
+      <div class="extra images mb-3">
         <div class="ui comments">
           <div class="comment" *ngFor="let comment of comments; index as j">
             <a class="avatar">
@@ -71,7 +64,7 @@
               }}</a>
               <div class="metadata">
                 <div class="date mr-3">{{ comment.created | timeago }}</div>
-                <a (click)="deleteComment(post, comment, i)"
+                <a (click)="deleteComment(post, comment)"
                   ><svg
                     class="bi bi-trash-fill"
                     width="1em"
@@ -98,7 +91,7 @@
           <form
             class="ui reply form"
             [formGroup]="commentForm"
-            (ngSubmit)="commentPost(post, i)"
+            (ngSubmit)="commentPost(post)"
           >
             <div
               class="input-group form-group-no-border input-lg"
@@ -132,12 +125,50 @@
       </div>
     </div>
   </div>
-  <div class="d-flex justify-content-center" *ngIf="loading">
-    <div class="spinner-border text-primary" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
-  </div>
-  <p class="text-center font-italic text-info" *ngIf="!loading">
-    End of Posts
-  </p>
 </div>
+
+<p class="text-right" *ngIf="post && isMyPost(post.postedBy)">
+  <button type="button" class="btn btn-danger" (click)="open(content)">
+    <span
+      class="spinner-border spinner-border-sm"
+      role="status"
+      aria-hidden="true"
+      *ngIf="loading"
+    ></span>
+    <i class="fa fa-trash mr-2" *ngIf="!loading"></i> Delete Post
+  </button>
+</p>
+
+<ng-template #content let-modal class="bg-danger">
+  <div class="modal-header">
+    <h4 class="modal-title">Confirm Delete</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>Are you sure you want to delete this post?</p>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-danger"
+      (click)="deletePost(post); modal.close('Close click')"
+    >
+      Confirm
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-outline-dark float-right"
+      (click)="modal.close('Close click')"
+    >
+      Cancel
+    </button>
+  </div>
+</ng-template>

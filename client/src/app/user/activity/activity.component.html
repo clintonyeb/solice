@@ -49,12 +49,13 @@
 
 <div class="ui cards mt-1">
   <a
-    class="ui raised centered card"
+    class="ui raised centered card text-decoration-none"
     [ngClass]="{
       'border-bottom primary border-primary': noti.status === true
     }"
     style="width: 25rem;"
     *ngFor="let noti of notifications; index as i"
+    [routerLink]="getLink(noti)"
   >
     <div class="content" *ngIf="noti.type === 0">
       <div class="center aligned header text-primary">New Post</div>

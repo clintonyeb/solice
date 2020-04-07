@@ -4,6 +4,7 @@ import { UsersService } from "../../services/users.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ToastrService } from "ngx-toastr";
 import { SessionService } from "../../services/session.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-post",
@@ -28,7 +29,8 @@ export class PostComponent implements OnInit {
   constructor(
     private userService: UsersService,
     private toastService: ToastrService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -39,9 +41,9 @@ export class PostComponent implements OnInit {
     );
   }
 
-  // getUser(userId: any) {
-  //   return this.userService.getUserById(userId);
-  // }
+  viewPost(postId) {
+    this.router.navigate(["/users/main/posts", postId]);
+  }
 
   getFeed() {
     this.loading = true;

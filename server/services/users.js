@@ -113,13 +113,7 @@ function createUser(obj, cb) {
     if (user) {
       return cb(new Error("User with username already exists"));
     }
-
-    let bio = "";
-    if (obj.dob) {
-      bio = `Hey there! I'm ${obj.firstname} ;)! Wish me on ${obj.dob.day} ${obj.dob.month}`;
-    } else {
-      bio = `Hey there! I'm ${obj.firstname}`;
-    }
+    let bio = `Hey there! I'm ${obj.firstname}`;
     var newUser = new User({
       email: obj.email,
       firstname: obj.firstname,
@@ -512,22 +506,18 @@ function _isOnline(app, id) {
 
 async function broadCastUserJoin(activeUsers, userId) {
   const user = await User.findById(userId);
-  const following = user.following;
-
   const data = JSON.stringify({ type: "user-online", data: user });
-  following.forEach((ff) => {
-    const ws = activeUsers[ff];
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send(data);
-    }
-  });
+  broadCastUser(activeUsers, user, data);
 }
 
 async function broadCastUserLeave(activeUsers, userId) {
   const user = await User.findById(userId);
-  const following = user.following;
-
   const data = JSON.stringify({ type: "user-offline", data: userId });
+  broadCastUser(activeUsers, user, data);
+}
+
+async function broadCastUser(activeUsers, user, data) {
+  const following = user.following;
   following.forEach((ff) => {
     const ws = activeUsers[ff];
     if (ws && ws.readyState === WebSocket.OPEN) {
@@ -536,7 +526,12 @@ async function broadCastUserLeave(activeUsers, userId) {
   });
 }
 
+async function deletePost(postId) {
+  await Post.deleteOne({ _id: postId });
+}
+
 module.exports = {
+  deletePost,
   createUser,
   authenticate,
   getUser,
@@ -570,4 +565,5 @@ module.exports = {
   searchUsersByType,
   broadCastUserJoin,
   broadCastUserLeave,
+  getPostForId: getPost,
 };

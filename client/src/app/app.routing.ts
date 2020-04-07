@@ -32,6 +32,7 @@ import { FeedFriendComponent } from "./user/feed-friend/feed-friend.component";
 import { ProfileComponent } from "./user/profile/profile.component";
 import { UpdateProfileComponent } from "./user/update-profile/update-profile.component";
 import { FeedComponent } from './user/feed/feed.component';
+import { PostDetailComponent } from './user/post-detail/post-detail.component';
 
 const routes: Routes = [
   { path: "", redirectTo: "users", pathMatch: "full" },
@@ -80,6 +81,10 @@ const routes: Routes = [
           {
             path: "profile",
             component: UpdateProfileComponent,
+          },
+          {
+            path: "posts/:id",
+            component: PostDetailComponent,
           },
         ],
       },

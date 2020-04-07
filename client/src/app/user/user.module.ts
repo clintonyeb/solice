@@ -27,6 +27,7 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import FilePondPluginImageResize from "filepond-plugin-image-resize";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImageCrop from "filepond-plugin-image-crop";
+import { PostDetailComponent } from './post-detail/post-detail.component';
 
 registerPlugin(FilePondPluginFileValidateType);
 registerPlugin(FilePondPluginImagePreview);
@@ -58,6 +59,7 @@ registerPlugin(FilePondPluginImageCrop);
     FeedFriendComponent,
     UpdateProfileComponent,
     PostComponent,
+    PostDetailComponent,
   ],
   providers: [UsersService],
 })

@@ -14,8 +14,6 @@ router.get("/authenticate", handlers.authenticate);
 
 router.get("/user", handlers.getUser);
 
-router.get("/user/:id", handlers.getUserForId);
-
 router.get("/users", handlers.getUsers);
 
 router.put("/users", handlers.updateUser);
@@ -23,6 +21,12 @@ router.put("/users", handlers.updateUser);
 router.post("/users/follow", handlers.followUser);
 
 router.post("/users/unfollow", handlers.unFollowUser);
+
+router.delete("/posts/:id", handlers.deletePost);
+
+router.get("/user/:id", handlers.getUserForId);
+
+router.get("/post/:id", handlers.getPostForId);
 
 router.get("/active", handlers.goOnline);
 
