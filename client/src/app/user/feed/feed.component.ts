@@ -66,7 +66,7 @@ export class FeedComponent implements OnInit {
     {
       id: 2,
       path: "/users/main/feeds/posts",
-      title: "Posts",
+      title: "My Posts",
       icon: "fas fa-chalkboard",
     },
     {
