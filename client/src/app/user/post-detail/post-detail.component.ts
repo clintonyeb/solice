@@ -31,12 +31,13 @@ export class PostDetailComponent implements OnInit {
     private router: Router,
     private sessionService: SessionService,
     private modalService: NgbModal
-  ) {}
-
-  ngOnInit(): void {
-    this.route.params.subscribe((params) => {
+  ) {
+    route.params.subscribe((params) => {
       this.getPost(params["id"]);
     });
+  }
+
+  ngOnInit(): void {
     this.sessionService.currentUserSubject.subscribe(
       (user: IUser) => (this.user = user)
     );
