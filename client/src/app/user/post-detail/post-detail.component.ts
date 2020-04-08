@@ -34,7 +34,9 @@ export class PostDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getPost();
+    this.route.params.subscribe((params) => {
+      this.getPost(params["id"]);
+    });
     this.sessionService.currentUserSubject.subscribe(
       (user: IUser) => (this.user = user)
     );
@@ -44,8 +46,7 @@ export class PostDetailComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: "modal-basic-title" });
   }
 
-  getPost() {
-    const postId = this.route.snapshot.paramMap.get("id");
+  getPost(postId) {
     this.userService.getPostById(postId).subscribe((data: IPost) => {
       if (!data) {
         return (this.postDeleted = true);

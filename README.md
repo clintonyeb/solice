@@ -25,7 +25,6 @@ Admin Account:
 - _Username_: admin@gm.com
 - _Password_: testuser
 
-
 ## Highlighted Features
 
 ### User
@@ -49,11 +48,10 @@ Admin Account:
 3. Check user requests for account re-enabling
 4. Manage blacklisted words
 
-
 ### Other Features
 
 1. Cron Job sending email notifications when you're not checking your notifications and you're offline
-
+2. Mobile responsive
 
 ## Application Hosting
 
