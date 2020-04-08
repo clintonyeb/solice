@@ -19,11 +19,7 @@
   </div>
 </div>
 <div class="ui feed" infiniteScroll (scrolled)="onScroll()">
-  <div
-    class="event"
-    *ngFor="let post of feed; index as i"
-    (click)="viewPost(post._id)"
-  >
+  <div class="event" *ngFor="let post of feed; index as i">
     <div class="label">
       <img [src]="post.postedBy.profile_pic" />
     </div>
@@ -57,6 +53,14 @@
         >
           <i class="fa fa-comment"></i>
           {{ post.comments.length }} Comments
+        </a>
+        <a
+          class="like ml-4"
+          (click)="viewPost(post._id)"
+          [class.text-primary]="isMyPost(post.postedBy)"
+        >
+          <i class="fa fa-eye"></i>
+          View Post
         </a>
       </div>
       <div class="extra images mb-3" *ngIf="commentActive === post">

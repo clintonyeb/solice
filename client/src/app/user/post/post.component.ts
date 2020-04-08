@@ -171,4 +171,9 @@ export class PostComponent implements OnInit {
   onScroll() {
     this.getMoreFeed();
   }
+
+  isMyPost(postedBy) {
+    const userId = this.user._id;
+    return postedBy._id === userId;
+  }
 }
