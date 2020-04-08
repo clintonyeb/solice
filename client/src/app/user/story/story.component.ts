@@ -182,4 +182,9 @@ export class StoryComponent implements OnInit {
   onScroll() {
     this.getMoreFeed();
   }
+
+  isMyPost(postedBy) {
+    const userId = this.user._id;
+    return postedBy._id === userId;
+  }
 }
