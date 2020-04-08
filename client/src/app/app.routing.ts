@@ -54,7 +54,7 @@ const routes: Routes = [
   {
     path: "users",
     component: UserComponent,
-    canActivate: [AuthGuardService],
+    canLoad: [AuthGuardService],
     children: [
       { path: "", redirectTo: "main", pathMatch: "full" },
       {
@@ -93,7 +93,7 @@ const routes: Routes = [
   {
     path: "admins",
     component: AdminDashboardComponent,
-    canActivate: [AuthGuardService],
+    canLoad: [AuthGuardService],
     children: [
       { path: "", redirectTo: "posts", pathMatch: "full" },
       { path: "posts", component: PostsComponent },
