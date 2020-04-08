@@ -78,7 +78,7 @@ async function online(app, userId) {
 async function _updateFollowers(app, userId, noti) {
   const user = await User.findById(userId);
 
-  user.followers.forEach(async (ff) => {
+  user.subscribers.forEach(async (ff) => {
     if (isOnline(app, ff)) {
       sendToUser(app, ff, noti);
     }

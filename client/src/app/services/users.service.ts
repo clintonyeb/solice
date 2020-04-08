@@ -61,9 +61,10 @@ export class UsersService {
 
   addUserOnline(user: IUser) {
     const past = this.onlineUsersSubject.value;
-    if (past.length > 10) past.shift();
-    const updatedValue = [user, ...past];
-    this.onlineUsersSubject.next(updatedValue);
+    var index = past.findIndex((u) => u._id === user._id);
+    if (index === -1) {
+      this.onlineUsersSubject.next([user, ...past]);
+    }
   }
 
   remUserOnline(userId: string) {

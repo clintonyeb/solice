@@ -52,8 +52,8 @@ var userSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
-    following: [{ type: mongoose.Schema.ObjectId, ref: "users" }],
-    followers: [{ type: mongoose.Schema.ObjectId, ref: "users" }],
+    subscriptions: [{ type: mongoose.Schema.ObjectId, ref: "users" }], // refers to this user's subscriptions
+    subscribers: [{ type: mongoose.Schema.ObjectId, ref: "users" }], // refers to subscriptions to this users
     status: {
       type: Number,
       enum: Object.values(require("../utils/user-status")),

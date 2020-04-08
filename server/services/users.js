@@ -78,9 +78,9 @@ function getFeed(userId, cb, page) {
   page = page || 1;
   User.findById(userId, (err, user) => {
     if (err) return cb(err, false);
-    const following = user.following;
-    following.push(userId); // include self
-    Post.find({ postedBy: { $in: following }, status: 0 })
+    const subscriptions = user.subscriptions;
+    subscriptions.push(userId); // include self
+    Post.find({ postedBy: { $in: subscriptions }, status: 0 })
       .populate("postedBy")
       .sort({ created: "desc" })
       .skip(LIMIT * page - LIMIT)
@@ -140,13 +140,13 @@ async function followUser(userId, otherId, cb) {
   await User.updateOne(
     { _id: userId },
     {
-      $addToSet: { following: otherId },
+      $addToSet: { subscriptions: otherId },
     }
   );
   const other = await User.findByIdAndUpdate(
     otherId,
     {
-      $addToSet: { followers: userId },
+      $addToSet: { subscribers: userId },
     },
     { new: true }
   );
@@ -157,13 +157,13 @@ async function unFollowUser(userId, otherId, cb) {
   await User.updateOne(
     { _id: userId },
     {
-      $pull: { following: otherId },
+      $pull: { subscriptions: otherId },
     }
   );
   const other = await User.findByIdAndUpdate(
     otherId,
     {
-      $pull: { followers: userId },
+      $pull: { subscribers: userId },
     },
     { new: true }
   );
@@ -221,10 +221,10 @@ function searchFeed(userId, query, cb, page) {
   page = page || 1;
   User.findById(userId, (err, user) => {
     if (err) return cb(err, false);
-    const following = user.following;
-    following.push(userId); // include self
+    const subscriptions = user.subscriptions;
+    subscriptions.push(userId); // include self
     Post.find({
-      postedBy: { $in: following },
+      postedBy: { $in: subscriptions },
       text: { $regex: query, $options: "i" },
       status: POST_STATUS.ENABLED,
     })
@@ -368,9 +368,9 @@ async function clearNotifications(userId) {
   );
 }
 
-async function getActiveFollowing(app, userId) {
+async function getActiveUsersSubscribed(app, userId) {
   const user = await User.findById(userId);
-  const active = user.following.filter((ff) =>
+  const active = user.subscriptions.filter((ff) =>
     app.locals.activeUsers.hasOwnProperty(ff)
   );
   const users = await User.find({ _id: { $in: active } });
@@ -517,13 +517,14 @@ async function broadCastUserLeave(activeUsers, userId) {
 }
 
 async function broadCastUser(activeUsers, user, data) {
-  const following = user.following;
-  following.forEach((ff) => {
-    const ws = activeUsers[ff];
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send(data);
-    }
-  });
+  user.subscribers
+    .filter((ff) => activeUsers.hasOwnProperty(ff))
+    .forEach((u) => {
+      const ws = activeUsers[u];
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(data);
+      }
+    });
 }
 
 async function deletePost(postId) {
@@ -553,7 +554,7 @@ module.exports = {
   getNotifications,
   logout,
   clearNotifications,
-  getActiveFollowing,
+  getActiveFollowing: getActiveUsersSubscribed,
   createRequest,
   getAds,
   verifyEmailToken,

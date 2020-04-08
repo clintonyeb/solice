@@ -9,6 +9,7 @@ async function authenticate(req, res, next) {
   const getUser = util.promisify(userService.getUser);
   const user = await getUser(req.user._id);
   res.json(user);
+  userService.broadCastUserJoin(req.app.locals.activeUsers, req.user._id);
 }
 
 function getUser(req, res, next) {
@@ -81,6 +82,7 @@ function goOnline(req, res, next) {
   userService.getUser(user._id, (err, user) => {
     if (err) return res.status(404).send({ message: err.message });
     res.json(user);
+    userService.broadCastUserJoin(req.app.locals.activeUsers, user._id);
     notiService.online(req.app, req.user._id);
   });
 }

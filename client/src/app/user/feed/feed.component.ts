@@ -71,15 +71,15 @@ export class FeedComponent implements OnInit {
     },
     {
       id: 3,
-      path: "/users/main/feeds/following",
-      title: "Following",
-      icon: "fas fa-user-friends",
+      path: "/users/main/feeds/subscriptions",
+      title: "Subscriptions",
+      icon: "fas fa-heart",
     },
     {
       id: 4,
-      path: "/users/main/feeds/followers",
-      title: "Followers",
-      icon: "fa fa-user-tie",
+      path: "/users/main/feeds/subscribers",
+      title: "Subscribers",
+      icon: "fas fa-blind",
     },
     {
       id: 5,

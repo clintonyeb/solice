@@ -31,8 +31,8 @@ import { PostComponent } from "./user/post/post.component";
 import { FeedFriendComponent } from "./user/feed-friend/feed-friend.component";
 import { ProfileComponent } from "./user/profile/profile.component";
 import { UpdateProfileComponent } from "./user/update-profile/update-profile.component";
-import { FeedComponent } from './user/feed/feed.component';
-import { PostDetailComponent } from './user/post-detail/post-detail.component';
+import { FeedComponent } from "./user/feed/feed.component";
+import { PostDetailComponent } from "./user/post-detail/post-detail.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "users", pathMatch: "full" },
@@ -69,8 +69,8 @@ const routes: Routes = [
               { path: "", redirectTo: "timeline", pathMatch: "full" },
               { path: "timeline", component: StoryComponent },
               { path: "posts", component: PostComponent },
-              { path: "following", component: FeedFriendComponent },
-              { path: "followers", component: FeedFriendComponent },
+              { path: "subscriptions", component: FeedFriendComponent },
+              { path: "subscribers", component: FeedFriendComponent },
               { path: "people", component: FeedFriendComponent },
             ],
           },

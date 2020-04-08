@@ -31,10 +31,10 @@ export class FeedFriendComponent implements OnInit {
 
   getFeedType() {
     const url = this.router.url;
-    if (url === "/users/main/feeds/following") {
-      return "following";
-    } else if (url === "/users/main/feeds/followers") {
-      return "followers";
+    if (url === "/users/main/feeds/subscriptions") {
+      return "subscriptions";
+    } else if (url === "/users/main/feeds/subscribers") {
+      return "subscribers";
     } else {
       return "all";
     }
@@ -78,9 +78,9 @@ export class FeedFriendComponent implements OnInit {
   }
 
   isFollowing(user): boolean {
-    if (!user || !user.followers) return false;
+    if (!user || !user.subscribers) return false;
     const id = this.user._id;
-    return user.followers.indexOf(id) > -1;
+    return user.subscribers.indexOf(id) > -1;
   }
 
   searchPeople() {
