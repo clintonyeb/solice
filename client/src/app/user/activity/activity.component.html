@@ -57,73 +57,87 @@
     *ngFor="let noti of notifications; index as i"
     [routerLink]="getLink(noti)"
   >
-    <div class="content" *ngIf="noti.type === 0">
-      <div class="center aligned header text-primary">New Post</div>
-      <div class="description">
-        <p>{{ noti.postedBy.firstname }} created a new post. Check it out.</p>
+    <ng-container [ngSwitch]="noti.type">
+      <div class="content" *ngSwitchCase="0">
+        <div class="center aligned header text-primary">New Post</div>
+        <div class="description text-center">
+          <p>{{ noti.postedBy.firstname }} created a new post. Check it out.</p>
+        </div>
       </div>
-    </div>
 
-    <div class="content" *ngIf="noti.type === 1">
-      <div class="center aligned header text-primary">Liked Post</div>
-      <div class="description">
-        <p>{{ noti.postedBy.firstname }} liked a post. Check it out.</p>
+      <div class="content" *ngSwitchCase="1">
+        <div class="center aligned header text-primary">Liked Post</div>
+        <div class="description text-center">
+          <p>{{ noti.postedBy.firstname }} liked a post. Check it out.</p>
+        </div>
       </div>
-    </div>
 
-    <div class="content" *ngIf="noti.type === 2">
-      <div class="center aligned header text-primary">Commented Post</div>
-      <div class="description">
-        <p>{{ noti.postedBy.firstname }} commented on a post. Check it out.</p>
+      <div class="content" *ngSwitchCase="2">
+        <div class="center aligned header text-primary">Commented Post</div>
+        <div class="description text-center">
+          <p>
+            {{ noti.postedBy.firstname }} commented on a post. Check it out.
+          </p>
+        </div>
       </div>
-    </div>
 
-    <div class="content" *ngIf="noti.type === 3">
-      <div class="center aligned header text-primary">Followed User</div>
-      <div class="description">
-        <p>{{ noti.postedBy.firstname }} followed a user. Check him out.</p>
+      <div class="content" *ngSwitchCase="3">
+        <div class="center aligned header text-primary">Followed User</div>
+        <div class="description text-center">
+          <p>{{ noti.postedBy.firstname }} followed a user. Check him out.</p>
+        </div>
       </div>
-    </div>
 
-    <div class="content" *ngIf="noti.type === 4">
-      <div class="center aligned header text-primary">Updated Profile</div>
-      <div class="description">
-        <p>{{ noti.postedBy.firstname }} updated his profile. Check it out.</p>
+      <div class="content" *ngSwitchCase="4">
+        <div class="center aligned header text-primary">Updated Profile</div>
+        <div class="description text-center">
+          <p>
+            {{ noti.postedBy.firstname }} updated his profile. Check it out.
+          </p>
+        </div>
       </div>
-    </div>
 
-    <div class="content" *ngIf="noti.type === 5">
-      <div class="center aligned header text-primary">Is Online</div>
-      <div class="description">
-        <p>{{ noti.postedBy.firstname }} is online.</p>
+      <div class="content" *ngSwitchCase="5">
+        <div class="center aligned header text-primary">Is Online</div>
+        <div class="description text-center">
+          <p>{{ noti.postedBy.firstname }} is online.</p>
+        </div>
       </div>
-    </div>
 
-    <div class="content" *ngIf="noti.type === 5">
-      <div class="center aligned header text-primary">Is Online</div>
-      <div class="description">
-        <p>{{ noti.postedBy.firstname }} is online.</p>
+      <div class="content" *ngSwitchCase="5">
+        <div class="center aligned header text-primary">Is Online</div>
+        <div class="description text-center">
+          <p>{{ noti.postedBy.firstname }} is online.</p>
+        </div>
       </div>
-    </div>
 
-    <div class="content" *ngIf="noti.type === 6">
-      <div class="center aligned header text-primary">Post Flagged</div>
-      <div class="description">
-        <p>Your recent post was flagged as inappropriate.</p>
+      <div class="content" *ngSwitchCase="6">
+        <div class="center aligned header text-primary">Post Flagged</div>
+        <div class="description text-center">
+          <p>Your recent post was flagged as inappropriate.</p>
+        </div>
       </div>
-    </div>
 
-    <div class="content" *ngIf="noti.type === 7">
-      <div class="center aligned header text-primary">Comment Flagged</div>
-      <div class="description">
-        <p>Your recent comment was flagged as inappropriate.</p>
+      <div class="content" *ngSwitchCase="7">
+        <div class="center aligned header text-primary">Comment Flagged</div>
+        <div class="description text-center">
+          <p>Your recent comment was flagged as inappropriate.</p>
+        </div>
       </div>
-    </div>
+    </ng-container>
+
     <div class="extra content">
-      <div class="center aligned author">
-        <img class="ui avatar image" [src]="noti.postedBy.profile_pic" />
-        {{ noti.postedBy.firstname + " " + noti.postedBy.lastname }}
-        | <span class="date small">{{ noti.created | timeago }}</span>
+      <div class="author d-flex justify-content-between">
+        <span class="center aligned"
+          ><img
+            class="ui avatar image mb-0"
+            [src]="noti.postedBy.profile_pic"
+          />
+          {{ noti.postedBy.firstname + " " + noti.postedBy.lastname }}</span
+        >
+        <span class="date small center aligned">{{
+          noti.created | timeago
+        }}</span>
       </div>
     </div>
   </a>
