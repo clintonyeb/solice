@@ -459,7 +459,13 @@ async function verifyEmailToken(token) {
 }
 
 async function runCronJob() {
-  const users = await User.find({ "notifications.4": { $exists: true } });
+  const users = await User.aggregate([
+    { $match: { "notifications.status": true } },
+    { $project: {notifications: 1, firstname: 1, lastname: 1, email: 1}},
+    { $addFields: { notifications: { $size: "$notifications" } } },
+    { $match: { notifications: { $gte: 4 } } },
+  ]);
+
   users.forEach((user) => {
     email.sendUserNotification(user);
   });
