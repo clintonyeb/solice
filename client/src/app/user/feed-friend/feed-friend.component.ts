@@ -15,6 +15,7 @@ export class FeedFriendComponent implements OnInit {
   query = new FormControl("");
   user: IUser;
   loading = false;
+  currentUserSubject;
 
   constructor(
     private userService: UsersService,
@@ -24,9 +25,13 @@ export class FeedFriendComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPeople();
-    this.sessionService.currentUserSubject.subscribe(
+    this.currentUserSubject = this.sessionService.currentUserSubject.subscribe(
       (user: IUser) => (this.user = user)
     );
+  }
+
+  ngOnDestroy() {
+    this.currentUserSubject.unsubscribe();
   }
 
   getFeedType() {

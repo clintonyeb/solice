@@ -12,6 +12,8 @@ export class BioComponent implements OnInit {
   active: Array<IUser>;
   @Input() status: boolean;
   @Output() main = new EventEmitter<string>();
+  currentUserSubscription: any;
+  onlineUsersSubscription: any;
 
   constructor(private userService: UsersService) {}
 
@@ -21,17 +23,26 @@ export class BioComponent implements OnInit {
 
   getUserInfo() {
     this.userService.getUser();
-    this.userService.currentUserSubject.subscribe((data: IUser) => {
-      this.user = data;
-    });
+    this.currentUserSubscription = this.userService.currentUserSubject.subscribe(
+      (data: IUser) => {
+        this.user = data;
+      }
+    );
     this.getActiveFriends();
+  }
+
+  ngOnDestroy() {
+    this.currentUserSubscription.unsubscribe();
+    this.onlineUsersSubscription.unsubscribe();
   }
 
   getActiveFriends() {
     this.userService.getActive();
-    this.userService.onlineUsersSubject.subscribe((data: Array<IUser>) => {
-      this.active = data;
-    });
+    this.onlineUsersSubscription = this.userService.onlineUsersSubject.subscribe(
+      (data: Array<IUser>) => {
+        this.active = data;
+      }
+    );
   }
 
   logout() {

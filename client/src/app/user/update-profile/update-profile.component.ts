@@ -43,6 +43,8 @@ export class UpdateProfileComponent implements OnInit {
     dob: new FormControl(""),
   });
 
+  currentUserSubject;
+
   constructor(
     private userService: UsersService,
     private toastService: ToastrService,
@@ -52,6 +54,10 @@ export class UpdateProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUserInfo();
+  }
+
+  ngOnDestroy() {
+    this.currentUserSubject.unsubscribe();
   }
 
   goToFeed() {
@@ -125,13 +131,15 @@ export class UpdateProfileComponent implements OnInit {
 
   getUserInfo() {
     this.userService.getUser();
-    this.userService.currentUserSubject.subscribe((data: IUser) => {
-      this.form.patchValue({
-        firstname: data.firstname,
-        lastname: data.lastname,
-        bio: data.bio,
-        dob: data.dob,
-      });
-    });
+    this.currentUserSubject = this.userService.currentUserSubject.subscribe(
+      (data: IUser) => {
+        this.form.patchValue({
+          firstname: data.firstname,
+          lastname: data.lastname,
+          bio: data.bio,
+          dob: data.dob,
+        });
+      }
+    );
   }
 }

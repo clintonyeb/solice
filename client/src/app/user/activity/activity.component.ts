@@ -11,10 +11,15 @@ export class ActivityComponent implements OnInit {
   ad: IAd;
   constructor(private userService: UsersService) {}
   notifications: Array<INotification>;
+  notificationSubscription: any;
 
   ngOnInit(): void {
     this.getNotifications();
     this.getAd();
+  }
+
+  ngOnDestroy() {
+    this.notificationSubscription.unsubscribe();
   }
 
   getNotifications() {
@@ -28,9 +33,11 @@ export class ActivityComponent implements OnInit {
   }
 
   getAd() {
-    this.userService.getAds().subscribe((data: IAd) => {
-      this.ad = data;
-    });
+    this.notificationSubscription = this.userService
+      .getAds()
+      .subscribe((data: IAd) => {
+        this.ad = data;
+      });
   }
 
   getLink(noti) {

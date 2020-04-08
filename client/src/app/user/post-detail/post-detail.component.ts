@@ -24,6 +24,9 @@ export class PostDetailComponent implements OnInit {
     text: new FormControl("", [Validators.required]),
   });
 
+  currentUserSubject;
+  routeSubs;
+
   constructor(
     private userService: UsersService,
     private toastService: ToastrService,
@@ -32,15 +35,20 @@ export class PostDetailComponent implements OnInit {
     private sessionService: SessionService,
     private modalService: NgbModal
   ) {
-    route.params.subscribe((params) => {
+    this.routeSubs = route.params.subscribe((params) => {
       this.getPost(params["id"]);
     });
   }
 
   ngOnInit(): void {
-    this.sessionService.currentUserSubject.subscribe(
+    this.currentUserSubject = this.sessionService.currentUserSubject.subscribe(
       (user: IUser) => (this.user = user)
     );
+  }
+
+  ngOnDestroy() {
+    this.currentUserSubject.unsubscribe();
+    this.routeSubs.unsubscribe();
   }
 
   open(content) {

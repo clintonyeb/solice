@@ -11,18 +11,23 @@ import { ActivatedRoute, Router } from "@angular/router";
 export class ProfileComponent implements OnInit {
   user: IUser;
   @Output() main = new EventEmitter<string>();
+  routeSubs;
 
   constructor(
     private userService: UsersService,
     private route: ActivatedRoute,
     private router: Router
   ) {
-    route.params.subscribe((params) => {
+    this.routeSubs = this.route.params.subscribe((params) => {
       this.getUserInfo(params["id"]);
     });
   }
 
   ngOnInit() {}
+
+  ngOnDestroy() {
+    this.routeSubs.unsubscribe();
+  }
 
   getUserInfo(userId) {
     this.userService.getUserById(userId).subscribe((data: IUser) => {

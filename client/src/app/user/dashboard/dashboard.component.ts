@@ -18,6 +18,8 @@ export class DashboardComponent implements OnInit {
   userId: string;
   user: IUser;
 
+  activeSubscription: any;
+
   constructor(
     private sessionService: SessionService,
     private userService: UsersService,
@@ -30,6 +32,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnDestroy() {
     this.userService.closeConnections();
+    this.activeSubscription.unsubscribe();
   }
 
   authenticateUser() {
@@ -42,7 +45,7 @@ export class DashboardComponent implements OnInit {
       }
       this.user = res;
       this.authenticated = true;
-      this.userService.activeSubject.subscribe(
+      this.activeSubscription =  this.userService.activeSubject.subscribe(
         (d: boolean) => {
           this.active = d;
         },

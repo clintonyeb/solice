@@ -31,6 +31,8 @@ export class FeedComponent implements OnInit {
   focus;
   loading = false;
 
+  currentUserSubs;
+
   // post form
   form = new FormGroup({
     text: new FormControl("", [Validators.required]),
@@ -90,9 +92,13 @@ export class FeedComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.sessionService.currentUserSubject.subscribe(
+    this.currentUserSubs = this.sessionService.currentUserSubject.subscribe(
       (user: IUser) => (this.user = user)
     );
+  }
+
+  ngOnDestroy() {
+    this.currentUserSubs.unsubscribe();
   }
 
   open(content) {

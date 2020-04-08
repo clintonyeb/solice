@@ -26,6 +26,9 @@ export class StoryComponent implements OnInit {
     text: new FormControl("", [Validators.required]),
   });
 
+  currentUserSubject;
+  newPostObserver;
+
   constructor(
     private userService: UsersService,
     private toastService: ToastrService,
@@ -35,10 +38,17 @@ export class StoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.getFeed();
-    this.userService.newPostObserver.subscribe((data: IPost) => this.add(data));
-    this.sessionService.currentUserSubject.subscribe(
+    this.newPostObserver = this.userService.newPostObserver.subscribe(
+      (data: IPost) => this.add(data)
+    );
+    this.currentUserSubject = this.sessionService.currentUserSubject.subscribe(
       (user: IUser) => (this.user = user)
     );
+  }
+
+  ngOnDestroy() {
+    this.currentUserSubject.unsubscribe();
+    this.newPostObserver.unsubscribe();
   }
 
   viewPost(postId) {
