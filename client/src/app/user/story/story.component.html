@@ -35,7 +35,7 @@
         {{ post.text }}
       </div>
       <div class="extra images" *ngIf="post.photo">
-        <a><img [src]="post.photo" style="width: 15rem;" /></a>
+        <a (click)="showImage(post.photo)"><img [src]="post.photo" style="width: 15rem;" /></a>
       </div>
       <div class="meta">
         <a

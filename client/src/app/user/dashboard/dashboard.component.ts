@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { UsersService } from "../../services/users.service";
 import { BioComponent } from "../bio/bio.component";
 import { INotify, INotification, IUser } from "../../utils/interfaces";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: "app-dashboard",
@@ -17,17 +18,22 @@ export class DashboardComponent implements OnInit {
   @ViewChild("bio") bio: BioComponent;
   userId: string;
   user: IUser;
-
+  @ViewChild("imageModal") imageModal;
   activeSubscription: any;
+  imageSrc: string;
 
   constructor(
     private sessionService: SessionService,
     private userService: UsersService,
-    private router: Router
+    private router: Router,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
     this.authenticateUser();
+    this.userService.imageModalSubject.subscribe((data) => {
+      this.openImage(data);
+    });
   }
 
   ngOnDestroy() {
@@ -45,7 +51,7 @@ export class DashboardComponent implements OnInit {
       }
       this.user = res;
       this.authenticated = true;
-      this.activeSubscription =  this.userService.activeSubject.subscribe(
+      this.activeSubscription = this.userService.activeSubject.subscribe(
         (d: boolean) => {
           this.active = d;
         },
@@ -64,5 +70,19 @@ export class DashboardComponent implements OnInit {
 
   viewProfile(value: string) {
     this.router.navigate(["/users/main/profiles", { id: value }]);
+  }
+
+  openImage(src: string) {
+    this.imageSrc = src;
+    if (src) {
+      this.modalService
+        .open(this.imageModal, {
+          ariaLabelledBy: "modal-basic-title",
+        })
+        .result.then((result) => {
+          console.log("closed");
+          // this.userService.setImageModal(null);
+        });
+    }
   }
 }

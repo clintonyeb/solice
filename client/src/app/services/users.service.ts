@@ -15,6 +15,7 @@ export class UsersService {
   public newPostObserver = new Subject<IPost>();
   public currentUserSubject = new BehaviorSubject<IUser>(null);
   public onlineUsersSubject = new BehaviorSubject<Array<IUser>>([]);
+  public imageModalSubject = new BehaviorSubject<string>(null);
 
   constructor(private http: HttpClientService, private router: Router) {}
 
@@ -241,5 +242,9 @@ export class UsersService {
   deletePost(postId) {
     const url: string = getServerURL(`posts/${postId}`);
     return this.http.delete(url);
+  }
+
+  setImageModal(src: string) {
+    this.imageModalSubject.next(src);
   }
 }

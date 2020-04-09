@@ -102,7 +102,11 @@ export class FeedComponent implements OnInit {
   }
 
   open(content) {
-    this.modalService.open(content, { ariaLabelledBy: "modal-basic-title" });
+    this.modalService
+      .open(content, { ariaLabelledBy: "modal-add-post" })
+      // .result.then((result) => {
+      //   console.log("closed");
+      // });
   }
 
   pondHandleInit() {
