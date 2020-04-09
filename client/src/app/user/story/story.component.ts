@@ -200,4 +200,9 @@ export class StoryComponent implements OnInit {
     const userId = this.user._id;
     return postedBy._id === userId;
   }
+
+  showImage(image: string) {
+    this.userService.setImageModal(image);
+  }
+
 }

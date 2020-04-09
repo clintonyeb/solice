@@ -30,7 +30,7 @@ export class PostComponent implements OnInit {
   newPostObserver;
 
   constructor(
-    private userService: UsersService,
+    public userService: UsersService,
     private toastService: ToastrService,
     private sessionService: SessionService,
     private router: Router

@@ -102,7 +102,17 @@ export class FeedComponent implements OnInit {
   }
 
   open(content) {
-    this.modalService.open(content, { ariaLabelledBy: "modal-basic-title" });
+    this.modalService
+      .open(content, { ariaLabelledBy: "modal-add-post" })
+      .result.then(
+        (result) => {
+          console.log("closed");
+        },
+        (reason) => {
+          this.form.reset({ text: "", notify: true });
+          this.pondFiles = [];
+        }
+      );
   }
 
   pondHandleInit() {
@@ -150,7 +160,7 @@ export class FeedComponent implements OnInit {
         (data: IPost) => {
           this.modalService.dismissAll();
           this.toastService.success("Post", "Post created successfully...");
-          this.form.reset();
+          this.form.reset({ text: "", notify: true });
           this.pondFiles = [];
 
           this.userService.newPostObserver.next(data);
