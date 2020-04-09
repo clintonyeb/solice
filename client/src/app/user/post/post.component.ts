@@ -153,12 +153,17 @@ export class PostComponent implements OnInit {
   }
 
   getComments(post: IPost) {
-    this.commentForm.reset();
-    this.userService.getComments(post._id).subscribe(
-      (d: Array<IComment>) => (this.comments = d),
-      (err) => {}
-    );
-    this.commentActive = post;
+     this.comments = [];
+     this.commentForm.reset();
+     this.commentActive = post;
+     this.loading = true;
+    this.userService
+      .getComments(post._id)
+      .finally(() => (this.loading = false))
+      .subscribe(
+        (d: Array<IComment>) => (this.comments = d),
+        (err) => {}
+      );
   }
 
   isMyComment(postedBy) {

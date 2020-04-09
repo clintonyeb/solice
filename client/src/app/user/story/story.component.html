@@ -19,10 +19,7 @@
   </div>
 </div>
 <div class="ui feed" infiniteScroll (scrolled)="onScroll()">
-  <div
-    class="event"
-    *ngFor="let post of feed; index as i"
-  >
+  <div class="event" *ngFor="let post of feed; index as i">
     <div class="label">
       <img [src]="post.postedBy.profile_pic" />
     </div>
@@ -102,6 +99,12 @@
               </div>
             </div>
           </div>
+          <span
+            class="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+            *ngIf="loading"
+          ></span>
           <form
             class="ui reply form"
             [formGroup]="commentForm"
