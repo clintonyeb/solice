@@ -26,7 +26,7 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {}
 
   ngOnDestroy() {
-    this.routeSubs.unsubscribe();
+    this.routeSubs && this.routeSubs.unsubscribe();
   }
 
   getUserInfo(userId) {

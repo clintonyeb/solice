@@ -45,8 +45,8 @@ export class PostComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.currentUserSubject.unsubscribe();
-    this.newPostObserver.unsubscribe();
+    this.currentUserSubject && this.currentUserSubject.unsubscribe();
+    this.newPostObserver && this.newPostObserver.unsubscribe();
   }
 
   viewPost(postId) {

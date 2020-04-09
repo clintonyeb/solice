@@ -274,7 +274,7 @@ async function getNotifications(req, res, next) {
 
 async function getActiveUsers(req, res, next) {
   try {
-    const activeUsers = await userService.getActiveFollowing(
+    const activeUsers = await userService.getActiveUsersSubscribed(
       req.app,
       req.user._id
     );

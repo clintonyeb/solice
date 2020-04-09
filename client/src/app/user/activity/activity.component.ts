@@ -19,7 +19,7 @@ export class ActivityComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.notificationSubscription.unsubscribe();
+    this.notificationSubscription && this.notificationSubscription.unsubscribe();
   }
 
   getNotifications() {

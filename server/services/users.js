@@ -560,7 +560,7 @@ module.exports = {
   getNotifications,
   logout,
   clearNotifications,
-  getActiveFollowing: getActiveUsersSubscribed,
+  getActiveUsersSubscribed,
   createRequest,
   getAds,
   verifyEmailToken,

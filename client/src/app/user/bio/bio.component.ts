@@ -32,8 +32,8 @@ export class BioComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.currentUserSubscription.unsubscribe();
-    this.onlineUsersSubscription.unsubscribe();
+    this.currentUserSubscription && this.currentUserSubscription.unsubscribe();
+    this.onlineUsersSubscription && this.onlineUsersSubscription.unsubscribe();
   }
 
   getActiveFriends() {

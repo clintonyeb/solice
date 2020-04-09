@@ -32,7 +32,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnDestroy() {
     this.userService.closeConnections();
-    this.activeSubscription.unsubscribe();
+    this.activeSubscription && this.activeSubscription.unsubscribe();
   }
 
   authenticateUser() {

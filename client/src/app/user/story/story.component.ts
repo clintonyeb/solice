@@ -47,8 +47,8 @@ export class StoryComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.currentUserSubject.unsubscribe();
-    this.newPostObserver.unsubscribe();
+    this.currentUserSubject && this.currentUserSubject.unsubscribe();
+    this.newPostObserver && this.newPostObserver.unsubscribe();
   }
 
   viewPost(postId) {

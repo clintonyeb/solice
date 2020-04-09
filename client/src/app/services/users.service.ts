@@ -48,7 +48,7 @@ export class UsersService {
   }
 
   closeConnections() {
-    this.socket.close();
+    this.socket && this.socket.close();
     this.socket = null;
   }
 

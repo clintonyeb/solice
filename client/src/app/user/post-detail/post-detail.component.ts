@@ -47,8 +47,8 @@ export class PostDetailComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.currentUserSubject.unsubscribe();
-    this.routeSubs.unsubscribe();
+    this.currentUserSubject && this.currentUserSubject.unsubscribe();
+    this.routeSubs && this.routeSubs.unsubscribe();
   }
 
   open(content) {

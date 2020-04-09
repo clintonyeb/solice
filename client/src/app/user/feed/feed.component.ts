@@ -98,7 +98,7 @@ export class FeedComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.currentUserSubs.unsubscribe();
+    this.currentUserSubs && this.currentUserSubs.unsubscribe();
   }
 
   open(content) {

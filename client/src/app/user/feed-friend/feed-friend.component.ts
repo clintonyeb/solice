@@ -31,7 +31,7 @@ export class FeedFriendComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.currentUserSubject.unsubscribe();
+    this.currentUserSubject && this.currentUserSubject.unsubscribe();
   }
 
   getFeedType() {

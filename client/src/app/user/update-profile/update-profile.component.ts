@@ -57,7 +57,7 @@ export class UpdateProfileComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.currentUserSubject.unsubscribe();
+    this.currentUserSubject && this.currentUserSubject.unsubscribe();
   }
 
   goToFeed() {
