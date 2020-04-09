@@ -21,11 +21,13 @@
 <div class="ui feed" infiniteScroll (scrolled)="onScroll()">
   <div class="event" *ngFor="let post of feed; index as i">
     <div class="label">
-      <img [src]="post.postedBy.profile_pic" />
+      <a [routerLink]="['/users/main/profiles', post.postedBy._id]">
+        <img [src]="post.postedBy.profile_pic" />
+      </a>
     </div>
     <div class="content">
       <div class="summary" [class.text-danger]="post.status === 1">
-        <a>{{ post.postedBy.firstname + " " + post.postedBy.lastname }}</a>
+        <a [routerLink]="['/users/main/profiles', post.postedBy._id]">{{ post.postedBy.firstname + " " + post.postedBy.lastname }}</a>
         posted on his page
         <div class="date">
           {{ post.created | timeago }}
@@ -35,7 +37,7 @@
         {{ post.text }}
       </div>
       <div class="extra images" *ngIf="post.photo">
-        <a><img [src]="post.photo" style="width: 15rem;" /></a>
+        <a (click)="userService.setImageModal(post.photo);"><img [src]="post.photo" style="width: 15rem;" /></a>
       </div>
       <div class="meta">
         <a

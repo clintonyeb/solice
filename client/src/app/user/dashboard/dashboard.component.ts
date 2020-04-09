@@ -78,11 +78,18 @@ export class DashboardComponent implements OnInit {
       this.modalService
         .open(this.imageModal, {
           ariaLabelledBy: "modal-basic-title",
+          centered: true,
+          windowClass: "transparent-modal",
         })
-        .result.then((result) => {
-          console.log("closed");
-          // this.userService.setImageModal(null);
-        });
+        .result.then(
+          (result) => {
+            console.log("closed");
+            // this.userService.setImageModal(null);
+          },
+          (reason) => {
+            console.log("Dismissed");
+          }
+        );
     }
   }
 }

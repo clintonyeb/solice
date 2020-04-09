@@ -28,14 +28,14 @@ export class PostDetailComponent implements OnInit {
   routeSubs;
 
   constructor(
-    private userService: UsersService,
+    public userService: UsersService,
     private toastService: ToastrService,
     private route: ActivatedRoute,
     private router: Router,
     private sessionService: SessionService,
     private modalService: NgbModal
   ) {
-    this.routeSubs = route.params.subscribe((params) => {
+    this.routeSubs = this.route.params.subscribe((params) => {
       this.getPost(params["id"]);
     });
   }
