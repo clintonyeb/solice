@@ -3,7 +3,6 @@
 @import "~filepond/dist/filepond.min.css";
 @import "~filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 
-
 // semantic ui components
 @import "~semantic-ui-feed/feed.min.css";
 @import "~semantic-ui-comment/comment.min.css";
@@ -33,4 +32,11 @@
   margin: 0;
   border-top-right-radius: 0.7rem;
   border-bottom-right-radius: 0.7rem;
+}
+
+.extra.text {
+  a {
+    text-decoration: underline;
+    color: blueviolet;
+  }
 }

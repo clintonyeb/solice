@@ -37,8 +37,7 @@
           {{ post.created | timeago }}
         </div>
       </div>
-      <div class="extra text" [class.text-danger]="post.status === 1">
-        {{ post.text }}
+      <div class="extra text" [class.text-danger]="post.status === 1" [innerHTML]="post.text | linky">
       </div>
       <div class="extra images" *ngIf="post.photo">
         <a (click)="showImage(post.photo)"

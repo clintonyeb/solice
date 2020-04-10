@@ -28,6 +28,7 @@ import FilePondPluginImageResize from "filepond-plugin-image-resize";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImageCrop from "filepond-plugin-image-crop";
 import { PostDetailComponent } from './post-detail/post-detail.component';
+import { LinkyModule } from 'ngx-linky';
 
 registerPlugin(FilePondPluginFileValidateType);
 registerPlugin(FilePondPluginImagePreview);
@@ -46,6 +47,7 @@ registerPlugin(FilePondPluginImageCrop);
     BrowserModule,
     FilePondModule,
     InfiniteScrollModule,
+    LinkyModule,
     TimeagoModule.forRoot(),
   ],
   declarations: [

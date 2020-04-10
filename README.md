@@ -52,6 +52,7 @@ Admin Account:
 
 1. Cron Job sending email notifications when you're not checking your notifications and you're offline
 2. Mobile responsive
+3. Automatic link/url detection from posts content
 
 ## Application Hosting
 
