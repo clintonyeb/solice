@@ -116,7 +116,9 @@ const routes: Routes = [
     HttpClientModule,
     BrowserModule,
     SharedModule,
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(routes, {
+      scrollPositionRestoration: "enabled",
+    }),
   ],
   providers: [SessionService, AuthGuardService],
 })
