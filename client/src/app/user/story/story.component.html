@@ -30,14 +30,14 @@
         <a
           [routerLink]="['/users/main/profiles', post.postedBy._id]"
           class="text-decoration-none"
-          >{{ post.postedBy.firstname + " " + post.postedBy.lastname }}</a
+          >{{ post.postedBy.name }}</a
         >
         posted on his page
         <div class="date">
           {{ post.created | timeago }}
         </div>
       </div>
-      <div class="extra text" [class.text-danger]="post.status === 1" [innerHTML]="post.text | linky">
+      <div class="extra text" [class.text-danger]="post.status === 1" [innerHTML]="post.text | linky: {className: 'post-link'}">
       </div>
       <div class="extra images" *ngIf="post.photo">
         <a (click)="showImage(post.photo)"
@@ -78,7 +78,7 @@
             </a>
             <div class="content">
               <a class="author">{{
-                comment.postedBy.firstname + " " + comment.postedBy.lastname
+                comment.postedBy.name
               }}</a>
               <div class="metadata">
                 <div class="date mr-3">{{ comment.created | timeago }}</div>

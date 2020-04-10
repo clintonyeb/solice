@@ -61,14 +61,14 @@
       <div class="content" *ngSwitchCase="0">
         <div class="center aligned header text-primary">New Post</div>
         <div class="description text-center">
-          <p>{{ noti.postedBy.firstname }} created a new post. Check it out.</p>
+          <p>{{ noti.postedBy.lastname + ' ' + noti.postedBy.firstname }} created a new post. Check it out.</p>
         </div>
       </div>
 
       <div class="content" *ngSwitchCase="1">
         <div class="center aligned header text-primary">Liked Post</div>
         <div class="description text-center">
-          <p>{{ noti.postedBy.firstname }} liked a post. Check it out.</p>
+          <p>{{ noti.postedBy.lastname + ' ' + noti.postedBy.firstname }} liked a post. Check it out.</p>
         </div>
       </div>
 
@@ -76,7 +76,7 @@
         <div class="center aligned header text-primary">Commented Post</div>
         <div class="description text-center">
           <p>
-            {{ noti.postedBy.firstname }} commented on a post. Check it out.
+            {{ noti.postedBy.lastname + ' ' + noti.postedBy.firstname }} commented on a post. Check it out.
           </p>
         </div>
       </div>
@@ -84,7 +84,7 @@
       <div class="content" *ngSwitchCase="3">
         <div class="center aligned header text-primary">Followed User</div>
         <div class="description text-center">
-          <p>{{ noti.postedBy.firstname }} followed a user. Check him out.</p>
+          <p>{{ noti.postedBy.lastname + ' ' + noti.postedBy.firstname }} followed a user. Check him out.</p>
         </div>
       </div>
 
@@ -92,7 +92,7 @@
         <div class="center aligned header text-primary">Updated Profile</div>
         <div class="description text-center">
           <p>
-            {{ noti.postedBy.firstname }} updated his profile. Check it out.
+            {{ noti.postedBy.lastname + ' ' + noti.postedBy.firstname }} updated his profile. Check it out.
           </p>
         </div>
       </div>
@@ -100,14 +100,14 @@
       <div class="content" *ngSwitchCase="5">
         <div class="center aligned header text-primary">Is Online</div>
         <div class="description text-center">
-          <p>{{ noti.postedBy.firstname }} is online.</p>
+          <p>{{ noti.postedBy.lastname + ' ' + noti.postedBy.firstname }} is online.</p>
         </div>
       </div>
 
       <div class="content" *ngSwitchCase="5">
         <div class="center aligned header text-primary">Is Online</div>
         <div class="description text-center">
-          <p>{{ noti.postedBy.firstname }} is online.</p>
+          <p>{{ noti.postedBy.lastname + ' ' + noti.postedBy.firstname }} is online.</p>
         </div>
       </div>
 
@@ -133,7 +133,7 @@
             class="ui avatar image mb-0"
             [src]="noti.postedBy.profile_pic"
           />
-          {{ noti.postedBy.firstname + " " + noti.postedBy.lastname }}</span
+          {{ noti.postedBy.lastname + ' ' + noti.postedBy.firstname }}</span
         >
         <span class="date small center aligned">{{
           noti.created | timeago

@@ -35,8 +35,17 @@
 }
 
 .extra.text {
-  a {
-    text-decoration: underline;
+  a.post-link {
     color: blueviolet;
+
+    &::after {
+      content: "\f360";
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      text-decoration: inherit;
+      margin-left: 3px;
+      margin-right: 5px;
+      color: blueviolet;
+    }
   }
 }

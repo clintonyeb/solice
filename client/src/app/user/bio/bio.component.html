@@ -9,7 +9,7 @@
             style="width: 100%; height: 100%;"
           />
         </div>
-        <h3 class="title">{{ user.firstname + " " + user.lastname }}</h3>
+        <h3 class="title">{{ user.name }}</h3>
         <p class="pb-0 text-center">
           <svg height="36" width="36" class="blinking">
             <circle
@@ -81,7 +81,7 @@
                   <img [src]="user.profile_pic" />
                 </div>
                 <div class="content">
-                  <a>{{ user.firstname }}</a> is online.
+                  <a>{{ user.name }}</a> is online.
                 </div>
               </div>
             </div>

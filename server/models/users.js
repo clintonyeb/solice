@@ -71,12 +71,10 @@ var userSchema = mongoose.Schema(
   },
   {
     toObject: {
-      transform: function (doc, ret) {
-        delete ret._id;
-        ret["name"] = ret.firstname + " " + ret.lastname;
-      },
+      virtuals: true,
     },
     toJSON: {
+      virtuals: true,
       transform: function (doc, ret) {
         delete ret.password;
       },
@@ -137,7 +135,7 @@ userSchema.methods.generateToken = function (cb) {
 };
 
 userSchema.virtual("name").get(function () {
-  return this.lastname + ", " + this.firstname;
+  return this.lastname + " " + this.firstname;
 });
 
 userSchema.virtual("age").get(function () {

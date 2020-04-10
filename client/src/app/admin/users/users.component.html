@@ -22,7 +22,7 @@
                   (click)="showUser(user)"
                 >
                   <td>
-                    {{ user.firstname + " " + user.lastname }}
+                    {{ user.name }}
                   </td>
                   <td>
                     {{ user.status === 0 ? "Enabled" : "Disabled" }}
@@ -40,7 +40,7 @@
           <div class="content">
             <img class="right floated mini ui image" [src]="user.profile_pic" />
             <div class="header">
-              {{ user.firstname + " " + user.lastname }}
+              {{ user.name }}
             </div>
             <div class="meta">
               Friends of Veronika

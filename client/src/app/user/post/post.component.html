@@ -28,7 +28,7 @@
     <div class="content">
       <div class="summary" [class.text-danger]="post.status === 1">
         <a [routerLink]="['/users/main/profiles', post.postedBy._id]">{{
-          post.postedBy.firstname + " " + post.postedBy.lastname
+          post.postedBy.name
         }}</a>
         posted on his page
         <div class="date">
@@ -38,7 +38,7 @@
       <div
         class="extra text"
         [class.text-danger]="post.status === 1"
-        [innerHTML]="post.text | linky"
+        [innerHTML]="post.text | linky: {className: 'post-link'}"
       ></div>
       <div class="extra images" *ngIf="post.photo">
         <a (click)="userService.setImageModal(post.photo)"
@@ -79,7 +79,7 @@
             </a>
             <div class="content">
               <a class="author">{{
-                comment.postedBy.firstname + " " + comment.postedBy.lastname
+                comment.postedBy.name
               }}</a>
               <div class="metadata">
                 <div class="date mr-3">{{ comment.created | timeago }}</div>

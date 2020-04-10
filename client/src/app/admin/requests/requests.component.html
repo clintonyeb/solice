@@ -28,7 +28,7 @@
                   (click)="showUser(user)"
                 >
                   <td>
-                    {{ user.firstname + " " + user.lastname }}
+                    {{ user.name }}
                   </td>
                   <td>
                     {{ user.status === 0 ? "Enabled" : "Disabled" }}
@@ -51,7 +51,7 @@
               [src]="request.profile_pic"
             />
             <div class="header">
-              {{ request.firstname + " " + request.lastname }}
+              {{ request.name }}
             </div>
             <div class="meta">
               Friends of Veronika
