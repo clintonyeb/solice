@@ -18,15 +18,15 @@
         </button>
       </div>
     </div>
-    <div class="mt-4 py-1 border-top px-4">
+    <div class="mt-4 py-1 w-100 d-flex justify-content-center m-auto">
       <ul
-        class="nav profile-navbar mt-4 d-flex justify-content-between"
+        class="nav profile-navbar w-100 d-inline-flex justify-content-between align-content-center"
         #navbar
         ngbNav
         [activeId]="router.url"
       >
         <li
-          class="nav-item mr-5"
+          class="nav-item"
           *ngFor="let link of routes"
           [ngbNavItem]="link.path"
         >

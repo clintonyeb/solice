@@ -21,12 +21,12 @@ export class AdsComponent implements OnInit {
   }
 
   showAd(ad: IAd) {
-    console.log(ad);
     this.ad = ad;
   }
 
-  deleteAd(ad: IAd, index) {
+  deleteAd(ad: IAd) {
     this.adminService.deleteAd(ad._id).subscribe((d: IAd) => {
+      const index = this.ads.findIndex(a => a._id === ad._id);
       this.ads.splice(index, 1);
       this.ad = null;
     });
