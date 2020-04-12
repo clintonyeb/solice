@@ -21,6 +21,7 @@ export class PostComponent implements OnInit {
   page = 1;
   user: IUser;
   loading = false;
+  canLoadMore = true;
 
   commentForm = new FormGroup({
     text: new FormControl("", [Validators.required]),
@@ -38,7 +39,9 @@ export class PostComponent implements OnInit {
 
   ngOnInit(): void {
     this.getFeed();
-    this.newPostObserver = this.userService.newPostObserver.subscribe((data: IPost) => this.add(data));
+    this.newPostObserver = this.userService.newPostObserver.subscribe(
+      (data: IPost) => this.add(data)
+    );
     this.currentUserSubject = this.sessionService.currentUserSubject.subscribe(
       (user: IUser) => (this.user = user)
     );
@@ -81,6 +84,9 @@ export class PostComponent implements OnInit {
               "Posts",
               "More posts have been loaded..."
             );
+            if (data.length < 10) {
+              this.canLoadMore = false;
+            }
           },
           (err) => console.error(err)
         );
@@ -153,10 +159,10 @@ export class PostComponent implements OnInit {
   }
 
   getComments(post: IPost) {
-     this.comments = [];
-     this.commentForm.reset();
-     this.commentActive = post;
-     this.loading = true;
+    this.comments = [];
+    this.commentForm.reset();
+    this.commentActive = post;
+    this.loading = true;
     this.userService
       .getComments(post._id)
       .finally(() => (this.loading = false))
@@ -182,7 +188,7 @@ export class PostComponent implements OnInit {
   }
 
   onScroll() {
-    this.getMoreFeed();
+    this.canLoadMore && this.getMoreFeed();
   }
 
   isMyPost(postedBy) {

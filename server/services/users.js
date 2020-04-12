@@ -64,10 +64,11 @@ function getAllUsers(user, cb) {
   });
 }
 
-function getPosts(userId, cb) {
+function getPosts(userId, cb, page) {
   Post.find({ postedBy: userId })
     .populate("postedBy")
     .sort({ created: "desc" })
+    .skip(LIMIT * page - LIMIT)
     .limit(LIMIT)
     .exec((err, posts) => {
       return cb(err, posts);

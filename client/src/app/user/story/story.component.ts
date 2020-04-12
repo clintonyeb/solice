@@ -21,6 +21,7 @@ export class StoryComponent implements OnInit {
   page = 1;
   user: IUser;
   loading = false;
+  canLoadMore = true;
 
   commentForm = new FormGroup({
     text: new FormControl("", [Validators.required]),
@@ -84,6 +85,9 @@ export class StoryComponent implements OnInit {
               "More posts have been loaded..."
             );
             this.loading = false;
+            if (data.length < 10) {
+              this.canLoadMore = false;
+            }
           },
           (err) => {
             console.error(err);
@@ -193,7 +197,7 @@ export class StoryComponent implements OnInit {
   }
 
   onScroll() {
-    this.getMoreFeed();
+    this.canLoadMore && this.getMoreFeed();
   }
 
   isMyPost(postedBy) {
@@ -204,5 +208,4 @@ export class StoryComponent implements OnInit {
   showImage(image: string) {
     this.userService.setImageModal(image);
   }
-
 }
