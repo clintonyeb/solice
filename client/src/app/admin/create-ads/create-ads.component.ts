@@ -61,7 +61,9 @@ export class CreateAdsComponent implements OnInit {
   onSubmit() {
     if (!this.targets.length) {
       this.toastService.info("At least specify one target audience");
+      return;
     }
+    
     if (this.pondFiles.length) {
       this.processPhoto(this.pondFiles[0]).subscribe(
         event => {
