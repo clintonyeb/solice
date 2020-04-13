@@ -24,9 +24,8 @@ export class AdsComponent implements OnInit {
     this.ad = ad;
   }
 
-  deleteAd(ad: IAd) {
+  deleteAd(ad: IAd, index) {
     this.adminService.deleteAd(ad._id).subscribe((d: IAd) => {
-      const index = this.ads.findIndex(a => a._id === ad._id);
       this.ads.splice(index, 1);
       this.ad = null;
     });

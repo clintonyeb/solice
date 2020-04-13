@@ -74,7 +74,7 @@ export interface IAd {
   url: string;
   image: string;
   created: Date;
-  target: ITarget;
+  targets: Array<ITarget>;
 }
 
 export interface ITarget {
