@@ -21,7 +21,7 @@ import { Router } from "@angular/router";
 })
 export class UpdateProfileComponent implements OnInit {
   @Output() main = new EventEmitter<string>();
-  minDate = { year: 1985, month: 1, day: 1 };
+  minDate = { year: 1900, month: 1, day: 1 };
   maxDate = { year: new Date().getFullYear(), month: 1, day: 1 };
   startDate = { year: 1988, month: 1, day: 1 };
   loading = false;
@@ -133,6 +133,7 @@ export class UpdateProfileComponent implements OnInit {
     this.userService.getUser();
     this.currentUserSubject = this.userService.currentUserSubject.subscribe(
       (data: IUser) => {
+        if (!data) return;
         this.form.patchValue({
           firstname: data.firstname,
           lastname: data.lastname,

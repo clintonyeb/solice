@@ -431,6 +431,8 @@ async function getAds(userId) {
       ad = matchedAds.find((ad) => {
         return ad.targets.find((req) => {
           const value = Number(req.value);
+          console.log(value, age, "aging");
+
           if (req.operator == "==" && age == value) return true;
           if (req.operator == "<" && age < value) return true;
           if (req.operator == ">" && age > value) return true;
@@ -462,7 +464,7 @@ async function verifyEmailToken(token) {
 async function runCronJob() {
   const users = await User.aggregate([
     { $match: { "notifications.status": true } },
-    { $project: {notifications: 1, firstname: 1, lastname: 1, email: 1}},
+    { $project: { notifications: 1, firstname: 1, lastname: 1, email: 1 } },
     { $addFields: { notifications: { $size: "$notifications" } } },
     { $match: { notifications: { $gte: 4 } } },
   ]);
