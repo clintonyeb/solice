@@ -431,8 +431,6 @@ async function getAds(userId) {
       ad = matchedAds.find((ad) => {
         return ad.targets.find((req) => {
           const value = Number(req.value);
-          console.log(value, age, "aging");
-
           if (req.operator == "==" && age == value) return true;
           if (req.operator == "<" && age < value) return true;
           if (req.operator == ">" && age > value) return true;
