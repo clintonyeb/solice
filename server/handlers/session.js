@@ -83,12 +83,13 @@ async function forgotPassword(req, res) {
 
 async function resetPassword(req, res) {
   try {
-    const res = await userService.resetPassword(
+    await userService.resetPassword(
       req.body.token,
       req.body.password
     );
     res.json({ status: true });
   } catch (error) {
+    console.log(error);
     res
       .status(HttpStatus.UNPROCESSABLE_ENTITY)
       .json({ message: error.message });
