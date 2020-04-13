@@ -60,15 +60,15 @@
                 </th>
               </thead>
               <tbody>
-                <tr>
+                <tr *ngFor="let target of ad.targets; index as j">
                   <td>
-                    {{ ad.target.field }}
+                    {{ target.field }}
                   </td>
                   <td>
-                    {{ ad.target.operator }}
+                    {{ target.operator }}
                   </td>
                   <td>
-                    {{ ad.target.value }}
+                    {{ target.value }}
                   </td>
                 </tr>
               </tbody>
