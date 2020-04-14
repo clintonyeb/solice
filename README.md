@@ -4,6 +4,10 @@
 
 ### This application was built from my MWA class project.
 
+### Demo Video:
+[![Solice Demo Video](https://img.youtube.com/vi/AQYZqd4DcrE/0.jpg)](https://www.youtube.com/watch?v=AQYZqd4DcrE)
+
+
 ## Technologies Used:
 
 - Angular
